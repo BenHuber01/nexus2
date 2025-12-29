@@ -15,6 +15,7 @@ import { attachmentRouter } from "./attachment";
 import { tagRouter } from "./tag";
 import { dependencyRouter } from "./dependency";
 import { workItemStateRouter } from "./workItemState";
+import { teamMembershipRouter } from "./teamMembership";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -33,6 +34,7 @@ export const appRouter = router({
 	tag: tagRouter,
 	dependency: dependencyRouter,
 	workItemState: workItemStateRouter,
+	teamMembership: teamMembershipRouter,
 });
 
 export type AppRouter = typeof appRouter;
