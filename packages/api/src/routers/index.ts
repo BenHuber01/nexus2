@@ -13,6 +13,7 @@ import { timeLogRouter } from "./timeLog";
 import { commentRouter } from "./comment";
 import { attachmentRouter } from "./attachment";
 import { tagRouter } from "./tag";
+import { dependencyRouter } from "./dependency";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -29,6 +30,7 @@ export const appRouter = router({
 	comment: commentRouter,
 	attachment: attachmentRouter,
 	tag: tagRouter,
+	dependency: dependencyRouter,
 });
 
 export type AppRouter = typeof appRouter;
