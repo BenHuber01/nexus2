@@ -259,7 +259,170 @@ Since there's no UI component yet, we can verify the router is accessible:
 
 ---
 
-## 🎯 Phase 1.3: Team CRUD Mutations (Coming Next)
+## 🎯 Phase 1.3: Team CRUD Mutations
+
+**Implementation:** Create, Update, Delete teams
+
+### 🎯 What Was Implemented
+
+**Backend Routes:**
+- `team.getAll` - Get all teams for organization (existing)
+- `team.getById` - Get single team with members and projects (existing)
+- `team.create` - Create new team ✨ NEW
+- `team.update` - Update team details ✨ NEW
+- `team.delete` - Delete team with validation ✨ NEW
+
+### 🧪 How to Test
+
+**Current Status:**
+- ✅ Can READ teams
+- ✅ Can CREATE teams
+- ✅ Can UPDATE teams
+- ✅ Can DELETE teams (with validation)
+- ⚠️ No UI component yet (manual testing only)
+
+**Step 1: Test Create Team (Prisma Studio)**
+
+1. Open Prisma Studio: http://localhost:5555
+2. Go to **Organization** table
+3. Copy an organization ID
+4. We'll create a team via the router
+
+**Since no UI exists yet, test via Prisma Studio:**
+
+1. Go to **Team** table in Prisma Studio
+2. Click **Add record**
+3. Fill in:
+   ```
+   name: "Backend Team"
+   description: "Backend developers"
+   organizationId: <paste-organization-id>
+   velocityHistory: []
+   settings: {}
+   ```
+4. Click **Save**
+5. Verify team appears in table
+
+**Step 2: Verify Team Relations**
+
+1. In Prisma Studio → **Team** table
+2. Click on the team you created
+3. Check relations:
+   - `organization` → Should link to correct org
+   - `members` → Empty array (we'll add members in Phase 1.4)
+   - `projects` → Empty array
+
+**Step 3: Test Update Team (Prisma Studio)**
+
+1. In Prisma Studio → **Team** table
+2. Click on a team
+3. Edit fields:
+   ```
+   name: "Backend Team (Updated)"
+   description: "Backend and infrastructure developers"
+   ```
+4. Click **Save**
+5. Verify changes persist after refresh
+
+**Step 4: Test Delete Team (Prisma Studio)**
+
+1. Create a test team (name it "Test Team to Delete")
+2. In Prisma Studio → **Team** table
+3. Click on the test team
+4. Click **Delete** button
+5. Confirm deletion
+6. Verify team removed from list
+
+**Step 5: Test Delete Validation (Manual)**
+
+The delete mutation prevents deletion if team has assigned projects.
+
+To test this protection:
+1. Create a team in Prisma Studio
+2. Go to **Project** table
+3. Find a project and note its ID
+4. We need to assign team to project (this requires TeamMembership or direct relation)
+5. Currently, this validation will pass since we haven't linked teams to projects yet
+
+**Note:** Full delete validation testing requires:
+- Projects assigned to teams
+- This will be testable once we have the UI for team-project assignment
+
+**Step 6: Test with Network Tab (Once UI Exists)**
+
+Once the Team Management UI is built:
+
+1. Open browser: http://localhost:3001
+2. Navigate to Organization Settings → Teams
+3. Click "Create Team" button
+4. Open DevTools → **Network** tab
+5. Fill in team form and submit
+6. Watch for API call:
+   ```
+   Request: POST /trpc/team.create
+   Payload: {name: "New Team", organizationId: "..."}
+   Response: {id: "...", name: "New Team", ...}
+   ```
+
+### ✅ Success Criteria
+
+- ✅ Can create teams in Prisma Studio
+- ✅ Teams appear in Team table
+- ✅ Can update team name and description
+- ✅ Can delete teams (that don't have projects)
+- ✅ Organization relation is correct
+- ✅ TypeScript compilation passes
+
+### ⏭️ Next Steps (Frontend Implementation Needed)
+
+**To fully use this feature, we need to create:**
+- `team-management.tsx` component (Phase 2.1)
+- Add to Organization Settings page
+- Team list with create/edit/delete actions
+
+**Where it will appear:**
+- **Organization Settings → Teams tab**
+- Click organization name → Settings
+- View all teams
+- Create new team button
+- Edit/delete actions per team
+
+**User Flow (Future):**
+```
+1. Navigate to Dashboard
+2. Click organization name
+3. Click "Settings" (or similar)
+4. Click "Teams" tab
+5. See list of teams with member counts
+6. Click "Create Team" button
+7. Fill in form:
+   - Name: "Mobile Team"
+   - Description: "iOS and Android developers"
+8. Click "Create"
+9. Team appears in list
+10. Click team → Edit details
+11. Click "Delete" → Confirm → Team removed
+```
+
+**Console Logs (When UI Exists):**
+```javascript
+// On successful create:
+console.log("Team created:", team);
+// {id: "...", name: "Mobile Team", organizationId: "...", ...}
+
+// On successful update:
+console.log("Team updated:", team);
+
+// On successful delete:
+console.log("Team deleted successfully");
+
+// On delete error (has projects):
+console.error("Cannot delete team: 3 project(s) are assigned to this team");
+```
+
+---
+
+## 🎯 Phase 1.4: TeamMembership Router (Coming Next)
 
 **Implementation:** Create, Update, Delete teams
 
