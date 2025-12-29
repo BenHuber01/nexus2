@@ -14,6 +14,7 @@ import { commentRouter } from "./comment";
 import { attachmentRouter } from "./attachment";
 import { tagRouter } from "./tag";
 import { dependencyRouter } from "./dependency";
+import { workItemStateRouter } from "./workItemState";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -31,6 +32,7 @@ export const appRouter = router({
 	attachment: attachmentRouter,
 	tag: tagRouter,
 	dependency: dependencyRouter,
+	workItemState: workItemStateRouter,
 });
 
 export type AppRouter = typeof appRouter;
