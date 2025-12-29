@@ -22,6 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Priority, WorkItemType } from "@my-better-t-app/db";
+import { DependencyManager } from "./dependency-manager";
 
 interface EditTaskModalProps {
     open: boolean;
@@ -152,10 +153,11 @@ export function EditTaskModal({
                 </DialogHeader>
 
                 <Tabs defaultValue="general" className="w-full">
-                    <TabsList className="grid w-full grid-cols-3">
+                    <TabsList className="grid w-full grid-cols-4">
                         <TabsTrigger value="general">General</TabsTrigger>
                         <TabsTrigger value="planning">Planning</TabsTrigger>
                         <TabsTrigger value="details">Details</TabsTrigger>
+                        <TabsTrigger value="dependencies">Dependencies</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="general" className="space-y-4 py-4">
@@ -386,6 +388,13 @@ export function EditTaskModal({
                                 />
                             </div>
                         </div>
+                    </TabsContent>
+
+                    <TabsContent value="dependencies" className="py-4">
+                        <DependencyManager
+                            workItemId={task.id}
+                            projectId={projectId}
+                        />
                     </TabsContent>
                 </Tabs>
 
