@@ -64,11 +64,24 @@ function RouteComponent() {
 						<div key={org.id} className="space-y-4">
 							<div className="flex items-center justify-between">
 								<h2 className="text-2xl font-semibold">{org.name}</h2>
-								<Link to="/dashboard" search={{ orgId: org.id }}>
-									<Button variant="outline" size="sm">
-										View All Projects
-									</Button>
-								</Link>
+								<div className="flex gap-2">
+									<Link
+										to="/organizations/$organizationId/teams"
+										params={{ organizationId: org.id }}
+									>
+										<Button variant="outline" size="sm">
+											Teams
+										</Button>
+									</Link>
+									<Link
+										to="/organizations/$organizationId/settings"
+										params={{ organizationId: org.id }}
+									>
+										<Button variant="outline" size="sm">
+											Settings
+										</Button>
+									</Link>
+								</div>
 							</div>
 
 							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
