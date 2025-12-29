@@ -16,6 +16,7 @@ import { tagRouter } from "./tag";
 import { dependencyRouter } from "./dependency";
 import { workItemStateRouter } from "./workItemState";
 import { teamMembershipRouter } from "./teamMembership";
+import { organizationMembershipRouter } from "./organizationMembership";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -35,6 +36,7 @@ export const appRouter = router({
 	dependency: dependencyRouter,
 	workItemState: workItemStateRouter,
 	teamMembership: teamMembershipRouter,
+	organizationMembership: organizationMembershipRouter,
 });
 
 export type AppRouter = typeof appRouter;
