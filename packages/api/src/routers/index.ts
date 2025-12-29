@@ -1,0 +1,34 @@
+import { router, publicProcedure } from "../index";
+
+import { organizationRouter } from "./organization";
+import { projectRouter } from "./project";
+import { workItemRouter } from "./workItem";
+import { teamRouter } from "./team";
+import { sprintRouter } from "./sprint";
+import { boardRouter } from "./board";
+import { portfolioRouter } from "./portfolio";
+import { milestoneRouter } from "./milestone";
+import { retrospectiveRouter } from "./retrospective";
+import { timeLogRouter } from "./timeLog";
+import { commentRouter } from "./comment";
+import { attachmentRouter } from "./attachment";
+import { tagRouter } from "./tag";
+
+export const appRouter = router({
+	healthCheck: publicProcedure.query(() => true),
+	organization: organizationRouter,
+	project: projectRouter,
+	workItem: workItemRouter,
+	team: teamRouter,
+	sprint: sprintRouter,
+	board: boardRouter,
+	portfolio: portfolioRouter,
+	milestone: milestoneRouter,
+	retrospective: retrospectiveRouter,
+	timeLog: timeLogRouter,
+	comment: commentRouter,
+	attachment: attachmentRouter,
+	tag: tagRouter,
+});
+
+export type AppRouter = typeof appRouter;
