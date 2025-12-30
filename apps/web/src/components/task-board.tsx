@@ -231,6 +231,8 @@ function BoardLane({ lane, tasks, onEditTask }: { lane: any; tasks: any[]; onEdi
         id: lane.id,
     });
 
+    const hasNoMappedStates = !lane.mappedStates || lane.mappedStates.length === 0;
+
     return (
         <div ref={setNodeRef} className="flex-shrink-0 w-80 flex flex-col gap-4">
             <div className="flex items-center justify-between px-2">
@@ -243,16 +245,31 @@ function BoardLane({ lane, tasks, onEditTask }: { lane: any; tasks: any[]; onEdi
                             WIP: {lane.wipLimit}
                         </Badge>
                     )}
+                    {hasNoMappedStates && (
+                        <Badge variant="destructive" className="text-xs">
+                            ⚠️ No states
+                        </Badge>
+                    )}
                 </div>
                 <Badge variant="secondary">{tasks.length}</Badge>
             </div>
 
             <div className="flex-1 space-y-3 p-2 bg-muted/30 rounded-lg min-h-[500px]">
-                <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                    {tasks.map((task) => (
-                        <SortableTaskCard key={task.id} task={task} onEdit={() => onEditTask(task)} />
-                    ))}
-                </SortableContext>
+                {hasNoMappedStates ? (
+                    <div className="flex items-center justify-center h-full text-center p-4">
+                        <div className="text-sm text-muted-foreground">
+                            <p className="font-medium mb-2">⚠️ No states mapped to this lane</p>
+                            <p className="text-xs">Tasks won't appear here.</p>
+                            <p className="text-xs">Configure in board settings.</p>
+                        </div>
+                    </div>
+                ) : (
+                    <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
+                        {tasks.map((task) => (
+                            <SortableTaskCard key={task.id} task={task} onEdit={() => onEditTask(task)} />
+                        ))}
+                    </SortableContext>
+                )}
             </div>
         </div>
     );

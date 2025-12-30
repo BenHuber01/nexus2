@@ -499,13 +499,52 @@ export function BoardSettingsModal({
             const newLanes = lanes.filter(lane => !lane.id);
             console.log("[BoardSettings] New lanes to create:", newLanes);
             
+            // Track which states are already used to avoid duplicates
+            const usedStates = lanes
+                .filter(lane => lane.id) // Only existing lanes
+                .flatMap(lane => lane.mappedStates || []);
+            
+            console.log("[BoardSettings] States already in use:", usedStates);
+            
             for (const lane of newLanes) {
-                console.log("[BoardSettings] Creating lane for existing board:", lane);
+                let mappedStates = lane.mappedStates || [];
+                
+                // Smart Auto-Assignment: If no states mapped, assign first available
+                if (mappedStates.length === 0 && states && states.length > 0) {
+                    // Find states not already used
+                    const availableStates = states.filter((state: any) => 
+                        !usedStates.includes(state.id)
+                    );
+                    
+                    if (availableStates.length > 0) {
+                        mappedStates = [availableStates[0].id];
+                        usedStates.push(availableStates[0].id); // Mark as used for next lanes
+                        console.log(
+                            `[BoardSettings] Auto-assigned state "${availableStates[0].name}" to lane "${lane.name}"`
+                        );
+                        toast.info(
+                            `Lane "${lane.name}" auto-assigned to state "${availableStates[0].name}"`
+                        );
+                    } else {
+                        console.warn(
+                            `[BoardSettings] No available states for lane "${lane.name}" - all states already used`
+                        );
+                        toast.warning(
+                            `Lane "${lane.name}" has no mapped states - configure in settings`
+                        );
+                    }
+                }
+                
+                console.log("[BoardSettings] Creating lane for existing board:", {
+                    ...lane,
+                    mappedStates,
+                });
+                
                 await createLaneMutation.mutateAsync({
                     boardId: boardId,
                     name: lane.name,
                     position: lane.position,
-                    mappedStates: lane.mappedStates,
+                    mappedStates: mappedStates,
                     wipLimit: lane.wipLimit || undefined,
                 });
             }

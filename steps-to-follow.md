@@ -220,6 +220,7 @@
   - **Lane management:**
     - Add lanes to existing boards ✅ (FIXED)
     - Configure lane properties (name, WIP limit, mapped states)
+    - **Smart Auto-Assignment:** Lanes without mapped states auto-assign available states ✅
     - Reorder lanes with up/down buttons
     - Delete lanes
     - Expand/collapse lane settings
@@ -233,6 +234,13 @@
   - **Problem 3:** Cannot delete unsaved lanes (temp IDs cause 500 error)
   - **Root Cause 3:** `handleDeleteLane` tried to delete temp-ID lanes from database
   - **Solution 3:** Check for temp- prefix, only delete real lanes from DB, clean temp lanes from cache
+  - **Problem 4:** Tasks invisible in new lanes without mapped states ✅
+  - **Root Cause 4:** Lanes with empty `mappedStates` arrays don't match any task states
+  - **Solution 4:** Smart Auto-Assignment + Visual Warnings (ADR-001)
+    - Auto-assigns first available state to lanes with empty mappedStates
+    - Tracks used states to avoid duplicates
+    - Shows toast notification when auto-assignment occurs
+    - Visual warning badge in board view for lanes without states
   - **Optimistic Updates Added:** ✅
     - Lane creates are immediately visible in UI (onMutate) ✅
     - Lane updates are immediately visible in UI (onMutate)
@@ -244,8 +252,10 @@
   - **Console Logs:**
     - `[BoardSettings] Adding new lane:` - When clicking "Add Lane"
     - `[BoardSettings] Saving board. BoardId: ... Lanes: ...` - When saving
+    - `[BoardSettings] States already in use:` - Shows which states are taken ✅
     - `[BoardSettings] New lanes to create:` - Shows which lanes will be created
-    - `[BoardSettings] Creating lane for existing board:` - Per lane creation
+    - `[BoardSettings] Auto-assigned state "X" to lane "Y"` - Auto-assignment notification ✅
+    - `[BoardSettings] Creating lane for existing board:` - Per lane creation with final mappedStates ✅
     - `[BoardSettings] Optimistic lane create:` - Optimistic create applied ✅
     - `[BoardSettings] Optimistic lane update:` - Optimistic update applied
     - `[BoardSettings] Optimistic lane delete:` - Optimistic delete applied
@@ -255,9 +265,13 @@
   - BoardLane has cascading delete on Board ✅
   - Lanes reference Board via `boardId` ✅
   - All required fields (name, position, mappedStates) properly handled ✅
+  - Smart defaults ensure lanes are always usable ✅
 - **Observable Changes:**
   - ⚡ **Instant UI Updates:** Changes are visible immediately in both modal and task board (optimistic updates) ✅
   - New lanes appear instantly in the task board when created ✅
+  - **Auto-Assignment:** Info toast shows which state was assigned to which lane ✅
+  - **Visual Warning:** Red badge "⚠️ No states" appears in lanes without mapped states ✅
+  - Empty lanes show placeholder message: "No states mapped to this lane" ✅
   - Lane deletions happen instantly in the UI
   - Board name/settings changes reflect immediately
   - ✅ Success toasts confirm server persistence
