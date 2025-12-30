@@ -195,12 +195,37 @@
   - Reorder states
   - Set initial/final flags
 
-#### BoardSettingsModal
+#### BoardSettingsModal (FIXED: Lane Management)
 - **File:** `apps/web/src/components/board-settings-modal.tsx`
 - **Triggered by:** Project board → Settings icon
+- **Purpose:** Create and configure boards with lanes
 - **Features:**
-  - Board configuration
-  - Lane management
+  - Board creation/editing (name, type: kanban/scrum, default flag)
+  - Sprint association (optional)
+  - **Lane management:**
+    - Add lanes to existing boards ✅ (FIXED)
+    - Configure lane properties (name, WIP limit, mapped states)
+    - Reorder lanes with up/down buttons
+    - Delete lanes
+    - Expand/collapse lane settings
+- **Bug Fix (2025-12-30):**
+  - **Problem:** New lanes added to existing boards were not saved to database
+  - **Root Cause:** `handleSave` function only updated board properties, not lanes
+  - **Solution:** Now creates lanes without IDs (new lanes) for existing boards
+  - **Console Logs:**
+    - `[BoardSettings] Adding new lane:` - When clicking "Add Lane"
+    - `[BoardSettings] Saving board. BoardId: ... Lanes: ...` - When saving
+    - `[BoardSettings] New lanes to create:` - Shows which lanes will be created
+    - `[BoardSettings] Creating lane for existing board:` - Per lane creation
+- **Data Model Alignment:**
+  - Board ↔ BoardLane: One-to-many relationship ✅
+  - BoardLane has cascading delete on Board ✅
+  - Lanes reference Board via `boardId` ✅
+  - All required fields (name, position, mappedStates) properly handled ✅
+- **Observable Changes:**
+  - New lanes now appear after saving and refreshing the board
+  - Console logs help debug the lane creation process
+  - Success toast shows "Board and lanes updated successfully" when lanes are added
   - WIP limits per lane
   - State mapping to lanes
 

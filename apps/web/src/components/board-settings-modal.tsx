@@ -164,6 +164,7 @@ export function BoardSettingsModal({
             mappedStates: [],
             wipLimit: null,
         };
+        console.log("[BoardSettings] Adding new lane:", newLane);
         setLanes([...lanes, newLane]);
     };
 
@@ -218,6 +219,8 @@ export function BoardSettingsModal({
     };
 
     const handleSave = async () => {
+        console.log("[BoardSettings] Saving board. BoardId:", boardId, "Lanes:", lanes);
+        
         if (!boardName.trim()) {
             toast.error("Board name is required");
             return;
@@ -232,6 +235,28 @@ export function BoardSettingsModal({
                 isDefault,
                 sprintId,
             });
+
+            // Create any new lanes (lanes without an ID)
+            const newLanes = lanes.filter(lane => !lane.id);
+            console.log("[BoardSettings] New lanes to create:", newLanes);
+            
+            for (const lane of newLanes) {
+                console.log("[BoardSettings] Creating lane for existing board:", lane);
+                await client.board.createLane.mutate({
+                    boardId: boardId,
+                    name: lane.name,
+                    position: lane.position,
+                    mappedStates: lane.mappedStates,
+                    wipLimit: lane.wipLimit || undefined,
+                });
+            }
+
+            if (newLanes.length > 0) {
+                queryClient.invalidateQueries({ queryKey: ["board"] });
+                toast.success("Board and lanes updated successfully");
+            }
+            
+            onOpenChange(false);
         } else {
             // Create new board
             await createBoardMutation.mutateAsync({

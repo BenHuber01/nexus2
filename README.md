@@ -51,7 +51,7 @@ This project uses **PostgreSQL** with the **pgvector extension** for AI features
 
 ```bash
 # Create docker-compose.yml
-docker-compose up -d
+docker compose up -d
 
 # The docker-compose.yml should include:
 version: '3.8'
