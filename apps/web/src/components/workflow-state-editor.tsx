@@ -87,14 +87,43 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
         mutationFn: async (data: any) => {
             return await client.workItemState.create.mutate(data);
         },
+        onMutate: async (newStateData) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousStates = queryClient.getQueryData(queryKey);
+            
+            // Optimistically add new state
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                const tempId = `temp-${Date.now()}`;
+                const position = old.length;
+                const newState = {
+                    id: tempId,
+                    ...newStateData,
+                    position,
+                    _count: { workItems: 0 },
+                };
+                return [...old, newState];
+            });
+            
+            console.log("[WorkflowStateEditor] Optimistic state create:", newStateData);
+            return { previousStates };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            if (context?.previousStates) {
+                queryClient.setQueryData(queryKey, context.previousStates);
+            }
+            console.error("[WorkflowStateEditor] Create error:", error);
+            toast.error(error.message || "Failed to create state");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["workItemState"] });
+            queryClient.invalidateQueries({ queryKey: ["board"] }); // Refresh board states too
             toast.success("State created successfully");
             setCreateDialogOpen(false);
             resetForm();
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to create state");
         },
     });
 
@@ -103,14 +132,37 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
         mutationFn: async (data: any) => {
             return await client.workItemState.update.mutate(data);
         },
+        onMutate: async (updatedData) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousStates = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update state
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return old.map((state: any) =>
+                    state.id === updatedData.id ? { ...state, ...updatedData } : state
+                );
+            });
+            
+            console.log("[WorkflowStateEditor] Optimistic state update:", updatedData);
+            return { previousStates };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            if (context?.previousStates) {
+                queryClient.setQueryData(queryKey, context.previousStates);
+            }
+            console.error("[WorkflowStateEditor] Update error:", error);
+            toast.error(error.message || "Failed to update state");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["workItemState"] });
+            queryClient.invalidateQueries({ queryKey: ["board"] });
             toast.success("State updated successfully");
             setEditDialogOpen(false);
             resetForm();
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to update state");
         },
     });
 
@@ -119,12 +171,33 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
         mutationFn: async (id: string) => {
             return await client.workItemState.delete.mutate({ id });
         },
+        onMutate: async (stateId) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousStates = queryClient.getQueryData(queryKey);
+            
+            // Optimistically remove state
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return old.filter((state: any) => state.id !== stateId);
+            });
+            
+            console.log("[WorkflowStateEditor] Optimistic state delete:", stateId);
+            return { previousStates };
+        },
+        onError: (error: any, _id, context: any) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            if (context?.previousStates) {
+                queryClient.setQueryData(queryKey, context.previousStates);
+            }
+            console.error("[WorkflowStateEditor] Delete error:", error);
+            toast.error(error.message || "Failed to delete state");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["workItemState"] });
+            queryClient.invalidateQueries({ queryKey: ["board"] });
             toast.success("State deleted successfully");
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to delete state");
         },
     });
 
@@ -133,12 +206,39 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
         mutationFn: async (data: any) => {
             return await client.workItemState.reorder.mutate(data);
         },
+        onMutate: async (reorderData) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousStates = queryClient.getQueryData(queryKey);
+            
+            // Optimistically reorder states
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                const reordered = [...old];
+                reorderData.states.forEach((item: any) => {
+                    const index = reordered.findIndex((s: any) => s.id === item.id);
+                    if (index !== -1) {
+                        reordered[index] = { ...reordered[index], position: item.position };
+                    }
+                });
+                return reordered.sort((a: any, b: any) => a.position - b.position);
+            });
+            
+            console.log("[WorkflowStateEditor] Optimistic reorder:", reorderData);
+            return { previousStates };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+            if (context?.previousStates) {
+                queryClient.setQueryData(queryKey, context.previousStates);
+            }
+            console.error("[WorkflowStateEditor] Reorder error:", error);
+            toast.error(error.message || "Failed to reorder states");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["workItemState"] });
             toast.success("States reordered");
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to reorder states");
         },
     });
 

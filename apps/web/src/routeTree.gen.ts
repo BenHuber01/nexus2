@@ -14,6 +14,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
+import { Route as ProjectsProjectIdSettingsRouteImport } from './routes/projects_.$projectId_.settings'
 import { Route as OrganizationsOrganizationIdTeamsRouteImport } from './routes/organizations.$organizationId.teams'
 import { Route as OrganizationsOrganizationIdSettingsRouteImport } from './routes/organizations.$organizationId.settings'
 
@@ -42,6 +43,12 @@ const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
   path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsProjectIdSettingsRoute =
+  ProjectsProjectIdSettingsRouteImport.update({
+    id: '/projects_/$projectId_/settings',
+    path: '/projects/$projectId/settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const OrganizationsOrganizationIdTeamsRoute =
   OrganizationsOrganizationIdTeamsRouteImport.update({
     id: '/organizations/$organizationId/teams',
@@ -63,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
+  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -72,6 +80,7 @@ export interface FileRoutesByTo {
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
+  '/projects/$projectId/settings': typeof ProjectsProjectIdSettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -82,6 +91,7 @@ export interface FileRoutesById {
   '/projects/$projectId': typeof ProjectsProjectIdRoute
   '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
   '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
+  '/projects_/$projectId_/settings': typeof ProjectsProjectIdSettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -93,6 +103,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId'
     | '/organizations/$organizationId/settings'
     | '/organizations/$organizationId/teams'
+    | '/projects/$projectId/settings'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -102,6 +113,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId'
     | '/organizations/$organizationId/settings'
     | '/organizations/$organizationId/teams'
+    | '/projects/$projectId/settings'
   id:
     | '__root__'
     | '/'
@@ -111,6 +123,7 @@ export interface FileRouteTypes {
     | '/projects/$projectId'
     | '/organizations/$organizationId/settings'
     | '/organizations/$organizationId/teams'
+    | '/projects_/$projectId_/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -121,6 +134,7 @@ export interface RootRouteChildren {
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
   OrganizationsOrganizationIdSettingsRoute: typeof OrganizationsOrganizationIdSettingsRoute
   OrganizationsOrganizationIdTeamsRoute: typeof OrganizationsOrganizationIdTeamsRoute
+  ProjectsProjectIdSettingsRoute: typeof ProjectsProjectIdSettingsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -160,6 +174,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects_/$projectId_/settings': {
+      id: '/projects_/$projectId_/settings'
+      path: '/projects/$projectId/settings'
+      fullPath: '/projects/$projectId/settings'
+      preLoaderRoute: typeof ProjectsProjectIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/organizations/$organizationId/teams': {
       id: '/organizations/$organizationId/teams'
       path: '/organizations/$organizationId/teams'
@@ -186,6 +207,7 @@ const rootRouteChildren: RootRouteChildren = {
   OrganizationsOrganizationIdSettingsRoute:
     OrganizationsOrganizationIdSettingsRoute,
   OrganizationsOrganizationIdTeamsRoute: OrganizationsOrganizationIdTeamsRoute,
+  ProjectsProjectIdSettingsRoute: ProjectsProjectIdSettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

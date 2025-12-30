@@ -1,6 +1,6 @@
 import { useTRPC } from "@/utils/trpc";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { TaskBoard } from "@/components/task-board";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -49,7 +49,9 @@ function ProjectComponent() {
                         <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
                     </div>
                     <div className="flex gap-2">
-                        <Button variant="outline">Settings</Button>
+                        <Link to="/projects/$projectId/settings" params={{ projectId }}>
+                            <Button variant="outline">Settings</Button>
+                        </Link>
                         <Button onClick={() => setCreateTaskOpen(true)}>Create Task</Button>
                     </div>
                 </div>

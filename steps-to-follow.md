@@ -108,9 +108,12 @@
 - **Purpose:** Project detail page with multiple tabs
 - **Tabs:**
   1. **Board** - Kanban/Scrum board with lanes
-  2. **Backlog** - Product backlog view
+  2. **List** - List view (placeholder)
   3. **Sprints** - Sprint management
-  4. **Reports** - Project metrics (placeholder)
+  4. **Backlog** - Product backlog view
+- **Header Actions:**
+  - **"Settings" button** → `/projects/{projectId}/settings` (NEW!)
+  - **"Create Task" button** → Opens CreateTaskModal
 - **Features:**
   - Task board with drag-and-drop
   - Sprint planning
@@ -118,11 +121,54 @@
   - Work item management
 - **Navigation:**
   - From: Dashboard → Click project card
+  - To Settings: Header → Click "Settings" button
 - **Interactions:**
   - Click work item → Opens EditTaskModal
   - Board tab: Board selector dropdown
   - Board tab: Board settings icon → Opens BoardSettingsModal
   - Sprints tab: Sprint management operations
+
+#### `/projects/{projectId}/settings` (NEW! ✅)
+- **Component:** `apps/web/src/routes/projects_.$projectId_.settings.tsx`
+- **Purpose:** Project settings with tabbed interface
+- **Tabs:**
+  1. **General** - Project name, key, description (view-only for now)
+  2. **Workflow States** - Custom workflow state management
+- **Features:**
+  - View project details
+  - **Workflow State Editor** – Full CRUD for custom workflow states
+    - Create custom states (e.g., "Code Review", "QA Testing")
+    - Edit state properties (name, color, category, WIP limit)
+    - Delete unused states (with safety check)
+    - Reorder states with up/down buttons
+    - Set initial/final states
+    - View usage count per state
+- **Backend Integration:**
+  - Router: `packages/api/src/routers/workItemState.ts`
+  - Procedures: `getByProject`, `create`, `update`, `delete`, `reorder`
+  - **Optimistic Updates:** ✅ All mutations (create, update, delete, reorder)
+  - **Cross-cache invalidation:** Updates both `workItemState` and `board` queries
+- **Navigation:**
+  - From: Project page → Click "Settings" button
+  - Back: Click "Back to Project" link
+- **Interactions:**
+  - General tab: View project info (editing coming soon)
+  - Workflow States tab:
+    - Click "+ Create State" → Opens create dialog
+    - Click edit icon → Opens edit dialog
+    - Click delete icon → Confirms and deletes (if no work items)
+    - Click ↑/↓ → Reorders states
+    - Color picker → Choose state color
+    - Category dropdown → Select TODO/IN_PROGRESS/DONE/ARCHIVED
+    - Toggle "Initial State" / "Final State"
+- **User Journey:**
+  1. Navigate to project settings
+  2. Switch to "Workflow States" tab
+  3. Create custom states for your workflow
+  4. Go back to board settings
+  5. Map lanes to custom states
+  6. Tasks with custom states now appear in correct lanes
+- **See Also:** ADR-002 in `decisions-doc.md`
 
 ---
 
