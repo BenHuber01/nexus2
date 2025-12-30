@@ -326,9 +326,48 @@ export function BoardSettingsModal({
 
     const handleDeleteLane = (index: number) => {
         const lane = lanes[index];
-        if (lane.id) {
+        
+        // Only call backend delete if lane has a real ID (not a temporary one)
+        if (lane.id && !lane.id.startsWith('temp-')) {
+            console.log("[BoardSettings] Deleting lane from database:", lane.id);
             deleteLaneMutation.mutate(lane.id);
+        } else {
+            console.log("[BoardSettings] Removing unsaved lane locally:", lane);
+            
+            // For temp lanes, remove them from the optimistic cache too
+            if (lane.id && lane.id.startsWith('temp-')) {
+                const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+                const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+                
+                // Remove temp lane from getById cache
+                queryClient.setQueryData(getByIdKey, (old: any) => {
+                    if (!old) return old;
+                    return {
+                        ...old,
+                        lanes: old.lanes.filter((l: any) => l.id !== lane.id),
+                    };
+                });
+                
+                // Remove temp lane from getForProject cache
+                queryClient.setQueryData(getForProjectKey, (old: any) => {
+                    if (!old || !Array.isArray(old)) return old;
+                    return old.map((board: any) => {
+                        if (board.id === boardId) {
+                            return {
+                                ...board,
+                                lanes: board.lanes.filter((l: any) => l.id !== lane.id),
+                            };
+                        }
+                        return board;
+                    });
+                });
+                
+                console.log("[BoardSettings] Removed temp lane from cache:", lane.id);
+            }
+            
+            toast.success("Lane removed");
         }
+        
         const updatedLanes = lanes.filter((_, i) => i !== index);
         // Reorder positions
         updatedLanes.forEach((l, i) => {

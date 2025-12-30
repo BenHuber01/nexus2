@@ -224,9 +224,15 @@
     - Delete lanes
     - Expand/collapse lane settings
 - **Bug Fix (2025-12-30):**
-  - **Problem:** New lanes added to existing boards were not saved to database
-  - **Root Cause:** `handleSave` function only updated board properties, not lanes
-  - **Solution:** Now creates lanes without IDs (new lanes) for existing boards
+  - **Problem 1:** New lanes added to existing boards were not saved to database
+  - **Root Cause 1:** `handleSave` function only updated board properties, not lanes
+  - **Solution 1:** Now creates lanes without IDs (new lanes) for existing boards
+  - **Problem 2:** Manual query keys didn't match tRPC-generated keys
+  - **Root Cause 2:** Used `["board", "getById", { id }]` instead of `trpc.board.getById.queryOptions().queryKey`
+  - **Solution 2:** All mutations now use proper tRPC query key generation
+  - **Problem 3:** Cannot delete unsaved lanes (temp IDs cause 500 error)
+  - **Root Cause 3:** `handleDeleteLane` tried to delete temp-ID lanes from database
+  - **Solution 3:** Check for temp- prefix, only delete real lanes from DB, clean temp lanes from cache
   - **Optimistic Updates Added:** ✅
     - Lane creates are immediately visible in UI (onMutate) ✅
     - Lane updates are immediately visible in UI (onMutate)
@@ -234,6 +240,7 @@
     - Board updates are immediately visible in UI (onMutate)
     - Updates both `getById` and `getForProject` queries for instant board view updates ✅
     - Automatic rollback on error (onError)
+    - Temp lane deletion also updates cache ✅
   - **Console Logs:**
     - `[BoardSettings] Adding new lane:` - When clicking "Add Lane"
     - `[BoardSettings] Saving board. BoardId: ... Lanes: ...` - When saving
