@@ -61,6 +61,10 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
         trpc.workItem.getAll.queryOptions({ projectId }) as any,
     );
 
+    const { data: states } = useQuery<any>(
+        trpc.workItemState.getByProject.queryOptions({ projectId }) as any,
+    );
+
     const updateStateMutation = useMutation({
         mutationFn: async ({ id, stateId }: { id: string; stateId: string }) => {
             return await client.workItem.updateState.mutate({ id, stateId });
@@ -198,6 +202,7 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
                                 tasks={filteredWorkItems?.filter((item: any) =>
                                     lane.mappedStates.includes(item.stateId)
                                 ) || []}
+                                states={states || []}
                                 onEditTask={(task) => {
                                     setEditingTask(task);
                                     setIsEditModalOpen(true);
@@ -226,32 +231,58 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
     );
 }
 
-function BoardLane({ lane, tasks, onEditTask }: { lane: any; tasks: any[]; onEditTask: (task: any) => void }) {
+function BoardLane({ lane, tasks, states, onEditTask }: { lane: any; tasks: any[]; states: any[]; onEditTask: (task: any) => void }) {
     const { setNodeRef } = useDroppable({
         id: lane.id,
     });
 
     const hasNoMappedStates = !lane.mappedStates || lane.mappedStates.length === 0;
 
+    // Get the state objects for this lane's mapped states
+    const laneStates = states.filter((state: any) => 
+        lane.mappedStates?.includes(state.id)
+    );
+
     return (
         <div ref={setNodeRef} className="flex-shrink-0 w-80 flex flex-col gap-4">
-            <div className="flex items-center justify-between px-2">
-                <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
-                        {lane.name}
-                    </h3>
-                    {lane.wipLimit && (
-                        <Badge variant="outline" className="text-xs">
-                            WIP: {lane.wipLimit}
-                        </Badge>
-                    )}
-                    {hasNoMappedStates && (
-                        <Badge variant="destructive" className="text-xs">
-                            ⚠️ No states
-                        </Badge>
-                    )}
+            <div className="px-2 space-y-2">
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">
+                            {lane.name}
+                        </h3>
+                        {lane.wipLimit && (
+                            <Badge variant="outline" className="text-xs">
+                                WIP: {lane.wipLimit}
+                            </Badge>
+                        )}
+                        {hasNoMappedStates && (
+                            <Badge variant="destructive" className="text-xs">
+                                ⚠️ No states
+                            </Badge>
+                        )}
+                    </div>
+                    <Badge variant="secondary">{tasks.length}</Badge>
                 </div>
-                <Badge variant="secondary">{tasks.length}</Badge>
+                
+                {/* State badges with colors */}
+                {laneStates.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                        {laneStates.map((state: any) => (
+                            <Badge
+                                key={state.id}
+                                variant="outline"
+                                className="text-[10px] px-1.5 py-0.5"
+                                style={{
+                                    borderColor: state.color,
+                                    color: state.color,
+                                }}
+                            >
+                                {state.name}
+                            </Badge>
+                        ))}
+                    </div>
+                )}
             </div>
 
             <div className="flex-1 space-y-3 p-2 bg-muted/30 rounded-lg min-h-[500px]">
