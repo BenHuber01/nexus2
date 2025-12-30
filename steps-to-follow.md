@@ -128,6 +128,24 @@
 
 ### Modals
 
+#### CreateTaskModal (ENHANCED)
+- **File:** `apps/web/src/components/create-task-modal.tsx`
+- **Triggered by:** Project board/backlog → "+ New Task" button
+- **Tabs:**
+  1. **General** - Title, description, type, priority, state, assignee, sprint, epic
+  2. **Planning** - Story points, due date, estimated hours, remaining hours
+  3. **Details** - Acceptance criteria, technical notes, reproduction steps, business value, user persona
+- **Features:**
+  - All fields from data model included
+  - Tab-based organization matching EditTaskModal
+  - Sprint and epic selection
+  - Time tracking fields
+  - Rich detail fields for requirements
+- **Observable Changes:**
+  - After creation → Task appears in selected sprint/backlog
+  - All fields saved to database
+  - Modal closes automatically on success
+
 #### TeamMemberSelector
 - **File:** `apps/web/src/components/team-member-selector.tsx`
 - **Triggered by:** 
