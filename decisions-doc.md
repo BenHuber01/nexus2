@@ -343,7 +343,230 @@ WorkItemState {
 ### Related Decisions
 
 - ADR-001: Board Lane State Mapping (lanes map to these states)
+- ADR-003: Workflow State Categories (explains category vs state distinction)
 - Future: Custom workflow transitions between states
+
+---
+
+## ADR-003: Workflow State Categories - Fixed Enum Design
+
+**Date:** 2025-12-30  
+**Status:** Accepted  
+**Decision Makers:** Development Team
+
+### Context
+
+Workflow states have two levels:
+1. **State Name** (custom, user-defined): "Code Review", "QA Testing", "Backlog", etc.
+2. **State Category** (fixed enum): `TODO`, `IN_PROGRESS`, `DONE`, `ARCHIVED`
+
+This design can be confusing because users might wonder:
+- "Why can't I create custom categories?"
+- "What's the point of categories if I have custom states?"
+
+### The Purpose of Categories
+
+**Categories are NOT old states** - they are **semantic metadata** for system automation.
+
+#### 1. Workflow Automation & Business Logic
+
+```typescript
+// Sprint Completion Check
+const allDone = sprintTasks.every(task => 
+  task.state.category === WorkItemStateCategory.DONE ||
+  task.state.category === WorkItemStateCategory.ARCHIVED
+);
+
+// Initial State for New Tasks
+const initialState = states.find(s => s.isInitial);
+// → Must be category: TODO (semantically correct)
+```
+
+#### 2. Metrics & Reporting
+
+```typescript
+// Velocity Calculation
+const velocity = completedStories
+  .filter(s => s.state.category === WorkItemStateCategory.DONE)
+  .reduce((sum, s) => sum + s.storyPoints, 0);
+
+// Burndown Chart: Only count DONE categories as complete
+const remaining = totalPoints - donePoints;
+```
+
+#### 3. WIP (Work In Progress) Limits
+
+```typescript
+// Count active work
+const wipCount = tasks.filter(t => 
+  t.state.category === WorkItemStateCategory.IN_PROGRESS
+).length;
+
+if (wipCount >= lane.wipLimit) {
+  toast.warning("WIP limit reached!");
+}
+```
+
+#### 4. Board Behavior & Filtering
+
+```typescript
+// "Show only tasks that are being worked on"
+const activeWork = allTasks.filter(t => 
+  t.state.category === WorkItemStateCategory.IN_PROGRESS
+);
+
+// "Move all TODO items to sprint backlog"
+const backlogItems = allTasks.filter(t => 
+  t.state.category === WorkItemStateCategory.TODO
+);
+```
+
+### Real-World Example
+
+**Your Custom Workflow:**
+
+| State Name | Category | Semantic Meaning | Use Case |
+|------------|----------|------------------|----------|
+| "Backlog" | `TODO` | Not started | Sprint planning pool |
+| "Ready for Dev" | `TODO` | Planned but not active | Ready to pull |
+| "In Development" | `IN_PROGRESS` | Active work | Counts toward WIP |
+| "Code Review" | `IN_PROGRESS` | Still active | Counts toward WIP |
+| "QA Testing" | `IN_PROGRESS` | Still active | Counts toward WIP |
+| "Ready to Deploy" | `IN_PROGRESS` | Still active | Counts toward WIP |
+| "Deployed" | `DONE` | Complete | Counts toward velocity |
+| "Closed" | `DONE` | Complete | Counts toward velocity |
+| "Won't Fix" | `ARCHIVED` | Cancelled | Excluded from metrics |
+
+**What the system sees:**
+- 9 different states → Flexible workflow
+- 4 categories → Predictable automation
+
+**Example automation:**
+```typescript
+// Can we close the sprint?
+if (sprintTasks.every(t => t.state.category !== 'IN_PROGRESS')) {
+  // All tasks are either DONE, ARCHIVED, or TODO (moved to next sprint)
+  enableSprintClosure();
+}
+```
+
+### Decision: Keep Categories as Fixed Enum
+
+**Why NOT allow custom categories?**
+
+#### ❌ Problems with Custom Categories:
+
+1. **Breaks Business Logic:**
+   ```typescript
+   // This code would break:
+   if (state.category === WorkItemStateCategory.DONE) { ... }
+   // If categories are custom strings, we can't write reliable code
+   ```
+
+2. **Metrics Become Meaningless:**
+   - Velocity calculation needs to know what "done" means
+   - Burndown charts need a clear "complete" definition
+   - WIP limits need to know what "active work" means
+
+3. **No Standard for Integrations:**
+   - Jira import/export would break
+   - Sprint reports wouldn't work
+   - Third-party tools expect standard categories
+
+4. **Analysis Paralysis:**
+   - "Should I create 'On Hold' as TODO or IN_PROGRESS?"
+   - "Is 'Blocked' a category or a state?"
+   - Too many decisions, no clear patterns
+
+5. **Database Schema Complexity:**
+   ```prisma
+   // Current: Simple enum (4 values, type-safe)
+   enum WorkItemStateCategory {
+     TODO
+     IN_PROGRESS
+     DONE
+     ARCHIVED
+   }
+   
+   // Alternative: Would need new table + foreign keys
+   model StateCategory {
+     id   String @id
+     name String
+     // ... complexity explosion
+   }
+   ```
+
+#### ✅ Benefits of Fixed Categories:
+
+1. **Predictable Automation:** Code can rely on 4 known values
+2. **Clear Semantics:** Everyone understands TODO vs DONE
+3. **Simple Mental Model:** Categories = "What is the system doing?"
+4. **Type Safety:** TypeScript enums prevent typos
+5. **Performance:** Enum comparison is faster than string comparison
+6. **Standard Compliance:** Matches Agile best practices (To Do, Doing, Done)
+
+### Alternative Considered: State Tags
+
+If users need MORE semantic grouping beyond categories, we could add **tags**:
+
+```typescript
+WorkItemState {
+  name: "Code Review"
+  category: IN_PROGRESS  // Fixed enum
+  tags: ["review", "blocked", "waiting-for-feedback"]  // Flexible!
+}
+```
+
+**Future Enhancement:** State tags for custom filtering/reporting without breaking core logic.
+
+### Consequences
+
+**Positive:**
+- ✅ System automation works reliably
+- ✅ Metrics (velocity, burndown) are accurate
+- ✅ WIP limits are enforceable
+- ✅ Sprint planning logic is predictable
+- ✅ Simple mental model: "States = what users see, Categories = what system needs"
+
+**Negative:**
+- ⚠️ Users might be confused initially ("Why only 4 categories?")
+- ⚠️ Need to map custom states to fixed categories
+- ⚠️ Less flexibility in semantic grouping (mitigated by future tags feature)
+
+**Mitigations:**
+- Clear documentation explaining category purpose
+- Tooltips in UI: "Category determines how the system treats this state"
+- Suggested mappings: "Code Review → IN_PROGRESS" (still active work)
+
+### UI Clarity Improvements
+
+**Category Dropdown with Descriptions:**
+```
+┌─ Select Category ──────────────────────────────┐
+│ ○ To Do        (Not started, waiting)         │
+│ ○ In Progress  (Active work, counts WIP)      │
+│ ○ Done         (Complete, counts velocity)    │
+│ ○ Archived     (Cancelled, excluded)          │
+└────────────────────────────────────────────────┘
+```
+
+**Help Text in UI:**
+> "Category determines how the system handles automation (metrics, WIP limits, sprint completion). Your state name is what users see."
+
+### Validation Criteria
+
+- [✅] Categories remain fixed enum (TODO, IN_PROGRESS, DONE, ARCHIVED)
+- [✅] Backend logic relies on category for automation
+- [ ] UI explains category purpose clearly (future tooltip enhancement)
+- [✅] Users can create unlimited custom states
+- [✅] Documentation explains State vs Category distinction
+- [ ] Future: Consider state tags for additional grouping
+
+### Related Decisions
+
+- ADR-002: Workflow State Management UI
+- ADR-001: Board Lane State Mapping
+- Future: State tags for flexible grouping without breaking automation
 
 ---
 
