@@ -115,23 +115,44 @@ export function BoardSettingsModal({
             return await client.board.update.mutate(data);
         },
         onMutate: async (updatedBoard) => {
-            const queryKey = ["board", "getById", { id: boardId }];
-            await queryClient.cancelQueries({ queryKey });
-            const previousBoard = queryClient.getQueryData(queryKey);
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
             
-            // Optimistically update the board in the query cache
-            queryClient.setQueryData(queryKey, (old: any) => {
+            await queryClient.cancelQueries({ queryKey: getByIdKey });
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            
+            const previousBoard = queryClient.getQueryData(getByIdKey);
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            // Optimistically update the board in getById query
+            queryClient.setQueryData(getByIdKey, (old: any) => {
                 if (!old) return old;
                 return { ...old, ...updatedBoard };
             });
             
+            // Optimistically update the board in getForProject query
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        return { ...board, ...updatedBoard };
+                    }
+                    return board;
+                });
+            });
+            
             console.log("[BoardSettings] Optimistic board update:", updatedBoard);
-            return { previousBoard };
+            return { previousBoard, previousBoards };
         },
         onError: (err, _updatedBoard, context: any) => {
-            const queryKey = ["board", "getById", { id: boardId }];
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
             if (context?.previousBoard) {
-                queryClient.setQueryData(queryKey, context.previousBoard);
+                queryClient.setQueryData(getByIdKey, context.previousBoard);
+            }
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
             }
             console.error("[BoardSettings] Board update error:", err);
             toast.error("Failed to update board");
@@ -161,12 +182,17 @@ export function BoardSettingsModal({
             return await client.board.updateLane.mutate(data);
         },
         onMutate: async (updatedLane) => {
-            const queryKey = ["board", "getById", { id: boardId }];
-            await queryClient.cancelQueries({ queryKey });
-            const previousBoard = queryClient.getQueryData(queryKey);
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
             
-            // Optimistically update the lane in the query cache
-            queryClient.setQueryData(queryKey, (old: any) => {
+            await queryClient.cancelQueries({ queryKey: getByIdKey });
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            
+            const previousBoard = queryClient.getQueryData(getByIdKey);
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            // Optimistically update the lane in getById query
+            queryClient.setQueryData(getByIdKey, (old: any) => {
                 if (!old) return old;
                 return {
                     ...old,
@@ -176,13 +202,34 @@ export function BoardSettingsModal({
                 };
             });
             
+            // Optimistically update the lane in getForProject query
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        return {
+                            ...board,
+                            lanes: board.lanes.map((lane: any) =>
+                                lane.id === updatedLane.id ? { ...lane, ...updatedLane } : lane
+                            ),
+                        };
+                    }
+                    return board;
+                });
+            });
+            
             console.log("[BoardSettings] Optimistic lane update:", updatedLane);
-            return { previousBoard };
+            return { previousBoard, previousBoards };
         },
         onError: (err, _updatedLane, context: any) => {
-            const queryKey = ["board", "getById", { id: boardId }];
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
             if (context?.previousBoard) {
-                queryClient.setQueryData(queryKey, context.previousBoard);
+                queryClient.setQueryData(getByIdKey, context.previousBoard);
+            }
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
             }
             console.error("[BoardSettings] Lane update error:", err);
             toast.error("Failed to update lane");
@@ -198,12 +245,17 @@ export function BoardSettingsModal({
             return await client.board.deleteLane.mutate({ id });
         },
         onMutate: async (laneId) => {
-            const queryKey = ["board", "getById", { id: boardId }];
-            await queryClient.cancelQueries({ queryKey });
-            const previousBoard = queryClient.getQueryData(queryKey);
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
             
-            // Optimistically remove the lane from the query cache
-            queryClient.setQueryData(queryKey, (old: any) => {
+            await queryClient.cancelQueries({ queryKey: getByIdKey });
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            
+            const previousBoard = queryClient.getQueryData(getByIdKey);
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            // Optimistically remove the lane from getById query
+            queryClient.setQueryData(getByIdKey, (old: any) => {
                 if (!old) return old;
                 return {
                     ...old,
@@ -211,13 +263,32 @@ export function BoardSettingsModal({
                 };
             });
             
+            // Optimistically remove the lane from getForProject query
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        return {
+                            ...board,
+                            lanes: board.lanes.filter((lane: any) => lane.id !== laneId),
+                        };
+                    }
+                    return board;
+                });
+            });
+            
             console.log("[BoardSettings] Optimistic lane delete:", laneId);
-            return { previousBoard };
+            return { previousBoard, previousBoards };
         },
         onError: (err, _laneId, context: any) => {
-            const queryKey = ["board", "getById", { id: boardId }];
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
             if (context?.previousBoard) {
-                queryClient.setQueryData(queryKey, context.previousBoard);
+                queryClient.setQueryData(getByIdKey, context.previousBoard);
+            }
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
             }
             console.error("[BoardSettings] Lane delete error:", err);
             toast.error("Failed to delete lane");
@@ -294,15 +365,27 @@ export function BoardSettingsModal({
             return await client.board.createLane.mutate(data);
         },
         onMutate: async (newLaneData) => {
-            // Update both getById and getForProject queries
-            const getByIdKey = ["board", "getById", { id: boardId }];
-            const getForProjectKey = ["board", "getForProject", { projectId }];
+            // Update both getById and getForProject queries using proper query keys
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
+            console.log("[BoardSettings] Query keys:", {
+                getByIdKey,
+                getForProjectKey,
+                boardId,
+                projectId,
+            });
             
             await queryClient.cancelQueries({ queryKey: getByIdKey });
             await queryClient.cancelQueries({ queryKey: getForProjectKey });
             
             const previousBoard = queryClient.getQueryData(getByIdKey);
             const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            console.log("[BoardSettings] Previous data:", {
+                previousBoard,
+                previousBoards,
+            });
             
             const tempId = `temp-${Date.now()}-${Math.random()}`;
             const newLane = {
@@ -334,11 +417,12 @@ export function BoardSettingsModal({
             });
             
             console.log("[BoardSettings] Optimistic lane create:", newLaneData);
+            console.log("[BoardSettings] New temp lane:", newLane);
             return { previousBoard, previousBoards };
         },
         onError: (err, _newLaneData, context: any) => {
-            const getByIdKey = ["board", "getById", { id: boardId }];
-            const getForProjectKey = ["board", "getForProject", { projectId }];
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
             
             if (context?.previousBoard) {
                 queryClient.setQueryData(getByIdKey, context.previousBoard);
