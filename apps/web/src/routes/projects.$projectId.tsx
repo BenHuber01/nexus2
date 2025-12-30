@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CreateTaskModal } from "@/components/create-task-modal";
 import { SprintManagement } from "@/components/sprint-management";
 import { BacklogView } from "@/components/backlog-view";
+import { ListView } from "@/components/list-view";
 import { useState } from "react";
 
 export const Route = createFileRoute("/projects/$projectId")({
@@ -74,10 +75,8 @@ function ProjectComponent() {
                     <TabsContent value="board" className="flex-1 overflow-hidden">
                         <TaskBoard projectId={projectId} />
                     </TabsContent>
-                    <TabsContent value="list">
-                        <div className="p-8 text-center text-muted-foreground border rounded-lg border-dashed">
-                            List view coming soon...
-                        </div>
+                    <TabsContent value="list" className="flex-1 overflow-hidden">
+                        <ListView projectId={projectId} />
                     </TabsContent>
                     <TabsContent value="sprints">
                         <SprintManagement projectId={projectId} />
