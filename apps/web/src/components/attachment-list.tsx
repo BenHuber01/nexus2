@@ -16,6 +16,9 @@ export function AttachmentList({ workItemId }: AttachmentListProps) {
         trpc.attachment.getByWorkItem.queryOptions({ workItemId })
     );
 
+    // Safely convert to array, defaulting to empty array
+    const attachmentList = Array.isArray(attachments) ? attachments : [];
+
     const deleteMutation = useMutation(
         trpc.attachment.delete.mutationOptions({
             onSuccess: () => {
@@ -40,7 +43,7 @@ export function AttachmentList({ workItemId }: AttachmentListProps) {
             <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium flex items-center">
                     <Paperclip className="h-4 w-4 mr-2" />
-                    Attachments ({(attachments as unknown as any[])?.length || 0})
+                    Attachments ({attachmentList.length})
                 </h3>
                 <Button variant="outline" size="sm" onClick={handleUpload}>
                     Upload
@@ -48,7 +51,7 @@ export function AttachmentList({ workItemId }: AttachmentListProps) {
             </div>
 
             <div className="grid grid-cols-1 gap-2">
-                {(attachments as unknown as any[])?.map((attachment: any) => (
+                {attachmentList.map((attachment: any) => (
                     <div
                         key={attachment.id}
                         className="flex items-center justify-between p-2 border rounded-md hover:bg-accent transition-colors"
@@ -81,7 +84,7 @@ export function AttachmentList({ workItemId }: AttachmentListProps) {
                     </div>
                 ))}
 
-                {(attachments as any[])?.length === 0 && (
+                {attachmentList.length === 0 && (
                     <p className="text-sm text-muted-foreground text-center py-4">
                         No attachments yet.
                     </p>

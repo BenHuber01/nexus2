@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -61,6 +61,9 @@ export function BoardSettingsModal({
         enabled: !!boardId,
     } as any);
 
+    // Type assertion for board data
+    const boardData = board as any;
+
     // Fetch available states
     const { data: states } = useQuery<any>(
         trpc.board.getStatesForProject.queryOptions({ projectId }) as any,
@@ -72,15 +75,15 @@ export function BoardSettingsModal({
     );
 
     // Initialize form when board data loads
-    useState(() => {
-        if (board) {
-            setBoardName(board.name);
-            setBoardType(board.boardType);
-            setIsDefault(board.isDefault);
-            setSprintId(board.sprintId || null);
-            setLanes(board.lanes || []);
+    useEffect(() => {
+        if (boardData) {
+            setBoardName(boardData.name);
+            setBoardType(boardData.boardType);
+            setIsDefault(boardData.isDefault);
+            setSprintId(boardData.sprintId || null);
+            setLanes(boardData.lanes || []);
         }
-    });
+    }, [boardData]);
 
     const createBoardMutation = useMutation({
         mutationFn: async (data: any) => {

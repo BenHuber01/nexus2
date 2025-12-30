@@ -14,6 +14,8 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProjectsProjectIdRouteImport } from './routes/projects.$projectId'
+import { Route as OrganizationsOrganizationIdTeamsRouteImport } from './routes/organizations.$organizationId.teams'
+import { Route as OrganizationsOrganizationIdSettingsRouteImport } from './routes/organizations.$organizationId.settings'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -40,6 +42,18 @@ const ProjectsProjectIdRoute = ProjectsProjectIdRouteImport.update({
   path: '/projects/$projectId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OrganizationsOrganizationIdTeamsRoute =
+  OrganizationsOrganizationIdTeamsRouteImport.update({
+    id: '/organizations/$organizationId/teams',
+    path: '/organizations/$organizationId/teams',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const OrganizationsOrganizationIdSettingsRoute =
+  OrganizationsOrganizationIdSettingsRouteImport.update({
+    id: '/organizations/$organizationId/settings',
+    path: '/organizations/$organizationId/settings',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +61,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +70,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,12 +80,28 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/projects/$projectId': typeof ProjectsProjectIdRoute
+  '/organizations/$organizationId/settings': typeof OrganizationsOrganizationIdSettingsRoute
+  '/organizations/$organizationId/teams': typeof OrganizationsOrganizationIdTeamsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/ai' | '/dashboard' | '/login' | '/projects/$projectId'
+  fullPaths:
+    | '/'
+    | '/ai'
+    | '/dashboard'
+    | '/login'
+    | '/projects/$projectId'
+    | '/organizations/$organizationId/settings'
+    | '/organizations/$organizationId/teams'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/ai' | '/dashboard' | '/login' | '/projects/$projectId'
+  to:
+    | '/'
+    | '/ai'
+    | '/dashboard'
+    | '/login'
+    | '/projects/$projectId'
+    | '/organizations/$organizationId/settings'
+    | '/organizations/$organizationId/teams'
   id:
     | '__root__'
     | '/'
@@ -75,6 +109,8 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/projects/$projectId'
+    | '/organizations/$organizationId/settings'
+    | '/organizations/$organizationId/teams'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -83,6 +119,8 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   ProjectsProjectIdRoute: typeof ProjectsProjectIdRoute
+  OrganizationsOrganizationIdSettingsRoute: typeof OrganizationsOrganizationIdSettingsRoute
+  OrganizationsOrganizationIdTeamsRoute: typeof OrganizationsOrganizationIdTeamsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -122,6 +160,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsProjectIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/organizations/$organizationId/teams': {
+      id: '/organizations/$organizationId/teams'
+      path: '/organizations/$organizationId/teams'
+      fullPath: '/organizations/$organizationId/teams'
+      preLoaderRoute: typeof OrganizationsOrganizationIdTeamsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/organizations/$organizationId/settings': {
+      id: '/organizations/$organizationId/settings'
+      path: '/organizations/$organizationId/settings'
+      fullPath: '/organizations/$organizationId/settings'
+      preLoaderRoute: typeof OrganizationsOrganizationIdSettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -131,6 +183,9 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   ProjectsProjectIdRoute: ProjectsProjectIdRoute,
+  OrganizationsOrganizationIdSettingsRoute:
+    OrganizationsOrganizationIdSettingsRoute,
+  OrganizationsOrganizationIdTeamsRoute: OrganizationsOrganizationIdTeamsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
