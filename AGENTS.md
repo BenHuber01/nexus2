@@ -183,6 +183,181 @@ const mutation = useMutation({
 
 **❌ DON'T** try to use `trpc.client` - it doesn't exist!
 
+### ⚡ CRITICAL: Optimistic Updates for Better UX
+
+**MANDATORY RULE**: All mutations that modify data **MUST** implement optimistic updates to ensure immediate UI feedback.
+
+#### Why Optimistic Updates?
+
+- ✅ **Instant Feedback**: UI updates immediately, not after network roundtrip
+- ✅ **Better UX**: Feels responsive and fast
+- ✅ **Error Recovery**: Automatic rollback if mutation fails
+- ✅ **Prevents Confusion**: Users see their changes right away
+
+#### Pattern: Optimistic Update with React Query
+
+```typescript
+const mutation = useMutation({
+    mutationFn: async (data) => {
+        return await client.yourRouter.yourMutation.mutate(data);
+    },
+    
+    // 1. OPTIMISTIC UPDATE: Apply changes immediately
+    onMutate: async (newData) => {
+        const queryKey = ["your", "query", "key"];
+        
+        // Cancel outgoing refetches (so they don't overwrite our optimistic update)
+        await queryClient.cancelQueries({ queryKey });
+        
+        // Snapshot the previous value (for rollback)
+        const previousData = queryClient.getQueryData(queryKey);
+        
+        // Optimistically update to the new value
+        queryClient.setQueryData(queryKey, (old: any) => {
+            // Apply your optimistic update logic here
+            return { ...old, ...newData };
+        });
+        
+        console.log("[Component] Optimistic update:", newData);
+        return { previousData }; // Return context for rollback
+    },
+    
+    // 2. ERROR HANDLING: Rollback on failure
+    onError: (err, _newData, context: any) => {
+        const queryKey = ["your", "query", "key"];
+        if (context?.previousData) {
+            queryClient.setQueryData(queryKey, context.previousData);
+        }
+        console.error("[Component] Mutation error:", err);
+        toast.error("Failed to update");
+    },
+    
+    // 3. SUCCESS: Invalidate queries to refetch fresh data
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["your", "query", "key"] });
+        toast.success("Updated successfully");
+    },
+});
+```
+
+#### Real-World Examples
+
+**Example 1: Update Lane (board-settings-modal.tsx)**
+```typescript
+const updateLaneMutation = useMutation({
+    mutationFn: async (data: any) => {
+        return await client.board.updateLane.mutate(data);
+    },
+    onMutate: async (updatedLane) => {
+        const queryKey = ["board", "getById", { id: boardId }];
+        await queryClient.cancelQueries({ queryKey });
+        const previousBoard = queryClient.getQueryData(queryKey);
+        
+        queryClient.setQueryData(queryKey, (old: any) => {
+            if (!old) return old;
+            return {
+                ...old,
+                lanes: old.lanes.map((lane: any) =>
+                    lane.id === updatedLane.id ? { ...lane, ...updatedLane } : lane
+                ),
+            };
+        });
+        
+        return { previousBoard };
+    },
+    onError: (err, _updatedLane, context: any) => {
+        const queryKey = ["board", "getById", { id: boardId }];
+        if (context?.previousBoard) {
+            queryClient.setQueryData(queryKey, context.previousBoard);
+        }
+        toast.error("Failed to update lane");
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["board"] });
+        toast.success("Lane updated successfully");
+    },
+});
+```
+
+**Example 2: Move Task (task-board.tsx)**
+```typescript
+const updateStateMutation = useMutation({
+    mutationFn: async ({ id, stateId }: { id: string; stateId: string }) => {
+        return await client.workItem.updateState.mutate({ id, stateId });
+    },
+    onMutate: async (newMove) => {
+        const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+        await queryClient.cancelQueries({ queryKey });
+        const previousWorkItems = queryClient.getQueryData(queryKey);
+        
+        queryClient.setQueryData(queryKey, (old: any) => {
+            if (!old) return old;
+            return old.map((item: any) =>
+                item.id === newMove.id ? { ...item, stateId: newMove.stateId } : item
+            );
+        });
+        
+        return { previousWorkItems };
+    },
+    onError: (err, _newMove, context: any) => {
+        const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+        if (context?.previousWorkItems) {
+            queryClient.setQueryData(queryKey, context.previousWorkItems);
+        }
+        toast.error("Failed to move task");
+    },
+    onSettled: () => {
+        queryClient.invalidateQueries({ 
+            queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+        });
+    },
+});
+```
+
+#### Checklist for Every Mutation
+
+- ✅ **onMutate**: Cancel queries, snapshot previous data, apply optimistic update
+- ✅ **onError**: Rollback to previous data, show error toast
+- ✅ **onSuccess**: Invalidate queries, show success toast
+- ✅ **Console Logs**: Add debug logs for troubleshooting
+- ✅ **Context**: Return previous data from onMutate for rollback
+
+#### ❌ DON'T: Forget Optimistic Updates
+
+```typescript
+// ❌ BAD: No optimistic update - UI only updates after server response
+const mutation = useMutation({
+    mutationFn: async (data) => {
+        return await client.yourRouter.yourMutation.mutate(data);
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["data"] });
+        toast.success("Updated!");
+    },
+});
+```
+
+#### ✅ DO: Always Implement Optimistic Updates
+
+```typescript
+// ✅ GOOD: Optimistic update - UI updates immediately
+const mutation = useMutation({
+    mutationFn: async (data) => {
+        return await client.yourRouter.yourMutation.mutate(data);
+    },
+    onMutate: async (newData) => {
+        // ... optimistic update logic
+    },
+    onError: (err, _data, context: any) => {
+        // ... rollback logic
+    },
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["data"] });
+        toast.success("Updated!");
+    },
+});
+```
+
 ## UI Component Development
 
 ### Creating New Components

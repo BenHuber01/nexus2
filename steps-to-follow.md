@@ -212,20 +212,32 @@
   - **Problem:** New lanes added to existing boards were not saved to database
   - **Root Cause:** `handleSave` function only updated board properties, not lanes
   - **Solution:** Now creates lanes without IDs (new lanes) for existing boards
+  - **Optimistic Updates Added:** ✅
+    - Lane updates are immediately visible in UI (onMutate)
+    - Lane deletes are immediately visible in UI (onMutate)
+    - Board updates are immediately visible in UI (onMutate)
+    - Automatic rollback on error (onError)
   - **Console Logs:**
     - `[BoardSettings] Adding new lane:` - When clicking "Add Lane"
     - `[BoardSettings] Saving board. BoardId: ... Lanes: ...` - When saving
     - `[BoardSettings] New lanes to create:` - Shows which lanes will be created
     - `[BoardSettings] Creating lane for existing board:` - Per lane creation
+    - `[BoardSettings] Optimistic lane update:` - Optimistic update applied
+    - `[BoardSettings] Optimistic lane delete:` - Optimistic delete applied
+    - `[BoardSettings] Optimistic board update:` - Optimistic board update applied
 - **Data Model Alignment:**
   - Board ↔ BoardLane: One-to-many relationship ✅
   - BoardLane has cascading delete on Board ✅
   - Lanes reference Board via `boardId` ✅
   - All required fields (name, position, mappedStates) properly handled ✅
 - **Observable Changes:**
-  - New lanes now appear after saving and refreshing the board
-  - Console logs help debug the lane creation process
-  - Success toast shows "Board and lanes updated successfully" when lanes are added
+  - ⚡ **Instant UI Updates:** Changes are visible immediately (optimistic updates)
+  - New lanes appear instantly when editing lane properties
+  - Lane deletions happen instantly in the UI
+  - Board name/settings changes reflect immediately
+  - ✅ Success toasts confirm server persistence
+  - ❌ Automatic rollback if server errors occur
+  - Console logs help debug the lane creation and update process
   - WIP limits per lane
   - State mapping to lanes
 

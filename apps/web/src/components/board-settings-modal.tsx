@@ -114,12 +114,31 @@ export function BoardSettingsModal({
         mutationFn: async (data: any) => {
             return await client.board.update.mutate(data);
         },
+        onMutate: async (updatedBoard) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            await queryClient.cancelQueries({ queryKey });
+            const previousBoard = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update the board in the query cache
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return { ...old, ...updatedBoard };
+            });
+            
+            console.log("[BoardSettings] Optimistic board update:", updatedBoard);
+            return { previousBoard };
+        },
+        onError: (err, _updatedBoard, context: any) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            if (context?.previousBoard) {
+                queryClient.setQueryData(queryKey, context.previousBoard);
+            }
+            console.error("[BoardSettings] Board update error:", err);
+            toast.error("Failed to update board");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
             toast.success("Board updated successfully");
-        },
-        onError: () => {
-            toast.error("Failed to update board");
         },
     });
 
@@ -141,6 +160,33 @@ export function BoardSettingsModal({
         mutationFn: async (data: any) => {
             return await client.board.updateLane.mutate(data);
         },
+        onMutate: async (updatedLane) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            await queryClient.cancelQueries({ queryKey });
+            const previousBoard = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update the lane in the query cache
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    lanes: old.lanes.map((lane: any) =>
+                        lane.id === updatedLane.id ? { ...lane, ...updatedLane } : lane
+                    ),
+                };
+            });
+            
+            console.log("[BoardSettings] Optimistic lane update:", updatedLane);
+            return { previousBoard };
+        },
+        onError: (err, _updatedLane, context: any) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            if (context?.previousBoard) {
+                queryClient.setQueryData(queryKey, context.previousBoard);
+            }
+            console.error("[BoardSettings] Lane update error:", err);
+            toast.error("Failed to update lane");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
             toast.success("Lane updated successfully");
@@ -150,6 +196,31 @@ export function BoardSettingsModal({
     const deleteLaneMutation = useMutation({
         mutationFn: async (id: string) => {
             return await client.board.deleteLane.mutate({ id });
+        },
+        onMutate: async (laneId) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            await queryClient.cancelQueries({ queryKey });
+            const previousBoard = queryClient.getQueryData(queryKey);
+            
+            // Optimistically remove the lane from the query cache
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    lanes: old.lanes.filter((lane: any) => lane.id !== laneId),
+                };
+            });
+            
+            console.log("[BoardSettings] Optimistic lane delete:", laneId);
+            return { previousBoard };
+        },
+        onError: (err, _laneId, context: any) => {
+            const queryKey = ["board", "getById", { id: boardId }];
+            if (context?.previousBoard) {
+                queryClient.setQueryData(queryKey, context.previousBoard);
+            }
+            console.error("[BoardSettings] Lane delete error:", err);
+            toast.error("Failed to delete lane");
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
