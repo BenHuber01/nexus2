@@ -72,17 +72,32 @@
   2. **Members** - Organization member management
   3. **Teams** - Full team management (reuses TeamManagement component)
 - **Features:**
-  - Update organization details
+  - Update organization details (name, description) ✅
   - Add/remove organization members
   - Change member roles (member/admin/owner)
   - Full team management capabilities
+- **Backend Integration:**
+  - Router: `packages/api/src/routers/organization.ts`
+  - Procedures: `getById`, `update` (mutation)
+  - **Optimistic Updates:** ✅
+    - Organization updates are immediately visible in UI (onMutate)
+    - Automatic rollback on error (onError)
+  - **Console Logs:**
+    - `[GeneralSettings] Optimistic update:` - Shows updated organization data
+    - `[GeneralSettings] Update error:` - Logs errors if mutation fails
 - **Navigation:**
   - From: Dashboard → Click "Settings" button
 - **Interactions:**
+  - General tab: Edit name/description → Click "Save Changes" → Updates immediately
   - Members tab: Click "Invite Member" → Shows invite form
   - Members tab: Change role dropdown → Updates member role
   - Members tab: Click X → Removes member
   - Teams tab: Same as `/organizations/{orgId}/teams`
+- **Bug Fix (2025-12-30):**
+  - **Problem:** TypeScript error "Property 'update' does not exist" on organization router
+  - **Root Cause:** Missing `update` mutation procedure in organization router
+  - **Solution:** Added `update` mutation with id, name, slug, description fields
+  - **Enhancement:** Implemented optimistic updates for instant UI feedback
 
 ---
 

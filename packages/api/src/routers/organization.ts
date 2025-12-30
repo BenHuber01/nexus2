@@ -48,4 +48,22 @@ export const organizationRouter = router({
             });
             return org;
         }),
+
+    update: protectedProcedure
+        .input(
+            z.object({
+                id: z.string(),
+                name: z.string().optional(),
+                slug: z.string().optional(),
+                description: z.string().optional(),
+            }),
+        )
+        .mutation(async ({ ctx, input }) => {
+            const { id, ...updateData } = input;
+            const org = await ctx.prisma.organization.update({
+                where: { id },
+                data: updateData,
+            });
+            return org;
+        }),
 });

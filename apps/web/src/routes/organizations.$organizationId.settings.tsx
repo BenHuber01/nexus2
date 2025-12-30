@@ -103,6 +103,8 @@ function RouteComponent() {
 }
 
 function GeneralSettings({ organization }: { organization: any }) {
+    const { organizationId } = Route.useParams();
+    const trpc = useTRPC();
     const client = useTRPCClient();
     const queryClient = useQueryClient();
     const [name, setName] = useState(organization?.name || "");
@@ -112,12 +114,35 @@ function GeneralSettings({ organization }: { organization: any }) {
         mutationFn: async (data: any) => {
             return await client.organization.update.mutate(data);
         },
+        onMutate: async (updatedData) => {
+            const queryKey = trpc.organization.getById.queryOptions({ id: organizationId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousOrg = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return { ...old, ...updatedData };
+            });
+            
+            console.log("[GeneralSettings] Optimistic update:", updatedData);
+            return { previousOrg };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.organization.getById.queryOptions({ id: organizationId }).queryKey;
+            if (context?.previousOrg) {
+                queryClient.setQueryData(queryKey, context.previousOrg);
+            }
+            console.error("[GeneralSettings] Update error:", error);
+            toast.error(error.message || "Failed to update organization");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["organization"] });
             toast.success("Organization updated successfully");
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to update organization");
         },
     });
 

@@ -61,11 +61,18 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
     const [editDialogOpen, setEditDialogOpen] = useState(false);
     const [selectedState, setSelectedState] = useState<WorkflowState | null>(null);
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<{
+        name: string;
+        category: WorkItemStateCategory;
+        color: string;
+        wipLimit: number | null;
+        isInitial: boolean;
+        isFinal: boolean;
+    }>({
         name: "",
         category: WorkItemStateCategory.TODO,
         color: "#6B7280",
-        wipLimit: null as number | null,
+        wipLimit: null,
         isInitial: false,
         isFinal: false,
     });
@@ -164,7 +171,7 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
             name: state.name,
             category: state.category,
             color: state.color,
-            wipLimit: state.wipLimit,
+            wipLimit: state.wipLimit ?? null,
             isInitial: state.isInitial,
             isFinal: state.isFinal,
         });
