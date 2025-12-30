@@ -228,15 +228,18 @@
   - **Root Cause:** `handleSave` function only updated board properties, not lanes
   - **Solution:** Now creates lanes without IDs (new lanes) for existing boards
   - **Optimistic Updates Added:** ✅
+    - Lane creates are immediately visible in UI (onMutate) ✅
     - Lane updates are immediately visible in UI (onMutate)
     - Lane deletes are immediately visible in UI (onMutate)
     - Board updates are immediately visible in UI (onMutate)
+    - Updates both `getById` and `getForProject` queries for instant board view updates ✅
     - Automatic rollback on error (onError)
   - **Console Logs:**
     - `[BoardSettings] Adding new lane:` - When clicking "Add Lane"
     - `[BoardSettings] Saving board. BoardId: ... Lanes: ...` - When saving
     - `[BoardSettings] New lanes to create:` - Shows which lanes will be created
     - `[BoardSettings] Creating lane for existing board:` - Per lane creation
+    - `[BoardSettings] Optimistic lane create:` - Optimistic create applied ✅
     - `[BoardSettings] Optimistic lane update:` - Optimistic update applied
     - `[BoardSettings] Optimistic lane delete:` - Optimistic delete applied
     - `[BoardSettings] Optimistic board update:` - Optimistic board update applied
@@ -246,8 +249,8 @@
   - Lanes reference Board via `boardId` ✅
   - All required fields (name, position, mappedStates) properly handled ✅
 - **Observable Changes:**
-  - ⚡ **Instant UI Updates:** Changes are visible immediately (optimistic updates)
-  - New lanes appear instantly when editing lane properties
+  - ⚡ **Instant UI Updates:** Changes are visible immediately in both modal and task board (optimistic updates) ✅
+  - New lanes appear instantly in the task board when created ✅
   - Lane deletions happen instantly in the UI
   - Board name/settings changes reflect immediately
   - ✅ Success toasts confirm server persistence

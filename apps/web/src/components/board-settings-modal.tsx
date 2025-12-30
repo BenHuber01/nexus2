@@ -289,6 +289,71 @@ export function BoardSettingsModal({
         setLanes(updatedLanes);
     };
 
+    const createLaneMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.board.createLane.mutate(data);
+        },
+        onMutate: async (newLaneData) => {
+            // Update both getById and getForProject queries
+            const getByIdKey = ["board", "getById", { id: boardId }];
+            const getForProjectKey = ["board", "getForProject", { projectId }];
+            
+            await queryClient.cancelQueries({ queryKey: getByIdKey });
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            
+            const previousBoard = queryClient.getQueryData(getByIdKey);
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            const tempId = `temp-${Date.now()}-${Math.random()}`;
+            const newLane = {
+                id: tempId,
+                ...newLaneData,
+            };
+            
+            // Optimistically add the new lane to getById query
+            queryClient.setQueryData(getByIdKey, (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    lanes: [...(old.lanes || []), newLane],
+                };
+            });
+            
+            // Optimistically add the new lane to getForProject query
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        return {
+                            ...board,
+                            lanes: [...(board.lanes || []), newLane],
+                        };
+                    }
+                    return board;
+                });
+            });
+            
+            console.log("[BoardSettings] Optimistic lane create:", newLaneData);
+            return { previousBoard, previousBoards };
+        },
+        onError: (err, _newLaneData, context: any) => {
+            const getByIdKey = ["board", "getById", { id: boardId }];
+            const getForProjectKey = ["board", "getForProject", { projectId }];
+            
+            if (context?.previousBoard) {
+                queryClient.setQueryData(getByIdKey, context.previousBoard);
+            }
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
+            }
+            console.error("[BoardSettings] Lane create error:", err);
+            toast.error("Failed to create lane");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["board"] });
+        },
+    });
+
     const handleSave = async () => {
         console.log("[BoardSettings] Saving board. BoardId:", boardId, "Lanes:", lanes);
         
@@ -313,7 +378,7 @@ export function BoardSettingsModal({
             
             for (const lane of newLanes) {
                 console.log("[BoardSettings] Creating lane for existing board:", lane);
-                await client.board.createLane.mutate({
+                await createLaneMutation.mutateAsync({
                     boardId: boardId,
                     name: lane.name,
                     position: lane.position,
@@ -323,7 +388,6 @@ export function BoardSettingsModal({
             }
 
             if (newLanes.length > 0) {
-                queryClient.invalidateQueries({ queryKey: ["board"] });
                 toast.success("Board and lanes updated successfully");
             }
             
