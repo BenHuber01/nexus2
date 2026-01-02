@@ -3,6 +3,39 @@ import { protectedProcedure, router } from "../index";
 
 export const organizationMembershipRouter = router({
 	/**
+	 * Get all users in the system (for adding to organization)
+	 * Only returns users not already in the organization
+	 */
+	getAvailableUsers: protectedProcedure
+		.input(z.object({ organizationId: z.string() }))
+		.query(async ({ ctx, input }) => {
+			// Get all users
+			const allUsers = await ctx.prisma.user.findMany({
+				where: { isActive: true },
+				select: {
+					id: true,
+					name: true,
+					email: true,
+					firstName: true,
+					lastName: true,
+					avatarUrl: true,
+				},
+				orderBy: { email: "asc" },
+			});
+
+			// Get existing members
+			const existingMembers = await ctx.prisma.organizationMembership.findMany({
+				where: { organizationId: input.organizationId },
+				select: { userId: true },
+			});
+
+			const existingUserIds = new Set(existingMembers.map((m: { userId: string }) => m.userId));
+
+			// Filter out existing members
+			return allUsers.filter((user: { id: string }) => !existingUserIds.has(user.id));
+		}),
+
+	/**
 	 * Get all members of an organization
 	 */
 	getByOrganization: protectedProcedure
