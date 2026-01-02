@@ -148,7 +148,8 @@ export function TaskFormModal({
             }
         },
         onMutate: async (newTaskData) => {
-            const queryKey = ["workItem", "getAll", { projectId }];
+            // Use tRPC query key for consistency
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
 
             // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey });
@@ -197,6 +198,7 @@ export function TaskFormModal({
                     };
                     
                     console.log("[TaskFormModal] Optimistic create:", optimisticTask);
+                    console.log("[TaskFormModal] Query key:", queryKey);
                     return [...old, optimisticTask];
                 });
             } else {
@@ -215,7 +217,7 @@ export function TaskFormModal({
             console.error(`[TaskFormModal] ${mode} error:`, error);
             
             // Rollback on error
-            const queryKey = ["workItem", "getAll", { projectId }];
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
             if (context?.previousWorkItems) {
                 queryClient.setQueryData(queryKey, context.previousWorkItems);
             }
@@ -249,7 +251,7 @@ export function TaskFormModal({
             return await client.workItem.delete.mutate({ id: task.id });
         },
         onMutate: async () => {
-            const queryKey = ["workItem", "getAll", { projectId }];
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
 
             // Cancel outgoing refetches
             await queryClient.cancelQueries({ queryKey });
@@ -270,7 +272,7 @@ export function TaskFormModal({
             console.error("[TaskFormModal] Delete error:", error);
             
             // Rollback on error
-            const queryKey = ["workItem", "getAll", { projectId }];
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
             if (context?.previousWorkItems) {
                 queryClient.setQueryData(queryKey, context.previousWorkItems);
             }
