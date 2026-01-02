@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
@@ -29,21 +29,55 @@ export function LogTimeModal({
     workItemId,
 }: LogTimeModalProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
 
-    const createMutation = useMutation(
-        trpc.timeLog.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.timeLog.getByWorkItem.queryFilter({ workItemId }));
-                toast.success("Time logged successfully");
-                onOpenChange(false);
-                form.reset();
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to log time");
-            },
-        })
-    );
+    const createMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.timeLog.create.mutate(data);
+        },
+        onMutate: async (newTimeLog) => {
+            const queryKey = trpc.timeLog.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousTimeLogs = queryClient.getQueryData(queryKey);
+            
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const optimisticTimeLog = {
+                    id: tempId,
+                    ...newTimeLog,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                };
+                
+                console.log("[LogTime] Optimistic create:", optimisticTimeLog);
+                return [...old, optimisticTimeLog];
+            });
+            
+            return { previousTimeLogs };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.timeLog.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            if (context?.previousTimeLogs) {
+                queryClient.setQueryData(queryKey, context.previousTimeLogs);
+            }
+            
+            console.error("[LogTime] error:", error);
+            toast.error(error.message || "Failed to log time");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.timeLog.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            toast.success("Time logged successfully");
+            onOpenChange(false);
+            form.reset();
+        },
+    });
 
     const form = useForm({
         defaultValues: {
