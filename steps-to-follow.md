@@ -227,9 +227,27 @@
   - Sprint and epic selection
   - Time tracking fields
   - Rich detail fields for requirements
+- **Backend Integration:** ✅ FIXED (2026-01-02)
+  - Router: `packages/api/src/routers/workItem.ts`
+  - Procedure: `create` (mutation)
+  - **Bug Fix:**
+    - **Problem:** Planning and Details fields (storyPoints, dueDate, estimatedHours, acceptanceCriteria, etc.) were not saved when creating tasks
+    - **Root Cause:** The `create` procedure only accepted basic fields (title, description, type, priority) but not planning/details fields
+    - **Solution:** Extended `create` procedure to accept all fields matching `update` procedure:
+      - Planning: `storyPoints`, `estimatedHours`, `remainingHours`, `dueDate`
+      - Relations: `sprintId`, `epicId`, `parentId`
+      - Details: `acceptanceCriteria`, `technicalNotes`, `reproSteps`, `businessValue`, `userPersona`
+    - Wrapped in transaction to create `WorkItemDetail` record if details provided
+    - Now all three tabs (General, Planning, Details) save data correctly ✅
+  - **Console Logs:**
+    - `[CreateTaskModal]` logs can be added for debugging
 - **Observable Changes:**
   - After creation → Task appears in selected sprint/backlog
-  - All fields saved to database
+  - **All fields now saved to database** ✅
+    - Story points visible in task card
+    - Due date displayed
+    - Time estimates saved
+    - Details accessible in edit modal
   - Modal closes automatically on success
 
 #### TeamMemberSelector
