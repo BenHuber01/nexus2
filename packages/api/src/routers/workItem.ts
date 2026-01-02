@@ -260,4 +260,25 @@ export const workItemRouter = router({
                 data: { sprintId: null },
             });
         }),
+
+    delete: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+            console.log("[workItem.delete] Deleting work item:", input.id);
+            
+            // Prisma will cascade delete related records automatically:
+            // - WorkItemDetail (onDelete: Cascade)
+            // - ComponentOnWorkItem (onDelete: Cascade)
+            // - Dependencies (onDelete: Cascade)
+            // - Comments (onDelete: Cascade)
+            // - TimeLogs (onDelete: Cascade)
+            // - Attachments (onDelete: Cascade)
+            
+            const deletedItem = await ctx.prisma.workItem.delete({
+                where: { id: input.id },
+            });
+            
+            console.log("[workItem.delete] Successfully deleted:", deletedItem.title);
+            return deletedItem;
+        }),
 });

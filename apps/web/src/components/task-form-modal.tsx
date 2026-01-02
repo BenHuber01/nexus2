@@ -240,6 +240,63 @@ export function TaskFormModal({
         },
     });
 
+    // Delete mutation (only for edit mode)
+    const deleteMutation = useMutation({
+        mutationFn: async () => {
+            if (mode !== "edit" || !task) {
+                throw new Error("Cannot delete in create mode");
+            }
+            return await client.workItem.delete.mutate({ id: task.id });
+        },
+        onMutate: async () => {
+            const queryKey = ["workItem", "getAll", { projectId }];
+
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+
+            // Snapshot previous value
+            const previousWorkItems = queryClient.getQueryData(queryKey);
+
+            // Optimistically remove task
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                console.log("[TaskFormModal] Optimistic delete:", task.id);
+                return old.filter((item: any) => item.id !== task.id);
+            });
+
+            return { previousWorkItems };
+        },
+        onError: (error, _data, context: any) => {
+            console.error("[TaskFormModal] Delete error:", error);
+            
+            // Rollback on error
+            const queryKey = ["workItem", "getAll", { projectId }];
+            if (context?.previousWorkItems) {
+                queryClient.setQueryData(queryKey, context.previousWorkItems);
+            }
+            
+            toast.error("Failed to delete task");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["workItem"] });
+            toast.success("Task deleted successfully");
+            onOpenChange(false);
+        },
+    });
+
+    const handleDelete = () => {
+        if (mode !== "edit" || !task) return;
+        
+        const confirmed = window.confirm(
+            `Are you sure you want to delete "${task.title}"?\n\nThis action cannot be undone. All related data (details, components, dependencies, comments, time logs) will be permanently deleted.`
+        );
+        
+        if (confirmed) {
+            console.log("[TaskFormModal] User confirmed delete for:", task.id);
+            deleteMutation.mutate();
+        }
+    };
+
     const handleSave = () => {
         // Validation
         if (!title.trim()) {
@@ -604,23 +661,37 @@ export function TaskFormModal({
                     )}
                 </Tabs>
 
-                <div className="flex justify-end gap-2 pt-4 border-t">
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => onOpenChange(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        type="button"
-                        onClick={handleSave}
-                        disabled={mutation.isPending}
-                    >
-                        {mutation.isPending 
-                            ? (mode === "create" ? "Creating..." : "Saving...") 
-                            : (mode === "create" ? "Create Task" : "Save Changes")}
-                    </Button>
+                <div className="flex justify-between gap-2 pt-4 border-t">
+                    <div>
+                        {mode === "edit" && (
+                            <Button
+                                type="button"
+                                variant="destructive"
+                                onClick={handleDelete}
+                                disabled={deleteMutation.isPending}
+                            >
+                                {deleteMutation.isPending ? "Deleting..." : "Delete Task"}
+                            </Button>
+                        )}
+                    </div>
+                    <div className="flex gap-2">
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => onOpenChange(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={handleSave}
+                            disabled={mutation.isPending}
+                        >
+                            {mutation.isPending 
+                                ? (mode === "create" ? "Creating..." : "Saving...") 
+                                : (mode === "create" ? "Create Task" : "Save Changes")}
+                        </Button>
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
