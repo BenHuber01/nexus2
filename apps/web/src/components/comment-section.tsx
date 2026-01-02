@@ -27,9 +27,11 @@ export function CommentSection({ workItemId }: CommentSectionProps) {
         queryFn: getUser,
     });
 
-    const { data: comments, isLoading } = useQuery(
-        trpc.comment.getByWorkItem.queryOptions({ workItemId })
-    );
+    const { data: comments, isLoading } = useQuery({
+        ...trpc.comment.getByWorkItem.queryOptions({ workItemId }),
+        refetchInterval: 5000, // Refetch every 5 seconds
+        refetchIntervalInBackground: true, // Keep refetching even when tab is not focused
+    });
 
     const createMutation = useMutation({
         mutationFn: async (data: { body: string; workItemId: string }) => {
@@ -90,6 +92,10 @@ export function CommentSection({ workItemId }: CommentSectionProps) {
             // Invalidate to refetch fresh data
             queryClient.invalidateQueries({ 
                 queryKey: trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            // Also trigger immediate refetch for other users
+            queryClient.refetchQueries({
+                queryKey: trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey
             });
             setNewComment("");
             toast.success("Comment added");
