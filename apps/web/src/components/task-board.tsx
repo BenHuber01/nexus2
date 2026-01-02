@@ -125,10 +125,23 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
 
     const filteredWorkItems = workItems?.filter((item: any) => {
         if (currentBoard?.sprintId) {
-            return item.sprintId === currentBoard.sprintId;
+            const match = item.sprintId === currentBoard.sprintId;
+            console.log("[TaskBoard] Filter check:", {
+                itemId: item.id,
+                itemTitle: item.title,
+                itemSprintId: item.sprintId,
+                itemStateId: item.stateId,
+                itemStateName: item.state?.name,
+                boardSprintId: currentBoard.sprintId,
+                match,
+            });
+            return match;
         }
         return true;
     });
+
+    console.log("[TaskBoard] Filtered items:", filteredWorkItems?.length);
+    console.log("[TaskBoard] Lanes:", lanes.map((l: any) => ({ id: l.id, name: l.name, mappedStates: l.mappedStates })));
 
     const handleDragStart = (event: DragStartEvent) => {
         const { active } = event;

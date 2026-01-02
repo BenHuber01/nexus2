@@ -79,10 +79,23 @@ export const workItemRouter = router({
             const { componentIds, details, ...workItemData } = input;
 
             return ctx.prisma.$transaction(async (tx: any) => {
+                // If no stateId provided, get first state from project
+                let stateId = workItemData.stateId;
+                if (!stateId) {
+                    const firstState = await tx.workItemState.findFirst({
+                        where: { projectId: workItemData.projectId },
+                        orderBy: { position: 'asc' },
+                    });
+                    if (firstState) {
+                        stateId = firstState.id;
+                    }
+                }
+
                 // Create work item with all fields
                 const workItem = await tx.workItem.create({
                     data: {
                         ...workItemData,
+                        stateId,
                         creatorId: ctx.session.user.id,
                     },
                 });
