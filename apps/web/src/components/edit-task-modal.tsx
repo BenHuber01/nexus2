@@ -126,7 +126,7 @@ export function EditTaskModal({
             return;
         }
 
-        updateMutation.mutate({
+        const updateData = {
             id: task.id,
             title,
             description,
@@ -138,7 +138,7 @@ export function EditTaskModal({
             storyPoints: storyPoints === 0 ? null : storyPoints,
             estimatedHours: estimatedHours === 0 ? null : estimatedHours,
             remainingHours: remainingHours === 0 ? null : remainingHours,
-            dueDate: dueDate ? new Date(dueDate) : null,
+            dueDate: dueDate && dueDate.trim() !== "" ? new Date(dueDate) : null,
             componentIds,
             details: {
                 acceptanceCriteria,
@@ -147,7 +147,13 @@ export function EditTaskModal({
                 businessValue,
                 userPersona,
             },
-        });
+        };
+
+        console.log("[EditTaskModal] Saving task with data:", updateData);
+        console.log("[EditTaskModal] dueDate raw value:", dueDate);
+        console.log("[EditTaskModal] dueDate converted:", updateData.dueDate);
+
+        updateMutation.mutate(updateData);
     };
 
     const members = project?.organization?.users?.map((u: any) => u.user) || [];
