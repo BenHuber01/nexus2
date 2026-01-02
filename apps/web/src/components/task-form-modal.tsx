@@ -50,6 +50,7 @@ export function TaskFormModal({
     const [priority, setPriority] = useState<Priority>(Priority.MEDIUM);
     const [type, setType] = useState<WorkItemType>(WorkItemType.TASK);
     const [assigneeId, setAssigneeId] = useState<string | null>(null);
+    const [stateId, setStateId] = useState<string | null>(null);
     const [sprintId, setSprintId] = useState<string | null>(null);
     const [epicId, setEpicId] = useState<string | null>(null);
     const [storyPoints, setStoryPoints] = useState<number | null>(null);
@@ -78,6 +79,9 @@ export function TaskFormModal({
     const { data: components } = useQuery<any>(
         trpc.component.getByProject.queryOptions({ projectId }) as any
     );
+    const { data: states } = useQuery<any>(
+        trpc.workItemState.getByProject.queryOptions({ projectId }) as any
+    );
 
     // Reset form to initial values
     const resetForm = () => {
@@ -86,6 +90,7 @@ export function TaskFormModal({
         setPriority(Priority.MEDIUM);
         setType(WorkItemType.TASK);
         setAssigneeId(null);
+        setStateId(null);
         setSprintId(null);
         setEpicId(null);
         setStoryPoints(null);
@@ -109,6 +114,7 @@ export function TaskFormModal({
             setPriority(task.priority || Priority.MEDIUM);
             setType(task.type || WorkItemType.TASK);
             setAssigneeId(task.assigneeId || null);
+            setStateId(task.stateId || null);
             setSprintId(task.sprintId || null);
             setEpicId(task.epicId || null);
             setStoryPoints(task.storyPoints || null);
@@ -351,6 +357,7 @@ export function TaskFormModal({
             priority,
             type,
             assigneeId: normalizeOptionalId(assigneeId),
+            stateId: normalizeOptionalId(stateId),
             sprintId: normalizeOptionalId(sprintId),
             epicId: normalizeOptionalId(epicId),
             storyPoints: storyPoints === 0 ? null : storyPoints,
@@ -497,6 +504,26 @@ export function TaskFormModal({
                             </div>
 
                             <div className="space-y-2">
+                                <Label htmlFor="state">Workflow State</Label>
+                                <Select
+                                    value={stateId || "none"}
+                                    onValueChange={setStateId}
+                                >
+                                    <SelectTrigger id="state">
+                                        <SelectValue placeholder="Default State" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Default State</SelectItem>
+                                        {states?.map((state: any) => (
+                                            <SelectItem key={state.id} value={state.id}>
+                                                {state.name}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            <div className="space-y-2">
                                 <Label htmlFor="sprint">Sprint</Label>
                                 <Select
                                     value={sprintId || "none"}
@@ -515,26 +542,26 @@ export function TaskFormModal({
                                     </SelectContent>
                                 </Select>
                             </div>
+                        </div>
 
-                            <div className="space-y-2">
-                                <Label htmlFor="epic">Epic</Label>
-                                <Select
-                                    value={epicId || "none"}
-                                    onValueChange={setEpicId}
-                                >
-                                    <SelectTrigger id="epic">
-                                        <SelectValue placeholder="No Epic" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="none">No Epic</SelectItem>
-                                        {epics?.map((epic: any) => (
-                                            <SelectItem key={epic.id} value={epic.id}>
-                                                {epic.title}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                            </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="epic">Epic</Label>
+                            <Select
+                                value={epicId || "none"}
+                                onValueChange={setEpicId}
+                            >
+                                <SelectTrigger id="epic">
+                                    <SelectValue placeholder="No Epic" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="none">No Epic</SelectItem>
+                                    {epics?.map((epic: any) => (
+                                        <SelectItem key={epic.id} value={epic.id}>
+                                            {epic.title}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="space-y-2">

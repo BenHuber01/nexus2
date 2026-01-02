@@ -72,11 +72,17 @@ export function ListView({ projectId }: ListViewProps) {
         trpc.workItemState.getByProject.queryOptions({ projectId }) as any
     );
 
-    // Sprints - commented out until backend supports getForProject
-    // const { data: sprints } = useQuery<any>(
-    //     trpc.sprint.getForProject.queryOptions({ projectId }) as any
-    // );
-    const sprints: any[] = []; // Placeholder
+    // Get unique sprints from workItems
+    const sprints = useMemo(() => {
+        if (!workItems) return [];
+        const uniqueSprints = new Map();
+        workItems.forEach((item: any) => {
+            if (item.sprint) {
+                uniqueSprints.set(item.sprint.id, item.sprint);
+            }
+        });
+        return Array.from(uniqueSprints.values());
+    }, [workItems]);
 
     // Get unique assignees
     const assignees = useMemo(() => {
