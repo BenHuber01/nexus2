@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Priority } from "@my-better-t-app/db";
 import { BoardSelector } from "./board-selector";
-import { EditTaskModal } from "./edit-task-modal";
+import { TaskFormModal } from "./task-form-modal";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -220,7 +220,8 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
             </DndContext>
 
             {editingTask && (
-                <EditTaskModal
+                <TaskFormModal
+                    mode="edit"
                     open={isEditModalOpen}
                     onOpenChange={setIsEditModalOpen}
                     task={editingTask}
