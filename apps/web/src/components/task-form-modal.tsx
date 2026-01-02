@@ -24,6 +24,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Priority, WorkItemType } from "@my-better-t-app/db";
 import { DependencyManager } from "./dependency-manager";
+import { CommentSection } from "./comment-section";
 
 interface TaskFormModalProps {
     mode: "create" | "edit";
@@ -397,8 +398,9 @@ export function TaskFormModal({
         : "Update task details and planning information";
 
     // Conditional tabs based on mode
-    // Dependencies tab only in edit mode - new tasks can't have dependencies yet
+    // Dependencies and Comments tabs only in edit mode - new tasks can't have these yet
     const showDependenciesTab = mode === "edit";
+    const showCommentsTab = mode === "edit";
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -411,12 +413,19 @@ export function TaskFormModal({
                 </DialogHeader>
 
                 <Tabs defaultValue="general" className="w-full">
-                    <TabsList className={`grid w-full ${showDependenciesTab ? "grid-cols-4" : "grid-cols-3"}`}>
+                    <TabsList className={`grid w-full ${
+                        showDependenciesTab && showCommentsTab ? "grid-cols-5" : 
+                        showDependenciesTab || showCommentsTab ? "grid-cols-4" : 
+                        "grid-cols-3"
+                    }`}>
                         <TabsTrigger value="general">General</TabsTrigger>
                         <TabsTrigger value="planning">Planning</TabsTrigger>
                         <TabsTrigger value="details">Details</TabsTrigger>
                         {showDependenciesTab && (
                             <TabsTrigger value="dependencies">Dependencies</TabsTrigger>
+                        )}
+                        {showCommentsTab && (
+                            <TabsTrigger value="comments">Comments</TabsTrigger>
                         )}
                     </TabsList>
 
@@ -715,6 +724,13 @@ export function TaskFormModal({
                                 workItemId={task.id}
                                 projectId={projectId}
                             />
+                        </TabsContent>
+                    )}
+
+                    {/* Comments Tab (Edit mode only) */}
+                    {showCommentsTab && (
+                        <TabsContent value="comments" className="py-4">
+                            <CommentSection workItemId={task.id} />
                         </TabsContent>
                     )}
                 </Tabs>
