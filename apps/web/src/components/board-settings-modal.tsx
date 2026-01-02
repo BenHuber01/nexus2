@@ -423,6 +423,13 @@ export function BoardSettingsModal({
         setLanes(updatedLanes);
     };
 
+    // Check if a state is already used by another lane
+    const isStateUsedByOtherLane = (stateId: string, currentLaneIndex: number) => {
+        return lanes.some((lane, idx) => 
+            idx !== currentLaneIndex && lane.mappedStates.includes(stateId)
+        );
+    };
+
     const handleMoveLane = (index: number, direction: "up" | "down") => {
         if (
             (direction === "up" && index === 0) ||
@@ -898,33 +905,47 @@ export function BoardSettingsModal({
                                                 <div className="space-y-2">
                                                     <Label>Mapped States</Label>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {states?.map((state: any) => (
-                                                            <div
-                                                                key={state.id}
-                                                                className="flex items-center space-x-2"
-                                                            >
-                                                                <Checkbox
-                                                                    id={`state-${state.id}-${index}`}
-                                                                    checked={lane.mappedStates.includes(state.id)}
-                                                                    onCheckedChange={(checked) => {
-                                                                        const newMappedStates = checked
-                                                                            ? [...lane.mappedStates, state.id]
-                                                                            : lane.mappedStates.filter(
-                                                                                (id) => id !== state.id,
-                                                                            );
-                                                                        handleUpdateLane(index, {
-                                                                            mappedStates: newMappedStates,
-                                                                        });
-                                                                    }}
-                                                                />
-                                                                <Label
-                                                                    htmlFor={`state-${state.id}-${index}`}
-                                                                    className="cursor-pointer text-sm"
+                                                        {states?.map((state: any) => {
+                                                            const isUsedElsewhere = isStateUsedByOtherLane(state.id, index);
+                                                            const isChecked = lane.mappedStates.includes(state.id);
+                                                            
+                                                            return (
+                                                                <div
+                                                                    key={state.id}
+                                                                    className="flex items-center space-x-2"
+                                                                    title={isUsedElsewhere ? "State is already used by another lane" : ""}
                                                                 >
-                                                                    {state.name}
-                                                                </Label>
-                                                            </div>
-                                                        ))}
+                                                                    <Checkbox
+                                                                        id={`state-${state.id}-${index}`}
+                                                                        checked={isChecked}
+                                                                        disabled={isUsedElsewhere && !isChecked}
+                                                                        onCheckedChange={(checked) => {
+                                                                            const newMappedStates = checked
+                                                                                ? [...lane.mappedStates, state.id]
+                                                                                : lane.mappedStates.filter(
+                                                                                    (id) => id !== state.id,
+                                                                                );
+                                                                            handleUpdateLane(index, {
+                                                                                mappedStates: newMappedStates,
+                                                                            });
+                                                                        }}
+                                                                    />
+                                                                    <Label
+                                                                        htmlFor={`state-${state.id}-${index}`}
+                                                                        className={`cursor-pointer text-sm ${
+                                                                            isUsedElsewhere && !isChecked 
+                                                                                ? "text-muted-foreground line-through" 
+                                                                                : ""
+                                                                        }`}
+                                                                    >
+                                                                        {state.name}
+                                                                        {isUsedElsewhere && !isChecked && (
+                                                                            <span className="ml-1 text-xs text-muted-foreground">(in use)</span>
+                                                                        )}
+                                                                    </Label>
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </div>
                                             </>
