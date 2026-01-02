@@ -1,4 +1,4 @@
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,6 +23,7 @@ interface SprintManagementProps {
 
 export function SprintManagement({ projectId }: SprintManagementProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
     const [createOpen, setCreateOpen] = useState(false);
     const [newSprint, setNewSprint] = useState({ name: "", goal: "", startDate: "", endDate: "" });
@@ -31,28 +32,109 @@ export function SprintManagement({ projectId }: SprintManagementProps) {
         trpc.sprint.getAll.queryOptions({ projectId }) as any,
     );
 
-    const createMutation = useMutation(
-        trpc.sprint.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.sprint.getAll.queryFilter({ projectId }));
-                toast.success("Sprint created successfully");
-                setCreateOpen(false);
-                setNewSprint({ name: "", goal: "", startDate: "", endDate: "" });
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to create sprint");
-            },
-        }) as any
-    );
+    const createMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.sprint.create.mutate(data);
+        },
+        onMutate: async (newSprintData) => {
+            const queryKey = trpc.sprint.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousSprints = queryClient.getQueryData(queryKey);
+            
+            // Optimistically add sprint
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const now = new Date().toISOString();
+                
+                const optimisticSprint = {
+                    id: tempId,
+                    name: newSprintData.name,
+                    goal: newSprintData.goal || null,
+                    startDate: newSprintData.startDate,
+                    endDate: newSprintData.endDate,
+                    state: "planning",
+                    projectId: newSprintData.projectId,
+                    createdAt: now,
+                    updatedAt: now,
+                };
+                
+                console.log("[SprintManagement] Optimistic create:", optimisticSprint);
+                return [...old, optimisticSprint];
+            });
+            
+            return { previousSprints };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.sprint.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousSprints) {
+                queryClient.setQueryData(queryKey, context.previousSprints);
+            }
+            
+            console.error("[SprintManagement] create error:", error);
+            toast.error(error.message || "Failed to create sprint");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.sprint.getAll.queryOptions({ projectId }).queryKey 
+            });
+            toast.success("Sprint created successfully");
+            setCreateOpen(false);
+            setNewSprint({ name: "", goal: "", startDate: "", endDate: "" });
+        },
+    });
 
-    const updateMutation = useMutation(
-        trpc.sprint.update.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.sprint.getAll.queryFilter({ projectId }));
-                toast.success("Sprint updated successfully");
-            },
-        }) as any
-    );
+    const updateMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.sprint.update.mutate(data);
+        },
+        onMutate: async (updatedSprint) => {
+            const queryKey = trpc.sprint.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousSprints = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update sprint
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return old.map((sprint: any) =>
+                    sprint.id === updatedSprint.id 
+                        ? { ...sprint, ...updatedSprint } 
+                        : sprint
+                );
+            });
+            
+            console.log("[SprintManagement] Optimistic update:", updatedSprint);
+            return { previousSprints };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.sprint.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousSprints) {
+                queryClient.setQueryData(queryKey, context.previousSprints);
+            }
+            
+            console.error("[SprintManagement] update error:", error);
+            toast.error("Failed to update sprint");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.sprint.getAll.queryOptions({ projectId }).queryKey 
+            });
+            toast.success("Sprint updated successfully");
+        },
+    });
 
     if (isLoading) {
         return <Skeleton className="h-[400px] w-full" />;
