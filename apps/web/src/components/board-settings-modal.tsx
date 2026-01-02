@@ -243,62 +243,15 @@ export function BoardSettingsModal({
         mutationFn: async (data: any) => {
             return await client.board.updateLane.mutate(data);
         },
-        onMutate: async (updatedLane) => {
-            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
-            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
-            
-            await queryClient.cancelQueries({ queryKey: getByIdKey });
-            await queryClient.cancelQueries({ queryKey: getForProjectKey });
-            
-            const previousBoard = queryClient.getQueryData(getByIdKey);
-            const previousBoards = queryClient.getQueryData(getForProjectKey);
-            
-            // Optimistically update the lane in getById query
-            queryClient.setQueryData(getByIdKey, (old: any) => {
-                if (!old) return old;
-                return {
-                    ...old,
-                    lanes: old.lanes.map((lane: any) =>
-                        lane.id === updatedLane.id ? { ...lane, ...updatedLane } : lane
-                    ),
-                };
-            });
-            
-            // Optimistically update the lane in getForProject query
-            queryClient.setQueryData(getForProjectKey, (old: any) => {
-                if (!old || !Array.isArray(old)) return old;
-                return old.map((board: any) => {
-                    if (board.id === boardId) {
-                        return {
-                            ...board,
-                            lanes: board.lanes.map((lane: any) =>
-                                lane.id === updatedLane.id ? { ...lane, ...updatedLane } : lane
-                            ),
-                        };
-                    }
-                    return board;
-                });
-            });
-            
-            console.log("[BoardSettings] Optimistic lane update:", updatedLane);
-            return { previousBoard, previousBoards };
-        },
-        onError: (err, _updatedLane, context: any) => {
-            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
-            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
-            
-            if (context?.previousBoard) {
-                queryClient.setQueryData(getByIdKey, context.previousBoard);
-            }
-            if (context?.previousBoards) {
-                queryClient.setQueryData(getForProjectKey, context.previousBoards);
-            }
+        onError: (err) => {
             console.error("[BoardSettings] Lane update error:", err);
             toast.error("Failed to update lane");
+            // Don't rollback - handleUpdateLane already updated cache
+            // Let invalidateQueries in onSuccess fix any issues
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["board"] });
-            toast.success("Lane updated successfully");
+            // No success toast - too noisy for every checkbox click
         },
     });
 
@@ -377,8 +330,40 @@ export function BoardSettingsModal({
         updatedLanes[index] = { ...updatedLanes[index], ...updates };
         setLanes(updatedLanes);
 
-        // If lane has an ID, update it in the backend
-        if (updatedLanes[index].id) {
+        // If lane has an ID, update it in the backend AND cache immediately
+        if (updatedLanes[index].id && !updatedLanes[index].id.startsWith('temp-')) {
+            // Immediately update cache for instant Board view sync
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+
+            queryClient.setQueryData(getByIdKey, (old: any) => {
+                if (!old) return old;
+                return {
+                    ...old,
+                    lanes: old.lanes.map((lane: any) =>
+                        lane.id === updatedLanes[index].id ? { ...lane, ...updates } : lane
+                    ),
+                };
+            });
+
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        return {
+                            ...board,
+                            lanes: board.lanes.map((lane: any) =>
+                                lane.id === updatedLanes[index].id ? { ...lane, ...updates } : lane
+                            ),
+                        };
+                    }
+                    return board;
+                });
+            });
+
+            console.log("[BoardSettings] Immediate cache update for lane:", updatedLanes[index].id, updates);
+
+            // Then persist to backend
             updateLaneMutation.mutate({
                 id: updatedLanes[index].id,
                 ...updates,
@@ -459,6 +444,49 @@ export function BoardSettingsModal({
         });
 
         setLanes(updatedLanes);
+
+        // Optimistic update: Apply lane reorder immediately to cache
+        const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+        const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+
+        queryClient.setQueryData(getByIdKey, (old: any) => {
+            if (!old) return old;
+            return {
+                ...old,
+                lanes: updatedLanes,
+            };
+        });
+
+        queryClient.setQueryData(getForProjectKey, (old: any) => {
+            if (!old || !Array.isArray(old)) return old;
+            return old.map((board: any) => {
+                if (board.id === boardId) {
+                    return {
+                        ...board,
+                        lanes: updatedLanes,
+                    };
+                }
+                return board;
+            });
+        });
+
+        console.log("[BoardSettings] Optimistic lane reorder:", updatedLanes.map(l => ({ name: l.name, position: l.position })));
+
+        // Persist position changes to backend for lanes with IDs
+        const lanesToUpdate = [
+            { lane: updatedLanes[index], position: index },
+            { lane: updatedLanes[newIndex], position: newIndex },
+        ];
+
+        lanesToUpdate.forEach(({ lane, position }) => {
+            if (lane.id && !lane.id.startsWith('temp-')) {
+                console.log(`[BoardSettings] Updating lane position: ${lane.name} -> ${position}`);
+                updateLaneMutation.mutate({
+                    id: lane.id,
+                    position: position,
+                });
+            }
+        });
     };
 
     const createLaneMutation = useMutation({
@@ -534,8 +562,56 @@ export function BoardSettingsModal({
             console.error("[BoardSettings] Lane create error:", err);
             toast.error("Failed to create lane");
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+        onSuccess: (realLane, newLaneData) => {
+            // Replace temp lane with real lane in both queries
+            const getByIdKey = trpc.board.getById.queryOptions({ id: boardId || "" }).queryKey;
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+
+            // Remove temp lane and prevent duplicates
+            queryClient.setQueryData(getByIdKey, (old: any) => {
+                if (!old) return old;
+                // Filter out lanes without ID OR temp lanes that match name/position
+                const filteredLanes = old.lanes.filter((lane: any) => {
+                    // Remove if no ID at all
+                    if (!lane.id) return false;
+                    // Remove if temp ID and matches our lane
+                    if (lane.id.startsWith('temp-') && lane.name === newLaneData.name && lane.position === newLaneData.position) {
+                        return false;
+                    }
+                    return true;
+                });
+                return {
+                    ...old,
+                    lanes: [...filteredLanes, realLane].sort((a, b) => a.position - b.position),
+                };
+            });
+
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                return old.map((board: any) => {
+                    if (board.id === boardId) {
+                        // Filter out lanes without ID OR temp lanes that match name/position
+                        const filteredLanes = board.lanes.filter((lane: any) => {
+                            // Remove if no ID at all
+                            if (!lane.id) return false;
+                            // Remove if temp ID and matches our lane
+                            if (lane.id.startsWith('temp-') && lane.name === newLaneData.name && lane.position === newLaneData.position) {
+                                return false;
+                            }
+                            return true;
+                        });
+                        return {
+                            ...board,
+                            lanes: [...filteredLanes, realLane].sort((a, b) => a.position - b.position),
+                        };
+                    }
+                    return board;
+                });
+            });
+
+            console.log("[BoardSettings] Replaced temp lane with real lane:", realLane);
+            // Don't invalidate - we manually replaced the lane, no need to refetch
+            // queryClient.invalidateQueries({ queryKey: ["board"] });
         },
     });
 
@@ -613,9 +689,12 @@ export function BoardSettingsModal({
 
             if (newLanes.length > 0) {
                 toast.success("Board and lanes updated successfully");
+                // Don't close modal - allow user to configure mappedStates for new lanes
+                // User can close manually when done
+            } else {
+                // No new lanes created, safe to close
+                onOpenChange(false);
             }
-            
-            onOpenChange(false);
         } else {
             // Create new board
             await createBoardMutation.mutateAsync({

@@ -123,6 +123,8 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
     const currentBoard = boards?.find((b: any) => b.id === currentBoardId);
     const lanes = currentBoard?.lanes || [];
 
+    console.log("[TaskBoard] Current board lanes:", lanes.map((l: any) => ({ id: l.id, name: l.name, mappedStates: l.mappedStates })));
+
     const filteredWorkItems = workItems?.filter((item: any) => {
         if (currentBoard?.sprintId) {
             const match = item.sprintId === currentBoard.sprintId;
