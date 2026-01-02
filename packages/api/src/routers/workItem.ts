@@ -238,6 +238,8 @@ export const workItemRouter = router({
 
                 // Update components if provided
                 if (componentIds !== undefined) {
+                    console.log("[workItem.update] Updating components:", { componentIds, workItemId: id });
+                    
                     // Remove existing component assignments
                     await tx.componentOnWorkItem.deleteMany({
                         where: { workItemId: id },
@@ -245,6 +247,21 @@ export const workItemRouter = router({
 
                     // Add new component assignments
                     if (componentIds.length > 0) {
+                        // Verify component IDs exist before inserting
+                        const existingComponents = await tx.component.findMany({
+                            where: { id: { in: componentIds } },
+                            select: { id: true },
+                        });
+                        
+                        const existingIds = existingComponents.map((c: any) => c.id);
+                        const missingIds = componentIds.filter((id: string) => !existingIds.includes(id));
+                        
+                        if (missingIds.length > 0) {
+                            console.error("[workItem.update] Missing component IDs:", missingIds);
+                            throw new Error(`Component IDs not found: ${missingIds.join(', ')}`);
+                        }
+                        
+                        console.log("[workItem.update] All component IDs valid, creating assignments");
                         await tx.componentOnWorkItem.createMany({
                             data: componentIds.map((componentId: string) => ({
                                 workItemId: id,
