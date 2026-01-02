@@ -108,7 +108,12 @@ export function TaskFormModal({
 
     // Initialize form based on mode
     useEffect(() => {
-        if (mode === "edit" && task) {
+        if (mode === "edit" && task && open) {
+            // Refetch task data when modal opens to get latest updates
+            queryClient.invalidateQueries({
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey
+            });
+            
             // Edit mode: populate with task data
             setTitle(task.title || "");
             setDescription(task.description || "");
@@ -137,7 +142,7 @@ export function TaskFormModal({
             // Create mode: reset to empty values
             resetForm();
         }
-    }, [mode, task]);
+    }, [mode, task, open]);
 
     // Mode-based mutation
     const mutation = useMutation({

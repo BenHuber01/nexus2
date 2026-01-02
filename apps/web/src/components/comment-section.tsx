@@ -29,8 +29,8 @@ export function CommentSection({ workItemId }: CommentSectionProps) {
 
     const { data: comments, isLoading } = useQuery({
         ...trpc.comment.getByWorkItem.queryOptions({ workItemId }),
-        refetchInterval: 5000, // Refetch every 5 seconds
-        refetchIntervalInBackground: true, // Keep refetching even when tab is not focused
+        refetchOnMount: "always", // Always refetch when component mounts
+        refetchOnWindowFocus: true, // Refetch when window regains focus
     });
 
     const createMutation = useMutation({
@@ -92,10 +92,6 @@ export function CommentSection({ workItemId }: CommentSectionProps) {
             // Invalidate to refetch fresh data
             queryClient.invalidateQueries({ 
                 queryKey: trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey 
-            });
-            // Also trigger immediate refetch for other users
-            queryClient.refetchQueries({
-                queryKey: trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey
             });
             setNewComment("");
             toast.success("Comment added");
