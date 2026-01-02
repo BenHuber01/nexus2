@@ -360,6 +360,7 @@ export function TaskFormModal({
         : "Update task details and planning information";
 
     // Conditional tabs based on mode
+    // Dependencies tab only in edit mode - new tasks can't have dependencies yet
     const showDependenciesTab = mode === "edit";
 
     return (
