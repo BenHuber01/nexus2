@@ -36,6 +36,11 @@ export function BacklogView({ projectId }: BacklogViewProps) {
 
     const moveToSprintMutation = useMutation({
         mutationFn: async ({ id, sprintId }: { id: string; sprintId: string }) => {
+            // Skip mutation if ID is temporary (optimistic create not yet confirmed)
+            if (id.startsWith('temp-')) {
+                console.log("[BacklogView] Skipping moveToSprint for temp ID:", id);
+                throw new Error("Cannot move item with temporary ID. Please wait for creation to complete.");
+            }
             return await client.workItem.moveToSprint.mutate({ id, sprintId });
         },
         onMutate: async ({ id, sprintId }) => {
