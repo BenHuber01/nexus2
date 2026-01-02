@@ -171,12 +171,29 @@ export const workItemRouter = router({
 
             console.log("[workItem.update] Received input:", input);
             console.log("[workItem.update] Details object:", details);
+            console.log("[workItem.update] Data object:", data);
 
             return ctx.prisma.$transaction(async (tx: any) => {
-                const workItem = await tx.workItem.update({
-                    where: { id },
-                    data: data as any,
-                });
+                // Only update workItem if there's actual data to update
+                // Filter out undefined values
+                const cleanedData = Object.fromEntries(
+                    Object.entries(data).filter(([_, value]) => value !== undefined)
+                );
+                
+                console.log("[workItem.update] Cleaned data:", cleanedData);
+                
+                let workItem;
+                if (Object.keys(cleanedData).length > 0) {
+                    workItem = await tx.workItem.update({
+                        where: { id },
+                        data: cleanedData as any,
+                    });
+                } else {
+                    // No workItem fields to update, just fetch current
+                    workItem = await tx.workItem.findUnique({
+                        where: { id },
+                    });
+                }
 
                 if (details) {
                     console.log("[workItem.update] Upserting details:", details);
