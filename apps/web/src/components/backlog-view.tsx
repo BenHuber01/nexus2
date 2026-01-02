@@ -132,7 +132,13 @@ export function BacklogView({ projectId }: BacklogViewProps) {
                                     )}
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
-                                            <Button variant="outline" size="sm">Move to Sprint</Button>
+                                            <Button 
+                                                variant="outline" 
+                                                size="sm"
+                                                disabled={item.id.startsWith('temp-')}
+                                            >
+                                                {item.id.startsWith('temp-') ? 'Creating...' : 'Move to Sprint'}
+                                            </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
                                             {activeSprints.length === 0 ? (
