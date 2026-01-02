@@ -90,29 +90,21 @@ export function ListView({ projectId }: ListViewProps) {
         return Array.from(uniqueAssignees.values());
     }, [workItems]);
 
-    // Bulk delete mutation (simplified - mark for deletion)
+    // Bulk delete mutation
     const bulkDeleteMutation = useMutation({
         mutationFn: async (ids: string[]) => {
-            // Simplified: Just update title to mark as deleted
-            // TODO: Implement proper delete procedure in backend
-            const results = [];
-            for (const id of ids) {
-                try {
-                    results.push(await client.workItem.update.mutate({ 
-                        id, 
-                        title: "[DELETED] - Please implement delete procedure"
-                    }));
-                } catch (error) {
-                    console.error(`Failed to mark ${id} as deleted:`, error);
-                }
-            }
-            return results;
+            console.log("[ListView] Deleting items:", ids);
+            // Delete all items in parallel
+            return await Promise.all(
+                ids.map((id) => client.workItem.delete.mutate({ id }))
+            );
         },
         onMutate: async (ids) => {
             const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
             await queryClient.cancelQueries({ queryKey });
             const previousItems = queryClient.getQueryData(queryKey);
 
+            // Optimistically remove items
             queryClient.setQueryData(queryKey, (old: any) => {
                 if (!old) return old;
                 return old.filter((item: any) => !ids.includes(item.id));
@@ -133,7 +125,7 @@ export function ListView({ projectId }: ListViewProps) {
             queryClient.invalidateQueries({
                 queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey,
             });
-            toast.success(`${ids.length} items deleted successfully`);
+            toast.success(`${ids.length} item${ids.length > 1 ? 's' : ''} deleted successfully`);
             setSelectedItems(new Set());
         },
     });
