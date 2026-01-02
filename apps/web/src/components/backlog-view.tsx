@@ -1,4 +1,4 @@
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,7 @@ interface BacklogViewProps {
 
 export function BacklogView({ projectId }: BacklogViewProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
 
     const { data: project } = useQuery<any>(
@@ -33,14 +34,49 @@ export function BacklogView({ projectId }: BacklogViewProps) {
         trpc.sprint.getAll.queryOptions({ projectId }) as any,
     );
 
-    const moveToSprintMutation = useMutation(
-        trpc.workItem.moveToSprint.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.workItem.getAll.queryFilter({ projectId }));
-                toast.success("Item moved to sprint");
-            },
-        }) as any
-    );
+    const moveToSprintMutation = useMutation({
+        mutationFn: async ({ id, sprintId }: { id: string; sprintId: string }) => {
+            return await client.workItem.moveToSprint.mutate({ id, sprintId });
+        },
+        onMutate: async ({ id, sprintId }) => {
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousWorkItems = queryClient.getQueryData(queryKey);
+            
+            // Optimistically update item's sprintId (removes from backlog)
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                return old.map((item: any) =>
+                    item.id === id ? { ...item, sprintId } : item
+                );
+            });
+            
+            console.log("[BacklogView] Optimistic moveToSprint:", { id, sprintId });
+            return { previousWorkItems };
+        },
+        onError: (err, _vars, context: any) => {
+            const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousWorkItems) {
+                queryClient.setQueryData(queryKey, context.previousWorkItems);
+            }
+            
+            console.error("[BacklogView] moveToSprint error:", err);
+            toast.error("Failed to move item to sprint");
+        },
+        onSuccess: () => {
+            // Invalidate to refetch fresh data
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+            });
+            toast.success("Item moved to sprint");
+        },
+    });
 
     if (itemsLoading) {
         return <Skeleton className="h-[400px] w-full" />;
