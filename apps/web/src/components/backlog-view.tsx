@@ -1,10 +1,17 @@
 import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Priority } from "@my-better-t-app/db";
 import { Button } from "@/components/ui/button";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -103,64 +110,89 @@ export function BacklogView({ projectId }: BacklogViewProps) {
                 <Badge variant="secondary">{backlogItems.length} Items</Badge>
             </div>
 
-            <div className="space-y-2">
-                {backlogItems.length === 0 ? (
-                    <div className="p-12 text-center border rounded-lg border-dashed text-muted-foreground">
-                        Backlog is empty.
-                    </div>
-                ) : (
-                    backlogItems.map((item: any) => (
-                        <Card key={item.id} className="hover:bg-muted/30 transition-colors">
-                            <CardContent className="p-4 flex items-center justify-between">
-                                <div className="flex items-center gap-4">
-                                    <Badge variant="outline" className="w-20 justify-center">
+            {backlogItems.length === 0 ? (
+                <div className="p-12 text-center border rounded-lg border-dashed text-muted-foreground">
+                    Backlog is empty.
+                </div>
+            ) : (
+                <div className="border rounded-lg">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">ID</TableHead>
+                                <TableHead>Title</TableHead>
+                                <TableHead className="w-[120px]">Type</TableHead>
+                                <TableHead className="w-[120px]">Priority</TableHead>
+                                <TableHead className="w-[120px]">State</TableHead>
+                                <TableHead className="w-[150px]">Assignee</TableHead>
+                                <TableHead className="w-[180px] text-right">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {backlogItems.map((item: any) => (
+                                <TableRow key={item.id}>
+                                    <TableCell className="font-mono text-xs">
                                         {project?.key}-{item.id.split("-")[0]}
-                                    </Badge>
-                                    <span className="font-medium">{item.title}</span>
-                                    <Badge variant="secondary" className="text-[10px]">
-                                        {item.type}
-                                    </Badge>
-                                    <Badge variant={item.priority === Priority.HIGH ? "destructive" : "secondary"} className="text-[10px]">
-                                        {item.priority}
-                                    </Badge>
-                                </div>
-                                <div className="flex items-center gap-4">
-                                    {item.assignee && (
-                                        <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold">
-                                            {item.assignee.firstName[0]}{item.assignee.lastName[0]}
-                                        </div>
-                                    )}
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button 
-                                                variant="outline" 
-                                                size="sm"
-                                                disabled={item.id.startsWith('temp-')}
-                                            >
-                                                {item.id.startsWith('temp-') ? 'Creating...' : 'Move to Sprint'}
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end">
-                                            {activeSprints.length === 0 ? (
-                                                <DropdownMenuItem disabled>No active sprints</DropdownMenuItem>
-                                            ) : (
-                                                activeSprints.map((sprint: any) => (
-                                                    <DropdownMenuItem
-                                                        key={sprint.id}
-                                                        onClick={() => moveToSprintMutation.mutate({ id: item.id, sprintId: sprint.id } as any)}
-                                                    >
-                                                        {sprint.name}
-                                                    </DropdownMenuItem>
-                                                ))
-                                            )}
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                            </CardContent>
-                        </Card>
-                    ))
-                )}
-            </div>
+                                    </TableCell>
+                                    <TableCell className="font-medium">{item.title}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline">{item.type}</Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant={item.priority === Priority.HIGH ? "destructive" : "secondary"}>
+                                            {item.priority}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="secondary">{item.state?.name || "N/A"}</Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        {item.assignee ? (
+                                            <div className="flex items-center gap-2">
+                                                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-[10px] font-bold">
+                                                    {item.assignee.firstName[0]}{item.assignee.lastName[0]}
+                                                </div>
+                                                <span className="text-sm">
+                                                    {item.assignee.firstName} {item.assignee.lastName}
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <span className="text-sm text-muted-foreground">Unassigned</span>
+                                        )}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button 
+                                                    variant="outline" 
+                                                    size="sm"
+                                                    disabled={item.id.startsWith('temp-')}
+                                                >
+                                                    {item.id.startsWith('temp-') ? 'Creating...' : 'Move to Sprint'}
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end">
+                                                {activeSprints.length === 0 ? (
+                                                    <DropdownMenuItem disabled>No active sprints</DropdownMenuItem>
+                                                ) : (
+                                                    activeSprints.map((sprint: any) => (
+                                                        <DropdownMenuItem
+                                                            key={sprint.id}
+                                                            onClick={() => moveToSprintMutation.mutate({ id: item.id, sprintId: sprint.id } as any)}
+                                                        >
+                                                            {sprint.name}
+                                                        </DropdownMenuItem>
+                                                    ))
+                                                )}
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            )}
         </div>
     );
 }
