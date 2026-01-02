@@ -4,6 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Priority } from "@my-better-t-app/db";
 import { Button } from "@/components/ui/button";
+import { TaskFormModal } from "@/components/task-form-modal";
+import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -28,6 +30,8 @@ export function BacklogView({ projectId }: BacklogViewProps) {
     const trpc = useTRPC();
     const client = useTRPCClient();
     const queryClient = useQueryClient();
+    const [editingTask, setEditingTask] = useState<any>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const { data: project } = useQuery<any>(
         trpc.project.getById.queryOptions({ id: projectId }) as any,
@@ -130,7 +134,14 @@ export function BacklogView({ projectId }: BacklogViewProps) {
                         </TableHeader>
                         <TableBody>
                             {backlogItems.map((item: any) => (
-                                <TableRow key={item.id}>
+                                <TableRow 
+                                    key={item.id}
+                                    className="cursor-pointer hover:bg-muted/50"
+                                    onClick={() => {
+                                        setEditingTask(item);
+                                        setIsEditModalOpen(true);
+                                    }}
+                                >
                                     <TableCell className="font-mono text-xs">
                                         {project?.key}-{item.id.split("-")[0]}
                                     </TableCell>
@@ -167,11 +178,12 @@ export function BacklogView({ projectId }: BacklogViewProps) {
                                                     variant="outline" 
                                                     size="sm"
                                                     disabled={item.id.startsWith('temp-')}
+                                                    onClick={(e) => e.stopPropagation()}
                                                 >
                                                     {item.id.startsWith('temp-') ? 'Creating...' : 'Move to Sprint'}
                                                 </Button>
                                             </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
+                                            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
                                                 {activeSprints.length === 0 ? (
                                                     <DropdownMenuItem disabled>No active sprints</DropdownMenuItem>
                                                 ) : (
@@ -192,6 +204,17 @@ export function BacklogView({ projectId }: BacklogViewProps) {
                         </TableBody>
                     </Table>
                 </div>
+            )}
+
+            {/* Task Edit Modal */}
+            {editingTask && (
+                <TaskFormModal
+                    mode="edit"
+                    open={isEditModalOpen}
+                    onOpenChange={setIsEditModalOpen}
+                    task={editingTask}
+                    projectId={projectId}
+                />
             )}
         </div>
     );
