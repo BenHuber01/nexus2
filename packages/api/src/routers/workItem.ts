@@ -55,30 +55,59 @@ export const workItemRouter = router({
                 projectId: z.string(),
                 stateId: z.string().optional(),
                 assigneeId: z.string().optional(),
+                sprintId: z.string().optional(),
+                epicId: z.string().optional(),
+                parentId: z.string().optional(),
+                storyPoints: z.number().optional().nullable(),
+                estimatedHours: z.number().optional().nullable(),
+                remainingHours: z.number().optional().nullable(),
+                dueDate: z.date().optional().nullable(),
                 componentIds: z.array(z.string()).optional(),
+                details: z
+                    .object({
+                        acceptanceCriteria: z.string().optional().nullable(),
+                        technicalNotes: z.string().optional().nullable(),
+                        reproSteps: z.string().optional().nullable(),
+                        businessValue: z.string().optional().nullable(),
+                        userPersona: z.string().optional().nullable(),
+                    })
+                    .optional(),
             }),
         )
         .mutation(async ({ ctx, input }) => {
-            const { componentIds, ...workItemData } = input;
+            const { componentIds, details, ...workItemData } = input;
 
-            const workItem = await ctx.prisma.workItem.create({
-                data: {
-                    ...workItemData,
-                    creatorId: ctx.session.user.id,
-                },
-            });
-
-            // Assign components if provided
-            if (componentIds && componentIds.length > 0) {
-                await ctx.prisma.componentOnWorkItem.createMany({
-                    data: componentIds.map((componentId) => ({
-                        workItemId: workItem.id,
-                        componentId,
-                    })),
+            return ctx.prisma.$transaction(async (tx: any) => {
+                // Create work item with all fields
+                const workItem = await tx.workItem.create({
+                    data: {
+                        ...workItemData,
+                        creatorId: ctx.session.user.id,
+                    },
                 });
-            }
 
-            return workItem;
+                // Create details if provided
+                if (details && Object.values(details).some(v => v !== null && v !== undefined && v !== "")) {
+                    await tx.workItemDetail.create({
+                        data: {
+                            ...details,
+                            workItemId: workItem.id,
+                        },
+                    });
+                }
+
+                // Assign components if provided
+                if (componentIds && componentIds.length > 0) {
+                    await tx.componentOnWorkItem.createMany({
+                        data: componentIds.map((componentId: string) => ({
+                            workItemId: workItem.id,
+                            componentId,
+                        })),
+                    });
+                }
+
+                return workItem;
+            });
         }),
 
     updateState: protectedProcedure
