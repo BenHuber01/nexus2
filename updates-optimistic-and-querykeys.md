@@ -463,10 +463,10 @@ Nach Abschluss aller Phasen:
 - [x] Step 1.1: BacklogView ✅ COMPLETED
 - [x] Step 1.2: CommentSection ✅ COMPLETED
 
-### Phase 2 (Medium Priority) - 0/4 completed
-- [ ] Step 2.1: DependencyManager
-- [ ] Step 2.2: AttachmentList
-- [ ] Step 2.3: SprintManagement
+### Phase 2 (Medium Priority) - 3/4 completed
+- [x] Step 2.1: DependencyManager ✅ COMPLETED
+- [x] Step 2.2: AttachmentList ✅ COMPLETED
+- [x] Step 2.3: SprintManagement ✅ COMPLETED
 - [ ] Step 2.4: BoardSettingsModal
 
 ### Phase 3 (Create Modals) - 0/4 completed

@@ -90,6 +90,45 @@ export function BoardSettingsModal({
             const result = await client.board.create.mutate(data);
             return result;
         },
+        onMutate: async (newBoardData) => {
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            // Optimistically add board (without lanes initially)
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const optimisticBoard = {
+                    id: tempId,
+                    name: newBoardData.name,
+                    boardType: newBoardData.boardType,
+                    isDefault: newBoardData.isDefault || false,
+                    sprintId: newBoardData.sprintId || null,
+                    projectId: newBoardData.projectId,
+                    lanes: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                };
+                
+                console.log("[BoardSettings] Optimistic create board:", optimisticBoard);
+                return [...old, optimisticBoard];
+            });
+            
+            return { previousBoards };
+        },
+        onError: (err, _data, context: any) => {
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
+            }
+            
+            console.error("[BoardSettings] Board create error:", err);
+            toast.error("Failed to create board");
+        },
         onSuccess: async (newBoard: any) => {
             // Create lanes for the new board
             for (const lane of lanes) {
@@ -101,12 +140,11 @@ export function BoardSettingsModal({
                     wipLimit: lane.wipLimit || undefined,
                 });
             }
-            queryClient.invalidateQueries({ queryKey: ["board", "getForProject"] });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.board.getForProject.queryOptions({ projectId }).queryKey 
+            });
             toast.success("Board created successfully");
             onOpenChange(false);
-        },
-        onError: () => {
-            toast.error("Failed to create board");
         },
     });
 
@@ -167,13 +205,37 @@ export function BoardSettingsModal({
         mutationFn: async (id: string) => {
             return await client.board.delete.mutate({ id });
         },
+        onMutate: async (id) => {
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey: getForProjectKey });
+            const previousBoards = queryClient.getQueryData(getForProjectKey);
+            
+            // Optimistically remove board
+            queryClient.setQueryData(getForProjectKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                console.log("[BoardSettings] Optimistic delete board:", id);
+                return old.filter((board: any) => board.id !== id);
+            });
+            
+            return { previousBoards };
+        },
+        onError: (err, _id, context: any) => {
+            const getForProjectKey = trpc.board.getForProject.queryOptions({ projectId }).queryKey;
+            
+            if (context?.previousBoards) {
+                queryClient.setQueryData(getForProjectKey, context.previousBoards);
+            }
+            
+            console.error("[BoardSettings] Board delete error:", err);
+            toast.error("Failed to delete board");
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["board"] });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.board.getForProject.queryOptions({ projectId }).queryKey 
+            });
             toast.success("Board deleted successfully");
             onOpenChange(false);
-        },
-        onError: () => {
-            toast.error("Failed to delete board");
         },
     });
 
