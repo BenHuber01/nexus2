@@ -119,6 +119,16 @@ export type Tag = $Result.DefaultSelection<Prisma.$TagPayload>
  */
 export type TagOnWorkItem = $Result.DefaultSelection<Prisma.$TagOnWorkItemPayload>
 /**
+ * Model Component
+ * 
+ */
+export type Component = $Result.DefaultSelection<Prisma.$ComponentPayload>
+/**
+ * Model ComponentOnWorkItem
+ * 
+ */
+export type ComponentOnWorkItem = $Result.DefaultSelection<Prisma.$ComponentOnWorkItemPayload>
+/**
  * Model Dependency
  * 
  */
@@ -545,6 +555,26 @@ export class PrismaClient<
     * ```
     */
   get tagOnWorkItem(): Prisma.TagOnWorkItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.component`: Exposes CRUD operations for the **Component** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Components
+    * const components = await prisma.component.findMany()
+    * ```
+    */
+  get component(): Prisma.ComponentDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.componentOnWorkItem`: Exposes CRUD operations for the **ComponentOnWorkItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ComponentOnWorkItems
+    * const componentOnWorkItems = await prisma.componentOnWorkItem.findMany()
+    * ```
+    */
+  get componentOnWorkItem(): Prisma.ComponentOnWorkItemDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.dependency`: Exposes CRUD operations for the **Dependency** model.
@@ -1107,6 +1137,8 @@ export namespace Prisma {
     BoardLane: 'BoardLane',
     Tag: 'Tag',
     TagOnWorkItem: 'TagOnWorkItem',
+    Component: 'Component',
+    ComponentOnWorkItem: 'ComponentOnWorkItem',
     Dependency: 'Dependency',
     TimeLog: 'TimeLog',
     Comment: 'Comment',
@@ -1135,7 +1167,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "session" | "account" | "verification" | "organization" | "team" | "role" | "organizationMembership" | "teamMembership" | "portfolio" | "project" | "sprint" | "milestone" | "retrospective" | "workItem" | "workItemDetail" | "workItemState" | "board" | "boardLane" | "tag" | "tagOnWorkItem" | "dependency" | "timeLog" | "comment" | "attachment" | "workItemEmbedding" | "workItemSnapshot" | "userSkillProfile" | "workflowRule" | "notification" | "activityLog"
+      modelProps: "user" | "session" | "account" | "verification" | "organization" | "team" | "role" | "organizationMembership" | "teamMembership" | "portfolio" | "project" | "sprint" | "milestone" | "retrospective" | "workItem" | "workItemDetail" | "workItemState" | "board" | "boardLane" | "tag" | "tagOnWorkItem" | "component" | "componentOnWorkItem" | "dependency" | "timeLog" | "comment" | "attachment" | "workItemEmbedding" | "workItemSnapshot" | "userSkillProfile" | "workflowRule" | "notification" | "activityLog"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2693,6 +2725,154 @@ export namespace Prisma {
           }
         }
       }
+      Component: {
+        payload: Prisma.$ComponentPayload<ExtArgs>
+        fields: Prisma.ComponentFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ComponentFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ComponentFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          findFirst: {
+            args: Prisma.ComponentFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ComponentFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          findMany: {
+            args: Prisma.ComponentFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>[]
+          }
+          create: {
+            args: Prisma.ComponentCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          createMany: {
+            args: Prisma.ComponentCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ComponentCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>[]
+          }
+          delete: {
+            args: Prisma.ComponentDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          update: {
+            args: Prisma.ComponentUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          deleteMany: {
+            args: Prisma.ComponentDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ComponentUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ComponentUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>[]
+          }
+          upsert: {
+            args: Prisma.ComponentUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentPayload>
+          }
+          aggregate: {
+            args: Prisma.ComponentAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateComponent>
+          }
+          groupBy: {
+            args: Prisma.ComponentGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ComponentGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ComponentCountArgs<ExtArgs>
+            result: $Utils.Optional<ComponentCountAggregateOutputType> | number
+          }
+        }
+      }
+      ComponentOnWorkItem: {
+        payload: Prisma.$ComponentOnWorkItemPayload<ExtArgs>
+        fields: Prisma.ComponentOnWorkItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ComponentOnWorkItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ComponentOnWorkItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          findFirst: {
+            args: Prisma.ComponentOnWorkItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ComponentOnWorkItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          findMany: {
+            args: Prisma.ComponentOnWorkItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>[]
+          }
+          create: {
+            args: Prisma.ComponentOnWorkItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          createMany: {
+            args: Prisma.ComponentOnWorkItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ComponentOnWorkItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>[]
+          }
+          delete: {
+            args: Prisma.ComponentOnWorkItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          update: {
+            args: Prisma.ComponentOnWorkItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.ComponentOnWorkItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ComponentOnWorkItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ComponentOnWorkItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.ComponentOnWorkItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ComponentOnWorkItemPayload>
+          }
+          aggregate: {
+            args: Prisma.ComponentOnWorkItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateComponentOnWorkItem>
+          }
+          groupBy: {
+            args: Prisma.ComponentOnWorkItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ComponentOnWorkItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ComponentOnWorkItemCountArgs<ExtArgs>
+            result: $Utils.Optional<ComponentOnWorkItemCountAggregateOutputType> | number
+          }
+        }
+      }
       Dependency: {
         payload: Prisma.$DependencyPayload<ExtArgs>
         fields: Prisma.DependencyFieldRefs
@@ -3534,6 +3714,8 @@ export namespace Prisma {
     boardLane?: BoardLaneOmit
     tag?: TagOmit
     tagOnWorkItem?: TagOnWorkItemOmit
+    component?: ComponentOmit
+    componentOnWorkItem?: ComponentOnWorkItemOmit
     dependency?: DependencyOmit
     timeLog?: TimeLogOmit
     comment?: CommentOmit
@@ -3911,6 +4093,7 @@ export namespace Prisma {
     boards: number
     workflowRules: number
     workItemStates: number
+    components: number
     teams: number
   }
 
@@ -3921,6 +4104,7 @@ export namespace Prisma {
     boards?: boolean | ProjectCountOutputTypeCountBoardsArgs
     workflowRules?: boolean | ProjectCountOutputTypeCountWorkflowRulesArgs
     workItemStates?: boolean | ProjectCountOutputTypeCountWorkItemStatesArgs
+    components?: boolean | ProjectCountOutputTypeCountComponentsArgs
     teams?: boolean | ProjectCountOutputTypeCountTeamsArgs
   }
 
@@ -3975,6 +4159,13 @@ export namespace Prisma {
    */
   export type ProjectCountOutputTypeCountWorkItemStatesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: WorkItemStateWhereInput
+  }
+
+  /**
+   * ProjectCountOutputType without action
+   */
+  export type ProjectCountOutputTypeCountComponentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComponentWhereInput
   }
 
   /**
@@ -4057,6 +4248,7 @@ export namespace Prisma {
     timeLogs: number
     snapshots: number
     tags: number
+    components: number
   }
 
   export type WorkItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4069,6 +4261,7 @@ export namespace Prisma {
     timeLogs?: boolean | WorkItemCountOutputTypeCountTimeLogsArgs
     snapshots?: boolean | WorkItemCountOutputTypeCountSnapshotsArgs
     tags?: boolean | WorkItemCountOutputTypeCountTagsArgs
+    components?: boolean | WorkItemCountOutputTypeCountComponentsArgs
   }
 
   // Custom InputTypes
@@ -4143,6 +4336,13 @@ export namespace Prisma {
    */
   export type WorkItemCountOutputTypeCountTagsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TagOnWorkItemWhereInput
+  }
+
+  /**
+   * WorkItemCountOutputType without action
+   */
+  export type WorkItemCountOutputTypeCountComponentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComponentOnWorkItemWhereInput
   }
 
 
@@ -4236,6 +4436,37 @@ export namespace Prisma {
    */
   export type TagCountOutputTypeCountWorkItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: TagOnWorkItemWhereInput
+  }
+
+
+  /**
+   * Count Type ComponentCountOutputType
+   */
+
+  export type ComponentCountOutputType = {
+    workItems: number
+  }
+
+  export type ComponentCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workItems?: boolean | ComponentCountOutputTypeCountWorkItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ComponentCountOutputType without action
+   */
+  export type ComponentCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentCountOutputType
+     */
+    select?: ComponentCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ComponentCountOutputType without action
+   */
+  export type ComponentCountOutputTypeCountWorkItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComponentOnWorkItemWhereInput
   }
 
 
@@ -16032,6 +16263,7 @@ export namespace Prisma {
     boards?: boolean | Project$boardsArgs<ExtArgs>
     workflowRules?: boolean | Project$workflowRulesArgs<ExtArgs>
     workItemStates?: boolean | Project$workItemStatesArgs<ExtArgs>
+    components?: boolean | Project$componentsArgs<ExtArgs>
     teams?: boolean | Project$teamsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["project"]>
@@ -16104,6 +16336,7 @@ export namespace Prisma {
     boards?: boolean | Project$boardsArgs<ExtArgs>
     workflowRules?: boolean | Project$workflowRulesArgs<ExtArgs>
     workItemStates?: boolean | Project$workItemStatesArgs<ExtArgs>
+    components?: boolean | Project$componentsArgs<ExtArgs>
     teams?: boolean | Project$teamsArgs<ExtArgs>
     _count?: boolean | ProjectCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -16130,6 +16363,7 @@ export namespace Prisma {
       boards: Prisma.$BoardPayload<ExtArgs>[]
       workflowRules: Prisma.$WorkflowRulePayload<ExtArgs>[]
       workItemStates: Prisma.$WorkItemStatePayload<ExtArgs>[]
+      components: Prisma.$ComponentPayload<ExtArgs>[]
       teams: Prisma.$TeamPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -16550,6 +16784,7 @@ export namespace Prisma {
     boards<T extends Project$boardsArgs<ExtArgs> = {}>(args?: Subset<T, Project$boardsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BoardPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workflowRules<T extends Project$workflowRulesArgs<ExtArgs> = {}>(args?: Subset<T, Project$workflowRulesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkflowRulePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workItemStates<T extends Project$workItemStatesArgs<ExtArgs> = {}>(args?: Subset<T, Project$workItemStatesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkItemStatePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    components<T extends Project$componentsArgs<ExtArgs> = {}>(args?: Subset<T, Project$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     teams<T extends Project$teamsArgs<ExtArgs> = {}>(args?: Subset<T, Project$teamsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TeamPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -17169,6 +17404,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: WorkItemStateScalarFieldEnum | WorkItemStateScalarFieldEnum[]
+  }
+
+  /**
+   * Project.components
+   */
+  export type Project$componentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    where?: ComponentWhereInput
+    orderBy?: ComponentOrderByWithRelationInput | ComponentOrderByWithRelationInput[]
+    cursor?: ComponentWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ComponentScalarFieldEnum | ComponentScalarFieldEnum[]
   }
 
   /**
@@ -21061,6 +21320,7 @@ export namespace Prisma {
     timeLogs?: boolean | WorkItem$timeLogsArgs<ExtArgs>
     snapshots?: boolean | WorkItem$snapshotsArgs<ExtArgs>
     tags?: boolean | WorkItem$tagsArgs<ExtArgs>
+    components?: boolean | WorkItem$componentsArgs<ExtArgs>
     embedding?: boolean | WorkItem$embeddingArgs<ExtArgs>
     _count?: boolean | WorkItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["workItem"]>
@@ -21170,6 +21430,7 @@ export namespace Prisma {
     timeLogs?: boolean | WorkItem$timeLogsArgs<ExtArgs>
     snapshots?: boolean | WorkItem$snapshotsArgs<ExtArgs>
     tags?: boolean | WorkItem$tagsArgs<ExtArgs>
+    components?: boolean | WorkItem$componentsArgs<ExtArgs>
     embedding?: boolean | WorkItem$embeddingArgs<ExtArgs>
     _count?: boolean | WorkItemCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -21212,6 +21473,7 @@ export namespace Prisma {
       timeLogs: Prisma.$TimeLogPayload<ExtArgs>[]
       snapshots: Prisma.$WorkItemSnapshotPayload<ExtArgs>[]
       tags: Prisma.$TagOnWorkItemPayload<ExtArgs>[]
+      components: Prisma.$ComponentOnWorkItemPayload<ExtArgs>[]
       embedding: Prisma.$WorkItemEmbeddingPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -21647,6 +21909,7 @@ export namespace Prisma {
     timeLogs<T extends WorkItem$timeLogsArgs<ExtArgs> = {}>(args?: Subset<T, WorkItem$timeLogsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TimeLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     snapshots<T extends WorkItem$snapshotsArgs<ExtArgs> = {}>(args?: Subset<T, WorkItem$snapshotsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkItemSnapshotPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tags<T extends WorkItem$tagsArgs<ExtArgs> = {}>(args?: Subset<T, WorkItem$tagsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TagOnWorkItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    components<T extends WorkItem$componentsArgs<ExtArgs> = {}>(args?: Subset<T, WorkItem$componentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     embedding<T extends WorkItem$embeddingArgs<ExtArgs> = {}>(args?: Subset<T, WorkItem$embeddingArgs<ExtArgs>>): Prisma__WorkItemEmbeddingClient<$Result.GetResult<Prisma.$WorkItemEmbeddingPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -22421,6 +22684,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TagOnWorkItemScalarFieldEnum | TagOnWorkItemScalarFieldEnum[]
+  }
+
+  /**
+   * WorkItem.components
+   */
+  export type WorkItem$componentsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    where?: ComponentOnWorkItemWhereInput
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ComponentOnWorkItemScalarFieldEnum | ComponentOnWorkItemScalarFieldEnum[]
   }
 
   /**
@@ -29203,6 +29490,2207 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: TagOnWorkItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Component
+   */
+
+  export type AggregateComponent = {
+    _count: ComponentCountAggregateOutputType | null
+    _avg: ComponentAvgAggregateOutputType | null
+    _sum: ComponentSumAggregateOutputType | null
+    _min: ComponentMinAggregateOutputType | null
+    _max: ComponentMaxAggregateOutputType | null
+  }
+
+  export type ComponentAvgAggregateOutputType = {
+    position: number | null
+  }
+
+  export type ComponentSumAggregateOutputType = {
+    position: number | null
+  }
+
+  export type ComponentMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    position: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    projectId: string | null
+  }
+
+  export type ComponentMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    color: string | null
+    position: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+    projectId: string | null
+  }
+
+  export type ComponentCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    color: number
+    position: number
+    createdAt: number
+    updatedAt: number
+    projectId: number
+    _all: number
+  }
+
+
+  export type ComponentAvgAggregateInputType = {
+    position?: true
+  }
+
+  export type ComponentSumAggregateInputType = {
+    position?: true
+  }
+
+  export type ComponentMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+  }
+
+  export type ComponentMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+  }
+
+  export type ComponentCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    color?: true
+    position?: true
+    createdAt?: true
+    updatedAt?: true
+    projectId?: true
+    _all?: true
+  }
+
+  export type ComponentAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Component to aggregate.
+     */
+    where?: ComponentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Components to fetch.
+     */
+    orderBy?: ComponentOrderByWithRelationInput | ComponentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ComponentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Components from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Components.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Components
+    **/
+    _count?: true | ComponentCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: ComponentAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: ComponentSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ComponentMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ComponentMaxAggregateInputType
+  }
+
+  export type GetComponentAggregateType<T extends ComponentAggregateArgs> = {
+        [P in keyof T & keyof AggregateComponent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateComponent[P]>
+      : GetScalarType<T[P], AggregateComponent[P]>
+  }
+
+
+
+
+  export type ComponentGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComponentWhereInput
+    orderBy?: ComponentOrderByWithAggregationInput | ComponentOrderByWithAggregationInput[]
+    by: ComponentScalarFieldEnum[] | ComponentScalarFieldEnum
+    having?: ComponentScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ComponentCountAggregateInputType | true
+    _avg?: ComponentAvgAggregateInputType
+    _sum?: ComponentSumAggregateInputType
+    _min?: ComponentMinAggregateInputType
+    _max?: ComponentMaxAggregateInputType
+  }
+
+  export type ComponentGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    color: string
+    position: number
+    createdAt: Date
+    updatedAt: Date
+    projectId: string
+    _count: ComponentCountAggregateOutputType | null
+    _avg: ComponentAvgAggregateOutputType | null
+    _sum: ComponentSumAggregateOutputType | null
+    _min: ComponentMinAggregateOutputType | null
+    _max: ComponentMaxAggregateOutputType | null
+  }
+
+  type GetComponentGroupByPayload<T extends ComponentGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ComponentGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ComponentGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ComponentGroupByOutputType[P]>
+            : GetScalarType<T[P], ComponentGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ComponentSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workItems?: boolean | Component$workItemsArgs<ExtArgs>
+    _count?: boolean | ComponentCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["component"]>
+
+  export type ComponentSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["component"]>
+
+  export type ComponentSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["component"]>
+
+  export type ComponentSelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    color?: boolean
+    position?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    projectId?: boolean
+  }
+
+  export type ComponentOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "color" | "position" | "createdAt" | "updatedAt" | "projectId", ExtArgs["result"]["component"]>
+  export type ComponentInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+    workItems?: boolean | Component$workItemsArgs<ExtArgs>
+    _count?: boolean | ComponentCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ComponentIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+  export type ComponentIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | ProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $ComponentPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Component"
+    objects: {
+      project: Prisma.$ProjectPayload<ExtArgs>
+      workItems: Prisma.$ComponentOnWorkItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      color: string
+      position: number
+      createdAt: Date
+      updatedAt: Date
+      projectId: string
+    }, ExtArgs["result"]["component"]>
+    composites: {}
+  }
+
+  type ComponentGetPayload<S extends boolean | null | undefined | ComponentDefaultArgs> = $Result.GetResult<Prisma.$ComponentPayload, S>
+
+  type ComponentCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ComponentFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ComponentCountAggregateInputType | true
+    }
+
+  export interface ComponentDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Component'], meta: { name: 'Component' } }
+    /**
+     * Find zero or one Component that matches the filter.
+     * @param {ComponentFindUniqueArgs} args - Arguments to find a Component
+     * @example
+     * // Get one Component
+     * const component = await prisma.component.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ComponentFindUniqueArgs>(args: SelectSubset<T, ComponentFindUniqueArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Component that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ComponentFindUniqueOrThrowArgs} args - Arguments to find a Component
+     * @example
+     * // Get one Component
+     * const component = await prisma.component.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ComponentFindUniqueOrThrowArgs>(args: SelectSubset<T, ComponentFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Component that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentFindFirstArgs} args - Arguments to find a Component
+     * @example
+     * // Get one Component
+     * const component = await prisma.component.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ComponentFindFirstArgs>(args?: SelectSubset<T, ComponentFindFirstArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Component that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentFindFirstOrThrowArgs} args - Arguments to find a Component
+     * @example
+     * // Get one Component
+     * const component = await prisma.component.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ComponentFindFirstOrThrowArgs>(args?: SelectSubset<T, ComponentFindFirstOrThrowArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Components that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Components
+     * const components = await prisma.component.findMany()
+     * 
+     * // Get first 10 Components
+     * const components = await prisma.component.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const componentWithIdOnly = await prisma.component.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ComponentFindManyArgs>(args?: SelectSubset<T, ComponentFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Component.
+     * @param {ComponentCreateArgs} args - Arguments to create a Component.
+     * @example
+     * // Create one Component
+     * const Component = await prisma.component.create({
+     *   data: {
+     *     // ... data to create a Component
+     *   }
+     * })
+     * 
+     */
+    create<T extends ComponentCreateArgs>(args: SelectSubset<T, ComponentCreateArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Components.
+     * @param {ComponentCreateManyArgs} args - Arguments to create many Components.
+     * @example
+     * // Create many Components
+     * const component = await prisma.component.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ComponentCreateManyArgs>(args?: SelectSubset<T, ComponentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Components and returns the data saved in the database.
+     * @param {ComponentCreateManyAndReturnArgs} args - Arguments to create many Components.
+     * @example
+     * // Create many Components
+     * const component = await prisma.component.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Components and only return the `id`
+     * const componentWithIdOnly = await prisma.component.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ComponentCreateManyAndReturnArgs>(args?: SelectSubset<T, ComponentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Component.
+     * @param {ComponentDeleteArgs} args - Arguments to delete one Component.
+     * @example
+     * // Delete one Component
+     * const Component = await prisma.component.delete({
+     *   where: {
+     *     // ... filter to delete one Component
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ComponentDeleteArgs>(args: SelectSubset<T, ComponentDeleteArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Component.
+     * @param {ComponentUpdateArgs} args - Arguments to update one Component.
+     * @example
+     * // Update one Component
+     * const component = await prisma.component.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ComponentUpdateArgs>(args: SelectSubset<T, ComponentUpdateArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Components.
+     * @param {ComponentDeleteManyArgs} args - Arguments to filter Components to delete.
+     * @example
+     * // Delete a few Components
+     * const { count } = await prisma.component.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ComponentDeleteManyArgs>(args?: SelectSubset<T, ComponentDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Components.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Components
+     * const component = await prisma.component.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ComponentUpdateManyArgs>(args: SelectSubset<T, ComponentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Components and returns the data updated in the database.
+     * @param {ComponentUpdateManyAndReturnArgs} args - Arguments to update many Components.
+     * @example
+     * // Update many Components
+     * const component = await prisma.component.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Components and only return the `id`
+     * const componentWithIdOnly = await prisma.component.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ComponentUpdateManyAndReturnArgs>(args: SelectSubset<T, ComponentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Component.
+     * @param {ComponentUpsertArgs} args - Arguments to update or create a Component.
+     * @example
+     * // Update or create a Component
+     * const component = await prisma.component.upsert({
+     *   create: {
+     *     // ... data to create a Component
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Component we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ComponentUpsertArgs>(args: SelectSubset<T, ComponentUpsertArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Components.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentCountArgs} args - Arguments to filter Components to count.
+     * @example
+     * // Count the number of Components
+     * const count = await prisma.component.count({
+     *   where: {
+     *     // ... the filter for the Components we want to count
+     *   }
+     * })
+    **/
+    count<T extends ComponentCountArgs>(
+      args?: Subset<T, ComponentCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ComponentCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Component.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ComponentAggregateArgs>(args: Subset<T, ComponentAggregateArgs>): Prisma.PrismaPromise<GetComponentAggregateType<T>>
+
+    /**
+     * Group by Component.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ComponentGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ComponentGroupByArgs['orderBy'] }
+        : { orderBy?: ComponentGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ComponentGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetComponentGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Component model
+   */
+  readonly fields: ComponentFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Component.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ComponentClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends ProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ProjectDefaultArgs<ExtArgs>>): Prisma__ProjectClient<$Result.GetResult<Prisma.$ProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    workItems<T extends Component$workItemsArgs<ExtArgs> = {}>(args?: Subset<T, Component$workItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Component model
+   */
+  interface ComponentFieldRefs {
+    readonly id: FieldRef<"Component", 'String'>
+    readonly name: FieldRef<"Component", 'String'>
+    readonly description: FieldRef<"Component", 'String'>
+    readonly color: FieldRef<"Component", 'String'>
+    readonly position: FieldRef<"Component", 'Int'>
+    readonly createdAt: FieldRef<"Component", 'DateTime'>
+    readonly updatedAt: FieldRef<"Component", 'DateTime'>
+    readonly projectId: FieldRef<"Component", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Component findUnique
+   */
+  export type ComponentFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter, which Component to fetch.
+     */
+    where: ComponentWhereUniqueInput
+  }
+
+  /**
+   * Component findUniqueOrThrow
+   */
+  export type ComponentFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter, which Component to fetch.
+     */
+    where: ComponentWhereUniqueInput
+  }
+
+  /**
+   * Component findFirst
+   */
+  export type ComponentFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter, which Component to fetch.
+     */
+    where?: ComponentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Components to fetch.
+     */
+    orderBy?: ComponentOrderByWithRelationInput | ComponentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Components.
+     */
+    cursor?: ComponentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Components from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Components.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Components.
+     */
+    distinct?: ComponentScalarFieldEnum | ComponentScalarFieldEnum[]
+  }
+
+  /**
+   * Component findFirstOrThrow
+   */
+  export type ComponentFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter, which Component to fetch.
+     */
+    where?: ComponentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Components to fetch.
+     */
+    orderBy?: ComponentOrderByWithRelationInput | ComponentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Components.
+     */
+    cursor?: ComponentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Components from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Components.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Components.
+     */
+    distinct?: ComponentScalarFieldEnum | ComponentScalarFieldEnum[]
+  }
+
+  /**
+   * Component findMany
+   */
+  export type ComponentFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter, which Components to fetch.
+     */
+    where?: ComponentWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Components to fetch.
+     */
+    orderBy?: ComponentOrderByWithRelationInput | ComponentOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Components.
+     */
+    cursor?: ComponentWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Components from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Components.
+     */
+    skip?: number
+    distinct?: ComponentScalarFieldEnum | ComponentScalarFieldEnum[]
+  }
+
+  /**
+   * Component create
+   */
+  export type ComponentCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Component.
+     */
+    data: XOR<ComponentCreateInput, ComponentUncheckedCreateInput>
+  }
+
+  /**
+   * Component createMany
+   */
+  export type ComponentCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Components.
+     */
+    data: ComponentCreateManyInput | ComponentCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Component createManyAndReturn
+   */
+  export type ComponentCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * The data used to create many Components.
+     */
+    data: ComponentCreateManyInput | ComponentCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Component update
+   */
+  export type ComponentUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Component.
+     */
+    data: XOR<ComponentUpdateInput, ComponentUncheckedUpdateInput>
+    /**
+     * Choose, which Component to update.
+     */
+    where: ComponentWhereUniqueInput
+  }
+
+  /**
+   * Component updateMany
+   */
+  export type ComponentUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Components.
+     */
+    data: XOR<ComponentUpdateManyMutationInput, ComponentUncheckedUpdateManyInput>
+    /**
+     * Filter which Components to update
+     */
+    where?: ComponentWhereInput
+    /**
+     * Limit how many Components to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Component updateManyAndReturn
+   */
+  export type ComponentUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * The data used to update Components.
+     */
+    data: XOR<ComponentUpdateManyMutationInput, ComponentUncheckedUpdateManyInput>
+    /**
+     * Filter which Components to update
+     */
+    where?: ComponentWhereInput
+    /**
+     * Limit how many Components to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Component upsert
+   */
+  export type ComponentUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Component to update in case it exists.
+     */
+    where: ComponentWhereUniqueInput
+    /**
+     * In case the Component found by the `where` argument doesn't exist, create a new Component with this data.
+     */
+    create: XOR<ComponentCreateInput, ComponentUncheckedCreateInput>
+    /**
+     * In case the Component was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ComponentUpdateInput, ComponentUncheckedUpdateInput>
+  }
+
+  /**
+   * Component delete
+   */
+  export type ComponentDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+    /**
+     * Filter which Component to delete.
+     */
+    where: ComponentWhereUniqueInput
+  }
+
+  /**
+   * Component deleteMany
+   */
+  export type ComponentDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Components to delete
+     */
+    where?: ComponentWhereInput
+    /**
+     * Limit how many Components to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Component.workItems
+   */
+  export type Component$workItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    where?: ComponentOnWorkItemWhereInput
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ComponentOnWorkItemScalarFieldEnum | ComponentOnWorkItemScalarFieldEnum[]
+  }
+
+  /**
+   * Component without action
+   */
+  export type ComponentDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Component
+     */
+    select?: ComponentSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Component
+     */
+    omit?: ComponentOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ComponentOnWorkItem
+   */
+
+  export type AggregateComponentOnWorkItem = {
+    _count: ComponentOnWorkItemCountAggregateOutputType | null
+    _min: ComponentOnWorkItemMinAggregateOutputType | null
+    _max: ComponentOnWorkItemMaxAggregateOutputType | null
+  }
+
+  export type ComponentOnWorkItemMinAggregateOutputType = {
+    workItemId: string | null
+    componentId: string | null
+    assignedAt: Date | null
+  }
+
+  export type ComponentOnWorkItemMaxAggregateOutputType = {
+    workItemId: string | null
+    componentId: string | null
+    assignedAt: Date | null
+  }
+
+  export type ComponentOnWorkItemCountAggregateOutputType = {
+    workItemId: number
+    componentId: number
+    assignedAt: number
+    _all: number
+  }
+
+
+  export type ComponentOnWorkItemMinAggregateInputType = {
+    workItemId?: true
+    componentId?: true
+    assignedAt?: true
+  }
+
+  export type ComponentOnWorkItemMaxAggregateInputType = {
+    workItemId?: true
+    componentId?: true
+    assignedAt?: true
+  }
+
+  export type ComponentOnWorkItemCountAggregateInputType = {
+    workItemId?: true
+    componentId?: true
+    assignedAt?: true
+    _all?: true
+  }
+
+  export type ComponentOnWorkItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ComponentOnWorkItem to aggregate.
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComponentOnWorkItems to fetch.
+     */
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComponentOnWorkItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComponentOnWorkItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ComponentOnWorkItems
+    **/
+    _count?: true | ComponentOnWorkItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ComponentOnWorkItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ComponentOnWorkItemMaxAggregateInputType
+  }
+
+  export type GetComponentOnWorkItemAggregateType<T extends ComponentOnWorkItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateComponentOnWorkItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateComponentOnWorkItem[P]>
+      : GetScalarType<T[P], AggregateComponentOnWorkItem[P]>
+  }
+
+
+
+
+  export type ComponentOnWorkItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ComponentOnWorkItemWhereInput
+    orderBy?: ComponentOnWorkItemOrderByWithAggregationInput | ComponentOnWorkItemOrderByWithAggregationInput[]
+    by: ComponentOnWorkItemScalarFieldEnum[] | ComponentOnWorkItemScalarFieldEnum
+    having?: ComponentOnWorkItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ComponentOnWorkItemCountAggregateInputType | true
+    _min?: ComponentOnWorkItemMinAggregateInputType
+    _max?: ComponentOnWorkItemMaxAggregateInputType
+  }
+
+  export type ComponentOnWorkItemGroupByOutputType = {
+    workItemId: string
+    componentId: string
+    assignedAt: Date
+    _count: ComponentOnWorkItemCountAggregateOutputType | null
+    _min: ComponentOnWorkItemMinAggregateOutputType | null
+    _max: ComponentOnWorkItemMaxAggregateOutputType | null
+  }
+
+  type GetComponentOnWorkItemGroupByPayload<T extends ComponentOnWorkItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ComponentOnWorkItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ComponentOnWorkItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ComponentOnWorkItemGroupByOutputType[P]>
+            : GetScalarType<T[P], ComponentOnWorkItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ComponentOnWorkItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    workItemId?: boolean
+    componentId?: boolean
+    assignedAt?: boolean
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["componentOnWorkItem"]>
+
+  export type ComponentOnWorkItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    workItemId?: boolean
+    componentId?: boolean
+    assignedAt?: boolean
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["componentOnWorkItem"]>
+
+  export type ComponentOnWorkItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    workItemId?: boolean
+    componentId?: boolean
+    assignedAt?: boolean
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["componentOnWorkItem"]>
+
+  export type ComponentOnWorkItemSelectScalar = {
+    workItemId?: boolean
+    componentId?: boolean
+    assignedAt?: boolean
+  }
+
+  export type ComponentOnWorkItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"workItemId" | "componentId" | "assignedAt", ExtArgs["result"]["componentOnWorkItem"]>
+  export type ComponentOnWorkItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }
+  export type ComponentOnWorkItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }
+  export type ComponentOnWorkItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    workItem?: boolean | WorkItemDefaultArgs<ExtArgs>
+    component?: boolean | ComponentDefaultArgs<ExtArgs>
+  }
+
+  export type $ComponentOnWorkItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ComponentOnWorkItem"
+    objects: {
+      workItem: Prisma.$WorkItemPayload<ExtArgs>
+      component: Prisma.$ComponentPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      workItemId: string
+      componentId: string
+      assignedAt: Date
+    }, ExtArgs["result"]["componentOnWorkItem"]>
+    composites: {}
+  }
+
+  type ComponentOnWorkItemGetPayload<S extends boolean | null | undefined | ComponentOnWorkItemDefaultArgs> = $Result.GetResult<Prisma.$ComponentOnWorkItemPayload, S>
+
+  type ComponentOnWorkItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ComponentOnWorkItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ComponentOnWorkItemCountAggregateInputType | true
+    }
+
+  export interface ComponentOnWorkItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ComponentOnWorkItem'], meta: { name: 'ComponentOnWorkItem' } }
+    /**
+     * Find zero or one ComponentOnWorkItem that matches the filter.
+     * @param {ComponentOnWorkItemFindUniqueArgs} args - Arguments to find a ComponentOnWorkItem
+     * @example
+     * // Get one ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ComponentOnWorkItemFindUniqueArgs>(args: SelectSubset<T, ComponentOnWorkItemFindUniqueArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ComponentOnWorkItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ComponentOnWorkItemFindUniqueOrThrowArgs} args - Arguments to find a ComponentOnWorkItem
+     * @example
+     * // Get one ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ComponentOnWorkItemFindUniqueOrThrowArgs>(args: SelectSubset<T, ComponentOnWorkItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ComponentOnWorkItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemFindFirstArgs} args - Arguments to find a ComponentOnWorkItem
+     * @example
+     * // Get one ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ComponentOnWorkItemFindFirstArgs>(args?: SelectSubset<T, ComponentOnWorkItemFindFirstArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ComponentOnWorkItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemFindFirstOrThrowArgs} args - Arguments to find a ComponentOnWorkItem
+     * @example
+     * // Get one ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ComponentOnWorkItemFindFirstOrThrowArgs>(args?: SelectSubset<T, ComponentOnWorkItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ComponentOnWorkItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ComponentOnWorkItems
+     * const componentOnWorkItems = await prisma.componentOnWorkItem.findMany()
+     * 
+     * // Get first 10 ComponentOnWorkItems
+     * const componentOnWorkItems = await prisma.componentOnWorkItem.findMany({ take: 10 })
+     * 
+     * // Only select the `workItemId`
+     * const componentOnWorkItemWithWorkItemIdOnly = await prisma.componentOnWorkItem.findMany({ select: { workItemId: true } })
+     * 
+     */
+    findMany<T extends ComponentOnWorkItemFindManyArgs>(args?: SelectSubset<T, ComponentOnWorkItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ComponentOnWorkItem.
+     * @param {ComponentOnWorkItemCreateArgs} args - Arguments to create a ComponentOnWorkItem.
+     * @example
+     * // Create one ComponentOnWorkItem
+     * const ComponentOnWorkItem = await prisma.componentOnWorkItem.create({
+     *   data: {
+     *     // ... data to create a ComponentOnWorkItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends ComponentOnWorkItemCreateArgs>(args: SelectSubset<T, ComponentOnWorkItemCreateArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ComponentOnWorkItems.
+     * @param {ComponentOnWorkItemCreateManyArgs} args - Arguments to create many ComponentOnWorkItems.
+     * @example
+     * // Create many ComponentOnWorkItems
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ComponentOnWorkItemCreateManyArgs>(args?: SelectSubset<T, ComponentOnWorkItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ComponentOnWorkItems and returns the data saved in the database.
+     * @param {ComponentOnWorkItemCreateManyAndReturnArgs} args - Arguments to create many ComponentOnWorkItems.
+     * @example
+     * // Create many ComponentOnWorkItems
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ComponentOnWorkItems and only return the `workItemId`
+     * const componentOnWorkItemWithWorkItemIdOnly = await prisma.componentOnWorkItem.createManyAndReturn({
+     *   select: { workItemId: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ComponentOnWorkItemCreateManyAndReturnArgs>(args?: SelectSubset<T, ComponentOnWorkItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ComponentOnWorkItem.
+     * @param {ComponentOnWorkItemDeleteArgs} args - Arguments to delete one ComponentOnWorkItem.
+     * @example
+     * // Delete one ComponentOnWorkItem
+     * const ComponentOnWorkItem = await prisma.componentOnWorkItem.delete({
+     *   where: {
+     *     // ... filter to delete one ComponentOnWorkItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ComponentOnWorkItemDeleteArgs>(args: SelectSubset<T, ComponentOnWorkItemDeleteArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ComponentOnWorkItem.
+     * @param {ComponentOnWorkItemUpdateArgs} args - Arguments to update one ComponentOnWorkItem.
+     * @example
+     * // Update one ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ComponentOnWorkItemUpdateArgs>(args: SelectSubset<T, ComponentOnWorkItemUpdateArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ComponentOnWorkItems.
+     * @param {ComponentOnWorkItemDeleteManyArgs} args - Arguments to filter ComponentOnWorkItems to delete.
+     * @example
+     * // Delete a few ComponentOnWorkItems
+     * const { count } = await prisma.componentOnWorkItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ComponentOnWorkItemDeleteManyArgs>(args?: SelectSubset<T, ComponentOnWorkItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ComponentOnWorkItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ComponentOnWorkItems
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ComponentOnWorkItemUpdateManyArgs>(args: SelectSubset<T, ComponentOnWorkItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ComponentOnWorkItems and returns the data updated in the database.
+     * @param {ComponentOnWorkItemUpdateManyAndReturnArgs} args - Arguments to update many ComponentOnWorkItems.
+     * @example
+     * // Update many ComponentOnWorkItems
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ComponentOnWorkItems and only return the `workItemId`
+     * const componentOnWorkItemWithWorkItemIdOnly = await prisma.componentOnWorkItem.updateManyAndReturn({
+     *   select: { workItemId: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ComponentOnWorkItemUpdateManyAndReturnArgs>(args: SelectSubset<T, ComponentOnWorkItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ComponentOnWorkItem.
+     * @param {ComponentOnWorkItemUpsertArgs} args - Arguments to update or create a ComponentOnWorkItem.
+     * @example
+     * // Update or create a ComponentOnWorkItem
+     * const componentOnWorkItem = await prisma.componentOnWorkItem.upsert({
+     *   create: {
+     *     // ... data to create a ComponentOnWorkItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ComponentOnWorkItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ComponentOnWorkItemUpsertArgs>(args: SelectSubset<T, ComponentOnWorkItemUpsertArgs<ExtArgs>>): Prisma__ComponentOnWorkItemClient<$Result.GetResult<Prisma.$ComponentOnWorkItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ComponentOnWorkItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemCountArgs} args - Arguments to filter ComponentOnWorkItems to count.
+     * @example
+     * // Count the number of ComponentOnWorkItems
+     * const count = await prisma.componentOnWorkItem.count({
+     *   where: {
+     *     // ... the filter for the ComponentOnWorkItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends ComponentOnWorkItemCountArgs>(
+      args?: Subset<T, ComponentOnWorkItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ComponentOnWorkItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ComponentOnWorkItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ComponentOnWorkItemAggregateArgs>(args: Subset<T, ComponentOnWorkItemAggregateArgs>): Prisma.PrismaPromise<GetComponentOnWorkItemAggregateType<T>>
+
+    /**
+     * Group by ComponentOnWorkItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ComponentOnWorkItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ComponentOnWorkItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ComponentOnWorkItemGroupByArgs['orderBy'] }
+        : { orderBy?: ComponentOnWorkItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ComponentOnWorkItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetComponentOnWorkItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ComponentOnWorkItem model
+   */
+  readonly fields: ComponentOnWorkItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ComponentOnWorkItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ComponentOnWorkItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    workItem<T extends WorkItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, WorkItemDefaultArgs<ExtArgs>>): Prisma__WorkItemClient<$Result.GetResult<Prisma.$WorkItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    component<T extends ComponentDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ComponentDefaultArgs<ExtArgs>>): Prisma__ComponentClient<$Result.GetResult<Prisma.$ComponentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ComponentOnWorkItem model
+   */
+  interface ComponentOnWorkItemFieldRefs {
+    readonly workItemId: FieldRef<"ComponentOnWorkItem", 'String'>
+    readonly componentId: FieldRef<"ComponentOnWorkItem", 'String'>
+    readonly assignedAt: FieldRef<"ComponentOnWorkItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ComponentOnWorkItem findUnique
+   */
+  export type ComponentOnWorkItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ComponentOnWorkItem to fetch.
+     */
+    where: ComponentOnWorkItemWhereUniqueInput
+  }
+
+  /**
+   * ComponentOnWorkItem findUniqueOrThrow
+   */
+  export type ComponentOnWorkItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ComponentOnWorkItem to fetch.
+     */
+    where: ComponentOnWorkItemWhereUniqueInput
+  }
+
+  /**
+   * ComponentOnWorkItem findFirst
+   */
+  export type ComponentOnWorkItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ComponentOnWorkItem to fetch.
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComponentOnWorkItems to fetch.
+     */
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ComponentOnWorkItems.
+     */
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComponentOnWorkItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComponentOnWorkItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ComponentOnWorkItems.
+     */
+    distinct?: ComponentOnWorkItemScalarFieldEnum | ComponentOnWorkItemScalarFieldEnum[]
+  }
+
+  /**
+   * ComponentOnWorkItem findFirstOrThrow
+   */
+  export type ComponentOnWorkItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ComponentOnWorkItem to fetch.
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComponentOnWorkItems to fetch.
+     */
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ComponentOnWorkItems.
+     */
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComponentOnWorkItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComponentOnWorkItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ComponentOnWorkItems.
+     */
+    distinct?: ComponentOnWorkItemScalarFieldEnum | ComponentOnWorkItemScalarFieldEnum[]
+  }
+
+  /**
+   * ComponentOnWorkItem findMany
+   */
+  export type ComponentOnWorkItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter, which ComponentOnWorkItems to fetch.
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ComponentOnWorkItems to fetch.
+     */
+    orderBy?: ComponentOnWorkItemOrderByWithRelationInput | ComponentOnWorkItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ComponentOnWorkItems.
+     */
+    cursor?: ComponentOnWorkItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ComponentOnWorkItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ComponentOnWorkItems.
+     */
+    skip?: number
+    distinct?: ComponentOnWorkItemScalarFieldEnum | ComponentOnWorkItemScalarFieldEnum[]
+  }
+
+  /**
+   * ComponentOnWorkItem create
+   */
+  export type ComponentOnWorkItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ComponentOnWorkItem.
+     */
+    data: XOR<ComponentOnWorkItemCreateInput, ComponentOnWorkItemUncheckedCreateInput>
+  }
+
+  /**
+   * ComponentOnWorkItem createMany
+   */
+  export type ComponentOnWorkItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ComponentOnWorkItems.
+     */
+    data: ComponentOnWorkItemCreateManyInput | ComponentOnWorkItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ComponentOnWorkItem createManyAndReturn
+   */
+  export type ComponentOnWorkItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many ComponentOnWorkItems.
+     */
+    data: ComponentOnWorkItemCreateManyInput | ComponentOnWorkItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ComponentOnWorkItem update
+   */
+  export type ComponentOnWorkItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ComponentOnWorkItem.
+     */
+    data: XOR<ComponentOnWorkItemUpdateInput, ComponentOnWorkItemUncheckedUpdateInput>
+    /**
+     * Choose, which ComponentOnWorkItem to update.
+     */
+    where: ComponentOnWorkItemWhereUniqueInput
+  }
+
+  /**
+   * ComponentOnWorkItem updateMany
+   */
+  export type ComponentOnWorkItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ComponentOnWorkItems.
+     */
+    data: XOR<ComponentOnWorkItemUpdateManyMutationInput, ComponentOnWorkItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ComponentOnWorkItems to update
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * Limit how many ComponentOnWorkItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ComponentOnWorkItem updateManyAndReturn
+   */
+  export type ComponentOnWorkItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * The data used to update ComponentOnWorkItems.
+     */
+    data: XOR<ComponentOnWorkItemUpdateManyMutationInput, ComponentOnWorkItemUncheckedUpdateManyInput>
+    /**
+     * Filter which ComponentOnWorkItems to update
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * Limit how many ComponentOnWorkItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * ComponentOnWorkItem upsert
+   */
+  export type ComponentOnWorkItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ComponentOnWorkItem to update in case it exists.
+     */
+    where: ComponentOnWorkItemWhereUniqueInput
+    /**
+     * In case the ComponentOnWorkItem found by the `where` argument doesn't exist, create a new ComponentOnWorkItem with this data.
+     */
+    create: XOR<ComponentOnWorkItemCreateInput, ComponentOnWorkItemUncheckedCreateInput>
+    /**
+     * In case the ComponentOnWorkItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ComponentOnWorkItemUpdateInput, ComponentOnWorkItemUncheckedUpdateInput>
+  }
+
+  /**
+   * ComponentOnWorkItem delete
+   */
+  export type ComponentOnWorkItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
+    /**
+     * Filter which ComponentOnWorkItem to delete.
+     */
+    where: ComponentOnWorkItemWhereUniqueInput
+  }
+
+  /**
+   * ComponentOnWorkItem deleteMany
+   */
+  export type ComponentOnWorkItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ComponentOnWorkItems to delete
+     */
+    where?: ComponentOnWorkItemWhereInput
+    /**
+     * Limit how many ComponentOnWorkItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ComponentOnWorkItem without action
+   */
+  export type ComponentOnWorkItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ComponentOnWorkItem
+     */
+    select?: ComponentOnWorkItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ComponentOnWorkItem
+     */
+    omit?: ComponentOnWorkItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ComponentOnWorkItemInclude<ExtArgs> | null
   }
 
 
@@ -40757,6 +43245,29 @@ export namespace Prisma {
   export type TagOnWorkItemScalarFieldEnum = (typeof TagOnWorkItemScalarFieldEnum)[keyof typeof TagOnWorkItemScalarFieldEnum]
 
 
+  export const ComponentScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    color: 'color',
+    position: 'position',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt',
+    projectId: 'projectId'
+  };
+
+  export type ComponentScalarFieldEnum = (typeof ComponentScalarFieldEnum)[keyof typeof ComponentScalarFieldEnum]
+
+
+  export const ComponentOnWorkItemScalarFieldEnum: {
+    workItemId: 'workItemId',
+    componentId: 'componentId',
+    assignedAt: 'assignedAt'
+  };
+
+  export type ComponentOnWorkItemScalarFieldEnum = (typeof ComponentOnWorkItemScalarFieldEnum)[keyof typeof ComponentOnWorkItemScalarFieldEnum]
+
+
   export const DependencyScalarFieldEnum: {
     id: 'id',
     dependencyType: 'dependencyType',
@@ -41876,6 +44387,7 @@ export namespace Prisma {
     boards?: BoardListRelationFilter
     workflowRules?: WorkflowRuleListRelationFilter
     workItemStates?: WorkItemStateListRelationFilter
+    components?: ComponentListRelationFilter
     teams?: TeamListRelationFilter
   }
 
@@ -41903,6 +44415,7 @@ export namespace Prisma {
     boards?: BoardOrderByRelationAggregateInput
     workflowRules?: WorkflowRuleOrderByRelationAggregateInput
     workItemStates?: WorkItemStateOrderByRelationAggregateInput
+    components?: ComponentOrderByRelationAggregateInput
     teams?: TeamOrderByRelationAggregateInput
   }
 
@@ -41934,6 +44447,7 @@ export namespace Prisma {
     boards?: BoardListRelationFilter
     workflowRules?: WorkflowRuleListRelationFilter
     workItemStates?: WorkItemStateListRelationFilter
+    components?: ComponentListRelationFilter
     teams?: TeamListRelationFilter
   }, "id" | "organizationId_key">
 
@@ -42258,6 +44772,7 @@ export namespace Prisma {
     timeLogs?: TimeLogListRelationFilter
     snapshots?: WorkItemSnapshotListRelationFilter
     tags?: TagOnWorkItemListRelationFilter
+    components?: ComponentOnWorkItemListRelationFilter
     embedding?: XOR<WorkItemEmbeddingNullableScalarRelationFilter, WorkItemEmbeddingWhereInput> | null
   }
 
@@ -42300,6 +44815,7 @@ export namespace Prisma {
     timeLogs?: TimeLogOrderByRelationAggregateInput
     snapshots?: WorkItemSnapshotOrderByRelationAggregateInput
     tags?: TagOnWorkItemOrderByRelationAggregateInput
+    components?: ComponentOnWorkItemOrderByRelationAggregateInput
     embedding?: WorkItemEmbeddingOrderByWithRelationInput
   }
 
@@ -42345,6 +44861,7 @@ export namespace Prisma {
     timeLogs?: TimeLogListRelationFilter
     snapshots?: WorkItemSnapshotListRelationFilter
     tags?: TagOnWorkItemListRelationFilter
+    components?: ComponentOnWorkItemListRelationFilter
     embedding?: XOR<WorkItemEmbeddingNullableScalarRelationFilter, WorkItemEmbeddingWhereInput> | null
   }, "id">
 
@@ -42840,6 +45357,131 @@ export namespace Prisma {
     NOT?: TagOnWorkItemScalarWhereWithAggregatesInput | TagOnWorkItemScalarWhereWithAggregatesInput[]
     workItemId?: StringWithAggregatesFilter<"TagOnWorkItem"> | string
     tagId?: StringWithAggregatesFilter<"TagOnWorkItem"> | string
+  }
+
+  export type ComponentWhereInput = {
+    AND?: ComponentWhereInput | ComponentWhereInput[]
+    OR?: ComponentWhereInput[]
+    NOT?: ComponentWhereInput | ComponentWhereInput[]
+    id?: StringFilter<"Component"> | string
+    name?: StringFilter<"Component"> | string
+    description?: StringNullableFilter<"Component"> | string | null
+    color?: StringFilter<"Component"> | string
+    position?: IntFilter<"Component"> | number
+    createdAt?: DateTimeFilter<"Component"> | Date | string
+    updatedAt?: DateTimeFilter<"Component"> | Date | string
+    projectId?: StringFilter<"Component"> | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    workItems?: ComponentOnWorkItemListRelationFilter
+  }
+
+  export type ComponentOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    project?: ProjectOrderByWithRelationInput
+    workItems?: ComponentOnWorkItemOrderByRelationAggregateInput
+  }
+
+  export type ComponentWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    projectId_name?: ComponentProjectIdNameCompoundUniqueInput
+    AND?: ComponentWhereInput | ComponentWhereInput[]
+    OR?: ComponentWhereInput[]
+    NOT?: ComponentWhereInput | ComponentWhereInput[]
+    name?: StringFilter<"Component"> | string
+    description?: StringNullableFilter<"Component"> | string | null
+    color?: StringFilter<"Component"> | string
+    position?: IntFilter<"Component"> | number
+    createdAt?: DateTimeFilter<"Component"> | Date | string
+    updatedAt?: DateTimeFilter<"Component"> | Date | string
+    projectId?: StringFilter<"Component"> | string
+    project?: XOR<ProjectScalarRelationFilter, ProjectWhereInput>
+    workItems?: ComponentOnWorkItemListRelationFilter
+  }, "id" | "projectId_name">
+
+  export type ComponentOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    color?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+    _count?: ComponentCountOrderByAggregateInput
+    _avg?: ComponentAvgOrderByAggregateInput
+    _max?: ComponentMaxOrderByAggregateInput
+    _min?: ComponentMinOrderByAggregateInput
+    _sum?: ComponentSumOrderByAggregateInput
+  }
+
+  export type ComponentScalarWhereWithAggregatesInput = {
+    AND?: ComponentScalarWhereWithAggregatesInput | ComponentScalarWhereWithAggregatesInput[]
+    OR?: ComponentScalarWhereWithAggregatesInput[]
+    NOT?: ComponentScalarWhereWithAggregatesInput | ComponentScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"Component"> | string
+    name?: StringWithAggregatesFilter<"Component"> | string
+    description?: StringNullableWithAggregatesFilter<"Component"> | string | null
+    color?: StringWithAggregatesFilter<"Component"> | string
+    position?: IntWithAggregatesFilter<"Component"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"Component"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Component"> | Date | string
+    projectId?: StringWithAggregatesFilter<"Component"> | string
+  }
+
+  export type ComponentOnWorkItemWhereInput = {
+    AND?: ComponentOnWorkItemWhereInput | ComponentOnWorkItemWhereInput[]
+    OR?: ComponentOnWorkItemWhereInput[]
+    NOT?: ComponentOnWorkItemWhereInput | ComponentOnWorkItemWhereInput[]
+    workItemId?: StringFilter<"ComponentOnWorkItem"> | string
+    componentId?: StringFilter<"ComponentOnWorkItem"> | string
+    assignedAt?: DateTimeFilter<"ComponentOnWorkItem"> | Date | string
+    workItem?: XOR<WorkItemScalarRelationFilter, WorkItemWhereInput>
+    component?: XOR<ComponentScalarRelationFilter, ComponentWhereInput>
+  }
+
+  export type ComponentOnWorkItemOrderByWithRelationInput = {
+    workItemId?: SortOrder
+    componentId?: SortOrder
+    assignedAt?: SortOrder
+    workItem?: WorkItemOrderByWithRelationInput
+    component?: ComponentOrderByWithRelationInput
+  }
+
+  export type ComponentOnWorkItemWhereUniqueInput = Prisma.AtLeast<{
+    workItemId_componentId?: ComponentOnWorkItemWorkItemIdComponentIdCompoundUniqueInput
+    AND?: ComponentOnWorkItemWhereInput | ComponentOnWorkItemWhereInput[]
+    OR?: ComponentOnWorkItemWhereInput[]
+    NOT?: ComponentOnWorkItemWhereInput | ComponentOnWorkItemWhereInput[]
+    workItemId?: StringFilter<"ComponentOnWorkItem"> | string
+    componentId?: StringFilter<"ComponentOnWorkItem"> | string
+    assignedAt?: DateTimeFilter<"ComponentOnWorkItem"> | Date | string
+    workItem?: XOR<WorkItemScalarRelationFilter, WorkItemWhereInput>
+    component?: XOR<ComponentScalarRelationFilter, ComponentWhereInput>
+  }, "workItemId_componentId">
+
+  export type ComponentOnWorkItemOrderByWithAggregationInput = {
+    workItemId?: SortOrder
+    componentId?: SortOrder
+    assignedAt?: SortOrder
+    _count?: ComponentOnWorkItemCountOrderByAggregateInput
+    _max?: ComponentOnWorkItemMaxOrderByAggregateInput
+    _min?: ComponentOnWorkItemMinOrderByAggregateInput
+  }
+
+  export type ComponentOnWorkItemScalarWhereWithAggregatesInput = {
+    AND?: ComponentOnWorkItemScalarWhereWithAggregatesInput | ComponentOnWorkItemScalarWhereWithAggregatesInput[]
+    OR?: ComponentOnWorkItemScalarWhereWithAggregatesInput[]
+    NOT?: ComponentOnWorkItemScalarWhereWithAggregatesInput | ComponentOnWorkItemScalarWhereWithAggregatesInput[]
+    workItemId?: StringWithAggregatesFilter<"ComponentOnWorkItem"> | string
+    componentId?: StringWithAggregatesFilter<"ComponentOnWorkItem"> | string
+    assignedAt?: DateTimeWithAggregatesFilter<"ComponentOnWorkItem"> | Date | string
   }
 
   export type DependencyWhereInput = {
@@ -44507,6 +47149,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -44531,6 +47174,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -44555,6 +47199,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -44579,6 +47224,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -44924,6 +47570,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -44959,6 +47606,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -44994,6 +47642,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -45029,6 +47678,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -45563,6 +48213,126 @@ export namespace Prisma {
   export type TagOnWorkItemUncheckedUpdateManyInput = {
     workItemId?: StringFieldUpdateOperationsInput | string
     tagId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ComponentCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutComponentsInput
+    workItems?: ComponentOnWorkItemCreateNestedManyWithoutComponentInput
+  }
+
+  export type ComponentUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+    workItems?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutComponentInput
+  }
+
+  export type ComponentUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutComponentsNestedInput
+    workItems?: ComponentOnWorkItemUpdateManyWithoutComponentNestedInput
+  }
+
+  export type ComponentUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    workItems?: ComponentOnWorkItemUncheckedUpdateManyWithoutComponentNestedInput
+  }
+
+  export type ComponentCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+  }
+
+  export type ComponentUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComponentUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ComponentOnWorkItemCreateInput = {
+    assignedAt?: Date | string
+    workItem: WorkItemCreateNestedOneWithoutComponentsInput
+    component: ComponentCreateNestedOneWithoutWorkItemsInput
+  }
+
+  export type ComponentOnWorkItemUncheckedCreateInput = {
+    workItemId: string
+    componentId: string
+    assignedAt?: Date | string
+  }
+
+  export type ComponentOnWorkItemUpdateInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workItem?: WorkItemUpdateOneRequiredWithoutComponentsNestedInput
+    component?: ComponentUpdateOneRequiredWithoutWorkItemsNestedInput
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateInput = {
+    workItemId?: StringFieldUpdateOperationsInput | string
+    componentId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComponentOnWorkItemCreateManyInput = {
+    workItemId: string
+    componentId: string
+    assignedAt?: Date | string
+  }
+
+  export type ComponentOnWorkItemUpdateManyMutationInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateManyInput = {
+    workItemId?: StringFieldUpdateOperationsInput | string
+    componentId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type DependencyCreateInput = {
@@ -47117,6 +49887,12 @@ export namespace Prisma {
     none?: WorkItemStateWhereInput
   }
 
+  export type ComponentListRelationFilter = {
+    every?: ComponentWhereInput
+    some?: ComponentWhereInput
+    none?: ComponentWhereInput
+  }
+
   export type SprintOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -47134,6 +49910,10 @@ export namespace Prisma {
   }
 
   export type WorkItemStateOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ComponentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47434,6 +50214,12 @@ export namespace Prisma {
     none?: TagOnWorkItemWhereInput
   }
 
+  export type ComponentOnWorkItemListRelationFilter = {
+    every?: ComponentOnWorkItemWhereInput
+    some?: ComponentOnWorkItemWhereInput
+    none?: ComponentOnWorkItemWhereInput
+  }
+
   export type WorkItemEmbeddingNullableScalarRelationFilter = {
     is?: WorkItemEmbeddingWhereInput | null
     isNot?: WorkItemEmbeddingWhereInput | null
@@ -47448,6 +50234,10 @@ export namespace Prisma {
   }
 
   export type TagOnWorkItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type ComponentOnWorkItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -47850,6 +50640,80 @@ export namespace Prisma {
   export type TagOnWorkItemMinOrderByAggregateInput = {
     workItemId?: SortOrder
     tagId?: SortOrder
+  }
+
+  export type ComponentProjectIdNameCompoundUniqueInput = {
+    projectId: string
+    name: string
+  }
+
+  export type ComponentCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+  }
+
+  export type ComponentAvgOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type ComponentMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+  }
+
+  export type ComponentMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    color?: SortOrder
+    position?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    projectId?: SortOrder
+  }
+
+  export type ComponentSumOrderByAggregateInput = {
+    position?: SortOrder
+  }
+
+  export type ComponentScalarRelationFilter = {
+    is?: ComponentWhereInput
+    isNot?: ComponentWhereInput
+  }
+
+  export type ComponentOnWorkItemWorkItemIdComponentIdCompoundUniqueInput = {
+    workItemId: string
+    componentId: string
+  }
+
+  export type ComponentOnWorkItemCountOrderByAggregateInput = {
+    workItemId?: SortOrder
+    componentId?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type ComponentOnWorkItemMaxOrderByAggregateInput = {
+    workItemId?: SortOrder
+    componentId?: SortOrder
+    assignedAt?: SortOrder
+  }
+
+  export type ComponentOnWorkItemMinOrderByAggregateInput = {
+    workItemId?: SortOrder
+    componentId?: SortOrder
+    assignedAt?: SortOrder
   }
 
   export type DependencySourceItemIdTargetItemIdCompoundUniqueInput = {
@@ -49314,6 +52178,13 @@ export namespace Prisma {
     connect?: WorkItemStateWhereUniqueInput | WorkItemStateWhereUniqueInput[]
   }
 
+  export type ComponentCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput> | ComponentCreateWithoutProjectInput[] | ComponentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ComponentCreateOrConnectWithoutProjectInput | ComponentCreateOrConnectWithoutProjectInput[]
+    createMany?: ComponentCreateManyProjectInputEnvelope
+    connect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+  }
+
   export type TeamCreateNestedManyWithoutProjectsInput = {
     create?: XOR<TeamCreateWithoutProjectsInput, TeamUncheckedCreateWithoutProjectsInput> | TeamCreateWithoutProjectsInput[] | TeamUncheckedCreateWithoutProjectsInput[]
     connectOrCreate?: TeamCreateOrConnectWithoutProjectsInput | TeamCreateOrConnectWithoutProjectsInput[]
@@ -49360,6 +52231,13 @@ export namespace Prisma {
     connectOrCreate?: WorkItemStateCreateOrConnectWithoutProjectInput | WorkItemStateCreateOrConnectWithoutProjectInput[]
     createMany?: WorkItemStateCreateManyProjectInputEnvelope
     connect?: WorkItemStateWhereUniqueInput | WorkItemStateWhereUniqueInput[]
+  }
+
+  export type ComponentUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput> | ComponentCreateWithoutProjectInput[] | ComponentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ComponentCreateOrConnectWithoutProjectInput | ComponentCreateOrConnectWithoutProjectInput[]
+    createMany?: ComponentCreateManyProjectInputEnvelope
+    connect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
   }
 
   export type TeamUncheckedCreateNestedManyWithoutProjectsInput = {
@@ -49488,6 +52366,20 @@ export namespace Prisma {
     deleteMany?: WorkItemStateScalarWhereInput | WorkItemStateScalarWhereInput[]
   }
 
+  export type ComponentUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput> | ComponentCreateWithoutProjectInput[] | ComponentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ComponentCreateOrConnectWithoutProjectInput | ComponentCreateOrConnectWithoutProjectInput[]
+    upsert?: ComponentUpsertWithWhereUniqueWithoutProjectInput | ComponentUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ComponentCreateManyProjectInputEnvelope
+    set?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    disconnect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    delete?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    connect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    update?: ComponentUpdateWithWhereUniqueWithoutProjectInput | ComponentUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ComponentUpdateManyWithWhereWithoutProjectInput | ComponentUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ComponentScalarWhereInput | ComponentScalarWhereInput[]
+  }
+
   export type TeamUpdateManyWithoutProjectsNestedInput = {
     create?: XOR<TeamCreateWithoutProjectsInput, TeamUncheckedCreateWithoutProjectsInput> | TeamCreateWithoutProjectsInput[] | TeamUncheckedCreateWithoutProjectsInput[]
     connectOrCreate?: TeamCreateOrConnectWithoutProjectsInput | TeamCreateOrConnectWithoutProjectsInput[]
@@ -49583,6 +52475,20 @@ export namespace Prisma {
     update?: WorkItemStateUpdateWithWhereUniqueWithoutProjectInput | WorkItemStateUpdateWithWhereUniqueWithoutProjectInput[]
     updateMany?: WorkItemStateUpdateManyWithWhereWithoutProjectInput | WorkItemStateUpdateManyWithWhereWithoutProjectInput[]
     deleteMany?: WorkItemStateScalarWhereInput | WorkItemStateScalarWhereInput[]
+  }
+
+  export type ComponentUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput> | ComponentCreateWithoutProjectInput[] | ComponentUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: ComponentCreateOrConnectWithoutProjectInput | ComponentCreateOrConnectWithoutProjectInput[]
+    upsert?: ComponentUpsertWithWhereUniqueWithoutProjectInput | ComponentUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: ComponentCreateManyProjectInputEnvelope
+    set?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    disconnect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    delete?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    connect?: ComponentWhereUniqueInput | ComponentWhereUniqueInput[]
+    update?: ComponentUpdateWithWhereUniqueWithoutProjectInput | ComponentUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: ComponentUpdateManyWithWhereWithoutProjectInput | ComponentUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: ComponentScalarWhereInput | ComponentScalarWhereInput[]
   }
 
   export type TeamUncheckedUpdateManyWithoutProjectsNestedInput = {
@@ -49959,6 +52865,13 @@ export namespace Prisma {
     connect?: TagOnWorkItemWhereUniqueInput | TagOnWorkItemWhereUniqueInput[]
   }
 
+  export type ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput> | ComponentOnWorkItemCreateWithoutWorkItemInput[] | ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput | ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput[]
+    createMany?: ComponentOnWorkItemCreateManyWorkItemInputEnvelope
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+  }
+
   export type WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput = {
     connect?: WorkItemEmbeddingWhereUniqueInput
   }
@@ -50030,6 +52943,13 @@ export namespace Prisma {
     connectOrCreate?: TagOnWorkItemCreateOrConnectWithoutWorkItemInput | TagOnWorkItemCreateOrConnectWithoutWorkItemInput[]
     createMany?: TagOnWorkItemCreateManyWorkItemInputEnvelope
     connect?: TagOnWorkItemWhereUniqueInput | TagOnWorkItemWhereUniqueInput[]
+  }
+
+  export type ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput> | ComponentOnWorkItemCreateWithoutWorkItemInput[] | ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput | ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput[]
+    createMany?: ComponentOnWorkItemCreateManyWorkItemInputEnvelope
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
   }
 
   export type WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput = {
@@ -50246,6 +53166,20 @@ export namespace Prisma {
     deleteMany?: TagOnWorkItemScalarWhereInput | TagOnWorkItemScalarWhereInput[]
   }
 
+  export type ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput> | ComponentOnWorkItemCreateWithoutWorkItemInput[] | ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput | ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput[]
+    upsert?: ComponentOnWorkItemUpsertWithWhereUniqueWithoutWorkItemInput | ComponentOnWorkItemUpsertWithWhereUniqueWithoutWorkItemInput[]
+    createMany?: ComponentOnWorkItemCreateManyWorkItemInputEnvelope
+    set?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    disconnect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    delete?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    update?: ComponentOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput | ComponentOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput[]
+    updateMany?: ComponentOnWorkItemUpdateManyWithWhereWithoutWorkItemInput | ComponentOnWorkItemUpdateManyWithWhereWithoutWorkItemInput[]
+    deleteMany?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
+  }
+
   export type WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput = {
     disconnect?: WorkItemEmbeddingWhereInput | boolean
     delete?: WorkItemEmbeddingWhereInput | boolean
@@ -50387,6 +53321,20 @@ export namespace Prisma {
     update?: TagOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput | TagOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput[]
     updateMany?: TagOnWorkItemUpdateManyWithWhereWithoutWorkItemInput | TagOnWorkItemUpdateManyWithWhereWithoutWorkItemInput[]
     deleteMany?: TagOnWorkItemScalarWhereInput | TagOnWorkItemScalarWhereInput[]
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput> | ComponentOnWorkItemCreateWithoutWorkItemInput[] | ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput | ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput[]
+    upsert?: ComponentOnWorkItemUpsertWithWhereUniqueWithoutWorkItemInput | ComponentOnWorkItemUpsertWithWhereUniqueWithoutWorkItemInput[]
+    createMany?: ComponentOnWorkItemCreateManyWorkItemInputEnvelope
+    set?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    disconnect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    delete?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    update?: ComponentOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput | ComponentOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput[]
+    updateMany?: ComponentOnWorkItemUpdateManyWithWhereWithoutWorkItemInput | ComponentOnWorkItemUpdateManyWithWhereWithoutWorkItemInput[]
+    deleteMany?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
   }
 
   export type WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput = {
@@ -50641,6 +53589,90 @@ export namespace Prisma {
     upsert?: TagUpsertWithoutWorkItemsInput
     connect?: TagWhereUniqueInput
     update?: XOR<XOR<TagUpdateToOneWithWhereWithoutWorkItemsInput, TagUpdateWithoutWorkItemsInput>, TagUncheckedUpdateWithoutWorkItemsInput>
+  }
+
+  export type ProjectCreateNestedOneWithoutComponentsInput = {
+    create?: XOR<ProjectCreateWithoutComponentsInput, ProjectUncheckedCreateWithoutComponentsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutComponentsInput
+    connect?: ProjectWhereUniqueInput
+  }
+
+  export type ComponentOnWorkItemCreateNestedManyWithoutComponentInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput> | ComponentOnWorkItemCreateWithoutComponentInput[] | ComponentOnWorkItemUncheckedCreateWithoutComponentInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutComponentInput | ComponentOnWorkItemCreateOrConnectWithoutComponentInput[]
+    createMany?: ComponentOnWorkItemCreateManyComponentInputEnvelope
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+  }
+
+  export type ComponentOnWorkItemUncheckedCreateNestedManyWithoutComponentInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput> | ComponentOnWorkItemCreateWithoutComponentInput[] | ComponentOnWorkItemUncheckedCreateWithoutComponentInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutComponentInput | ComponentOnWorkItemCreateOrConnectWithoutComponentInput[]
+    createMany?: ComponentOnWorkItemCreateManyComponentInputEnvelope
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+  }
+
+  export type ProjectUpdateOneRequiredWithoutComponentsNestedInput = {
+    create?: XOR<ProjectCreateWithoutComponentsInput, ProjectUncheckedCreateWithoutComponentsInput>
+    connectOrCreate?: ProjectCreateOrConnectWithoutComponentsInput
+    upsert?: ProjectUpsertWithoutComponentsInput
+    connect?: ProjectWhereUniqueInput
+    update?: XOR<XOR<ProjectUpdateToOneWithWhereWithoutComponentsInput, ProjectUpdateWithoutComponentsInput>, ProjectUncheckedUpdateWithoutComponentsInput>
+  }
+
+  export type ComponentOnWorkItemUpdateManyWithoutComponentNestedInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput> | ComponentOnWorkItemCreateWithoutComponentInput[] | ComponentOnWorkItemUncheckedCreateWithoutComponentInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutComponentInput | ComponentOnWorkItemCreateOrConnectWithoutComponentInput[]
+    upsert?: ComponentOnWorkItemUpsertWithWhereUniqueWithoutComponentInput | ComponentOnWorkItemUpsertWithWhereUniqueWithoutComponentInput[]
+    createMany?: ComponentOnWorkItemCreateManyComponentInputEnvelope
+    set?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    disconnect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    delete?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    update?: ComponentOnWorkItemUpdateWithWhereUniqueWithoutComponentInput | ComponentOnWorkItemUpdateWithWhereUniqueWithoutComponentInput[]
+    updateMany?: ComponentOnWorkItemUpdateManyWithWhereWithoutComponentInput | ComponentOnWorkItemUpdateManyWithWhereWithoutComponentInput[]
+    deleteMany?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateManyWithoutComponentNestedInput = {
+    create?: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput> | ComponentOnWorkItemCreateWithoutComponentInput[] | ComponentOnWorkItemUncheckedCreateWithoutComponentInput[]
+    connectOrCreate?: ComponentOnWorkItemCreateOrConnectWithoutComponentInput | ComponentOnWorkItemCreateOrConnectWithoutComponentInput[]
+    upsert?: ComponentOnWorkItemUpsertWithWhereUniqueWithoutComponentInput | ComponentOnWorkItemUpsertWithWhereUniqueWithoutComponentInput[]
+    createMany?: ComponentOnWorkItemCreateManyComponentInputEnvelope
+    set?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    disconnect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    delete?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    connect?: ComponentOnWorkItemWhereUniqueInput | ComponentOnWorkItemWhereUniqueInput[]
+    update?: ComponentOnWorkItemUpdateWithWhereUniqueWithoutComponentInput | ComponentOnWorkItemUpdateWithWhereUniqueWithoutComponentInput[]
+    updateMany?: ComponentOnWorkItemUpdateManyWithWhereWithoutComponentInput | ComponentOnWorkItemUpdateManyWithWhereWithoutComponentInput[]
+    deleteMany?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
+  }
+
+  export type WorkItemCreateNestedOneWithoutComponentsInput = {
+    create?: XOR<WorkItemCreateWithoutComponentsInput, WorkItemUncheckedCreateWithoutComponentsInput>
+    connectOrCreate?: WorkItemCreateOrConnectWithoutComponentsInput
+    connect?: WorkItemWhereUniqueInput
+  }
+
+  export type ComponentCreateNestedOneWithoutWorkItemsInput = {
+    create?: XOR<ComponentCreateWithoutWorkItemsInput, ComponentUncheckedCreateWithoutWorkItemsInput>
+    connectOrCreate?: ComponentCreateOrConnectWithoutWorkItemsInput
+    connect?: ComponentWhereUniqueInput
+  }
+
+  export type WorkItemUpdateOneRequiredWithoutComponentsNestedInput = {
+    create?: XOR<WorkItemCreateWithoutComponentsInput, WorkItemUncheckedCreateWithoutComponentsInput>
+    connectOrCreate?: WorkItemCreateOrConnectWithoutComponentsInput
+    upsert?: WorkItemUpsertWithoutComponentsInput
+    connect?: WorkItemWhereUniqueInput
+    update?: XOR<XOR<WorkItemUpdateToOneWithWhereWithoutComponentsInput, WorkItemUpdateWithoutComponentsInput>, WorkItemUncheckedUpdateWithoutComponentsInput>
+  }
+
+  export type ComponentUpdateOneRequiredWithoutWorkItemsNestedInput = {
+    create?: XOR<ComponentCreateWithoutWorkItemsInput, ComponentUncheckedCreateWithoutWorkItemsInput>
+    connectOrCreate?: ComponentCreateOrConnectWithoutWorkItemsInput
+    upsert?: ComponentUpsertWithoutWorkItemsInput
+    connect?: ComponentWhereUniqueInput
+    update?: XOR<XOR<ComponentUpdateToOneWithWhereWithoutWorkItemsInput, ComponentUpdateWithoutWorkItemsInput>, ComponentUncheckedUpdateWithoutWorkItemsInput>
   }
 
   export type WorkItemCreateNestedOneWithoutDependenciesAsSourceInput = {
@@ -51327,6 +54359,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -51350,6 +54383,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -51394,6 +54428,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -51428,6 +54463,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -51472,6 +54508,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -51506,6 +54543,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -52364,6 +55402,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -52387,6 +55426,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -52573,6 +55613,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectUncheckedCreateWithoutTeamsInput = {
@@ -52596,6 +55637,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
   }
 
   export type ProjectCreateOrConnectWithoutTeamsInput = {
@@ -53273,6 +56315,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -53296,6 +56339,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -53518,6 +56562,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -53552,6 +56597,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -53752,6 +56798,38 @@ export namespace Prisma {
 
   export type WorkItemStateCreateManyProjectInputEnvelope = {
     data: WorkItemStateCreateManyProjectInput | WorkItemStateCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ComponentCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workItems?: ComponentOnWorkItemCreateNestedManyWithoutComponentInput
+  }
+
+  export type ComponentUncheckedCreateWithoutProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    workItems?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutComponentInput
+  }
+
+  export type ComponentCreateOrConnectWithoutProjectInput = {
+    where: ComponentWhereUniqueInput
+    create: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ComponentCreateManyProjectInputEnvelope = {
+    data: ComponentCreateManyProjectInput | ComponentCreateManyProjectInput[]
     skipDuplicates?: boolean
   }
 
@@ -54106,6 +57184,36 @@ export namespace Prisma {
     projectId?: StringFilter<"WorkItemState"> | string
   }
 
+  export type ComponentUpsertWithWhereUniqueWithoutProjectInput = {
+    where: ComponentWhereUniqueInput
+    update: XOR<ComponentUpdateWithoutProjectInput, ComponentUncheckedUpdateWithoutProjectInput>
+    create: XOR<ComponentCreateWithoutProjectInput, ComponentUncheckedCreateWithoutProjectInput>
+  }
+
+  export type ComponentUpdateWithWhereUniqueWithoutProjectInput = {
+    where: ComponentWhereUniqueInput
+    data: XOR<ComponentUpdateWithoutProjectInput, ComponentUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type ComponentUpdateManyWithWhereWithoutProjectInput = {
+    where: ComponentScalarWhereInput
+    data: XOR<ComponentUpdateManyMutationInput, ComponentUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type ComponentScalarWhereInput = {
+    AND?: ComponentScalarWhereInput | ComponentScalarWhereInput[]
+    OR?: ComponentScalarWhereInput[]
+    NOT?: ComponentScalarWhereInput | ComponentScalarWhereInput[]
+    id?: StringFilter<"Component"> | string
+    name?: StringFilter<"Component"> | string
+    description?: StringNullableFilter<"Component"> | string | null
+    color?: StringFilter<"Component"> | string
+    position?: IntFilter<"Component"> | number
+    createdAt?: DateTimeFilter<"Component"> | Date | string
+    updatedAt?: DateTimeFilter<"Component"> | Date | string
+    projectId?: StringFilter<"Component"> | string
+  }
+
   export type TeamUpsertWithWhereUniqueWithoutProjectsInput = {
     where: TeamWhereUniqueInput
     update: XOR<TeamUpdateWithoutProjectsInput, TeamUncheckedUpdateWithoutProjectsInput>
@@ -54142,6 +57250,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -54165,6 +57274,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -54204,6 +57314,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54238,6 +57349,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54411,6 +57523,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -54434,6 +57547,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -54564,6 +57678,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -54587,6 +57702,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -54626,6 +57742,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -54649,6 +57766,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -54775,6 +57893,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54809,6 +57928,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54848,6 +57968,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54882,6 +58003,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54926,6 +58048,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54960,6 +58083,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -54999,6 +58123,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -55033,6 +58158,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -55066,6 +58192,7 @@ export namespace Prisma {
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -55089,6 +58216,7 @@ export namespace Prisma {
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -55534,6 +58662,26 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ComponentOnWorkItemCreateWithoutWorkItemInput = {
+    assignedAt?: Date | string
+    component: ComponentCreateNestedOneWithoutWorkItemsInput
+  }
+
+  export type ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput = {
+    componentId: string
+    assignedAt?: Date | string
+  }
+
+  export type ComponentOnWorkItemCreateOrConnectWithoutWorkItemInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    create: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput>
+  }
+
+  export type ComponentOnWorkItemCreateManyWorkItemInputEnvelope = {
+    data: ComponentOnWorkItemCreateManyWorkItemInput | ComponentOnWorkItemCreateManyWorkItemInput[]
+    skipDuplicates?: boolean
+  }
+
   export type WorkItemUpsertWithoutChildrenInput = {
     update: XOR<WorkItemUpdateWithoutChildrenInput, WorkItemUncheckedUpdateWithoutChildrenInput>
     create: XOR<WorkItemCreateWithoutChildrenInput, WorkItemUncheckedCreateWithoutChildrenInput>
@@ -55576,6 +58724,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -55610,6 +58759,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -55671,6 +58821,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -55705,6 +58856,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -55755,6 +58907,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -55778,6 +58931,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -56187,6 +59341,31 @@ export namespace Prisma {
     tagId?: StringFilter<"TagOnWorkItem"> | string
   }
 
+  export type ComponentOnWorkItemUpsertWithWhereUniqueWithoutWorkItemInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    update: XOR<ComponentOnWorkItemUpdateWithoutWorkItemInput, ComponentOnWorkItemUncheckedUpdateWithoutWorkItemInput>
+    create: XOR<ComponentOnWorkItemCreateWithoutWorkItemInput, ComponentOnWorkItemUncheckedCreateWithoutWorkItemInput>
+  }
+
+  export type ComponentOnWorkItemUpdateWithWhereUniqueWithoutWorkItemInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    data: XOR<ComponentOnWorkItemUpdateWithoutWorkItemInput, ComponentOnWorkItemUncheckedUpdateWithoutWorkItemInput>
+  }
+
+  export type ComponentOnWorkItemUpdateManyWithWhereWithoutWorkItemInput = {
+    where: ComponentOnWorkItemScalarWhereInput
+    data: XOR<ComponentOnWorkItemUpdateManyMutationInput, ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemInput>
+  }
+
+  export type ComponentOnWorkItemScalarWhereInput = {
+    AND?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
+    OR?: ComponentOnWorkItemScalarWhereInput[]
+    NOT?: ComponentOnWorkItemScalarWhereInput | ComponentOnWorkItemScalarWhereInput[]
+    workItemId?: StringFilter<"ComponentOnWorkItem"> | string
+    componentId?: StringFilter<"ComponentOnWorkItem"> | string
+    assignedAt?: DateTimeFilter<"ComponentOnWorkItem"> | Date | string
+  }
+
   export type WorkItemEmbeddingUpdateToOneWithWhereWithoutWorkItemInput = {
     where?: WorkItemEmbeddingWhereInput
     data: XOR<WorkItemEmbeddingUpdateWithoutWorkItemInput, WorkItemEmbeddingUncheckedUpdateWithoutWorkItemInput>
@@ -56235,6 +59414,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -56269,6 +59449,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -56319,6 +59500,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -56353,6 +59535,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -56376,6 +59559,7 @@ export namespace Prisma {
     milestones?: MilestoneCreateNestedManyWithoutProjectInput
     boards?: BoardCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -56399,6 +59583,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -56438,6 +59623,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -56472,6 +59658,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -56516,6 +59703,7 @@ export namespace Prisma {
     milestones?: MilestoneUpdateManyWithoutProjectNestedInput
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -56539,6 +59727,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -56578,6 +59767,7 @@ export namespace Prisma {
     milestones?: MilestoneCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -56601,6 +59791,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
     workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -56717,6 +59908,7 @@ export namespace Prisma {
     milestones?: MilestoneUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -56740,6 +59932,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -56957,6 +60150,7 @@ export namespace Prisma {
     attachments?: AttachmentCreateNestedManyWithoutWorkItemInput
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -56991,6 +60185,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkItemInput
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57062,6 +60257,7 @@ export namespace Prisma {
     attachments?: AttachmentUpdateManyWithoutWorkItemNestedInput
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57096,6 +60292,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkItemNestedInput
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57124,6 +60321,370 @@ export namespace Prisma {
     color?: StringFieldUpdateOperationsInput | string
     description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ProjectCreateWithoutComponentsInput = {
+    id?: string
+    key: string
+    name: string
+    description?: string | null
+    projectType?: string
+    riskScore?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    portfolio?: PortfolioCreateNestedOneWithoutProjectsInput
+    organization: OrganizationCreateNestedOneWithoutProjectsInput
+    leadUser?: UserCreateNestedOneWithoutOwnedProjectsInput
+    workItems?: WorkItemCreateNestedManyWithoutProjectInput
+    sprints?: SprintCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneCreateNestedManyWithoutProjectInput
+    boards?: BoardCreateNestedManyWithoutProjectInput
+    workflowRules?: WorkflowRuleCreateNestedManyWithoutProjectInput
+    workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    teams?: TeamCreateNestedManyWithoutProjectsInput
+  }
+
+  export type ProjectUncheckedCreateWithoutComponentsInput = {
+    id?: string
+    key: string
+    name: string
+    description?: string | null
+    projectType?: string
+    riskScore?: number
+    startDate?: Date | string | null
+    endDate?: Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    portfolioId?: string | null
+    organizationId: string
+    leadUserId?: string | null
+    workItems?: WorkItemUncheckedCreateNestedManyWithoutProjectInput
+    sprints?: SprintUncheckedCreateNestedManyWithoutProjectInput
+    milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
+    boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
+    workflowRules?: WorkflowRuleUncheckedCreateNestedManyWithoutProjectInput
+    workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
+  }
+
+  export type ProjectCreateOrConnectWithoutComponentsInput = {
+    where: ProjectWhereUniqueInput
+    create: XOR<ProjectCreateWithoutComponentsInput, ProjectUncheckedCreateWithoutComponentsInput>
+  }
+
+  export type ComponentOnWorkItemCreateWithoutComponentInput = {
+    assignedAt?: Date | string
+    workItem: WorkItemCreateNestedOneWithoutComponentsInput
+  }
+
+  export type ComponentOnWorkItemUncheckedCreateWithoutComponentInput = {
+    workItemId: string
+    assignedAt?: Date | string
+  }
+
+  export type ComponentOnWorkItemCreateOrConnectWithoutComponentInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    create: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput>
+  }
+
+  export type ComponentOnWorkItemCreateManyComponentInputEnvelope = {
+    data: ComponentOnWorkItemCreateManyComponentInput | ComponentOnWorkItemCreateManyComponentInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ProjectUpsertWithoutComponentsInput = {
+    update: XOR<ProjectUpdateWithoutComponentsInput, ProjectUncheckedUpdateWithoutComponentsInput>
+    create: XOR<ProjectCreateWithoutComponentsInput, ProjectUncheckedCreateWithoutComponentsInput>
+    where?: ProjectWhereInput
+  }
+
+  export type ProjectUpdateToOneWithWhereWithoutComponentsInput = {
+    where?: ProjectWhereInput
+    data: XOR<ProjectUpdateWithoutComponentsInput, ProjectUncheckedUpdateWithoutComponentsInput>
+  }
+
+  export type ProjectUpdateWithoutComponentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: StringFieldUpdateOperationsInput | string
+    riskScore?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    portfolio?: PortfolioUpdateOneWithoutProjectsNestedInput
+    organization?: OrganizationUpdateOneRequiredWithoutProjectsNestedInput
+    leadUser?: UserUpdateOneWithoutOwnedProjectsNestedInput
+    workItems?: WorkItemUpdateManyWithoutProjectNestedInput
+    sprints?: SprintUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUpdateManyWithoutProjectNestedInput
+    boards?: BoardUpdateManyWithoutProjectNestedInput
+    workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
+    workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    teams?: TeamUpdateManyWithoutProjectsNestedInput
+  }
+
+  export type ProjectUncheckedUpdateWithoutComponentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    key?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    projectType?: StringFieldUpdateOperationsInput | string
+    riskScore?: FloatFieldUpdateOperationsInput | number
+    startDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    endDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    settings?: JsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    portfolioId?: NullableStringFieldUpdateOperationsInput | string | null
+    organizationId?: StringFieldUpdateOperationsInput | string
+    leadUserId?: NullableStringFieldUpdateOperationsInput | string | null
+    workItems?: WorkItemUncheckedUpdateManyWithoutProjectNestedInput
+    sprints?: SprintUncheckedUpdateManyWithoutProjectNestedInput
+    milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
+    boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
+    workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
+    workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
+  }
+
+  export type ComponentOnWorkItemUpsertWithWhereUniqueWithoutComponentInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    update: XOR<ComponentOnWorkItemUpdateWithoutComponentInput, ComponentOnWorkItemUncheckedUpdateWithoutComponentInput>
+    create: XOR<ComponentOnWorkItemCreateWithoutComponentInput, ComponentOnWorkItemUncheckedCreateWithoutComponentInput>
+  }
+
+  export type ComponentOnWorkItemUpdateWithWhereUniqueWithoutComponentInput = {
+    where: ComponentOnWorkItemWhereUniqueInput
+    data: XOR<ComponentOnWorkItemUpdateWithoutComponentInput, ComponentOnWorkItemUncheckedUpdateWithoutComponentInput>
+  }
+
+  export type ComponentOnWorkItemUpdateManyWithWhereWithoutComponentInput = {
+    where: ComponentOnWorkItemScalarWhereInput
+    data: XOR<ComponentOnWorkItemUpdateManyMutationInput, ComponentOnWorkItemUncheckedUpdateManyWithoutComponentInput>
+  }
+
+  export type WorkItemCreateWithoutComponentsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    type: $Enums.WorkItemType
+    priority?: $Enums.Priority
+    storyPoints?: number | null
+    estimatedHours?: number | null
+    remainingHours?: number | null
+    order?: number
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parent?: WorkItemCreateNestedOneWithoutChildrenInput
+    children?: WorkItemCreateNestedManyWithoutParentInput
+    epic?: WorkItemCreateNestedOneWithoutStoriesInput
+    stories?: WorkItemCreateNestedManyWithoutEpicInput
+    project: ProjectCreateNestedOneWithoutWorkItemsInput
+    state?: WorkItemStateCreateNestedOneWithoutWorkItemsInput
+    assignee?: UserCreateNestedOneWithoutAssignedWorkItemsInput
+    creator: UserCreateNestedOneWithoutCreatedWorkItemsInput
+    sprint?: SprintCreateNestedOneWithoutWorkItemsInput
+    details?: WorkItemDetailCreateNestedOneWithoutWorkItemInput
+    dependenciesAsSource?: DependencyCreateNestedManyWithoutSourceItemInput
+    dependenciesAsTarget?: DependencyCreateNestedManyWithoutTargetItemInput
+    comments?: CommentCreateNestedManyWithoutWorkItemInput
+    attachments?: AttachmentCreateNestedManyWithoutWorkItemInput
+    timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
+    snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
+    tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
+  }
+
+  export type WorkItemUncheckedCreateWithoutComponentsInput = {
+    id?: string
+    title: string
+    description?: string | null
+    type: $Enums.WorkItemType
+    priority?: $Enums.Priority
+    storyPoints?: number | null
+    estimatedHours?: number | null
+    remainingHours?: number | null
+    order?: number
+    dueDate?: Date | string | null
+    completedAt?: Date | string | null
+    deletedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    parentId?: string | null
+    epicId?: string | null
+    projectId: string
+    stateId?: string | null
+    assigneeId?: string | null
+    creatorId: string
+    sprintId?: string | null
+    children?: WorkItemUncheckedCreateNestedManyWithoutParentInput
+    stories?: WorkItemUncheckedCreateNestedManyWithoutEpicInput
+    details?: WorkItemDetailUncheckedCreateNestedOneWithoutWorkItemInput
+    dependenciesAsSource?: DependencyUncheckedCreateNestedManyWithoutSourceItemInput
+    dependenciesAsTarget?: DependencyUncheckedCreateNestedManyWithoutTargetItemInput
+    comments?: CommentUncheckedCreateNestedManyWithoutWorkItemInput
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkItemInput
+    timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
+    snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
+    tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
+  }
+
+  export type WorkItemCreateOrConnectWithoutComponentsInput = {
+    where: WorkItemWhereUniqueInput
+    create: XOR<WorkItemCreateWithoutComponentsInput, WorkItemUncheckedCreateWithoutComponentsInput>
+  }
+
+  export type ComponentCreateWithoutWorkItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    project: ProjectCreateNestedOneWithoutComponentsInput
+  }
+
+  export type ComponentUncheckedCreateWithoutWorkItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    projectId: string
+  }
+
+  export type ComponentCreateOrConnectWithoutWorkItemsInput = {
+    where: ComponentWhereUniqueInput
+    create: XOR<ComponentCreateWithoutWorkItemsInput, ComponentUncheckedCreateWithoutWorkItemsInput>
+  }
+
+  export type WorkItemUpsertWithoutComponentsInput = {
+    update: XOR<WorkItemUpdateWithoutComponentsInput, WorkItemUncheckedUpdateWithoutComponentsInput>
+    create: XOR<WorkItemCreateWithoutComponentsInput, WorkItemUncheckedCreateWithoutComponentsInput>
+    where?: WorkItemWhereInput
+  }
+
+  export type WorkItemUpdateToOneWithWhereWithoutComponentsInput = {
+    where?: WorkItemWhereInput
+    data: XOR<WorkItemUpdateWithoutComponentsInput, WorkItemUncheckedUpdateWithoutComponentsInput>
+  }
+
+  export type WorkItemUpdateWithoutComponentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumWorkItemTypeFieldUpdateOperationsInput | $Enums.WorkItemType
+    priority?: EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+    storyPoints?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
+    remainingHours?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parent?: WorkItemUpdateOneWithoutChildrenNestedInput
+    children?: WorkItemUpdateManyWithoutParentNestedInput
+    epic?: WorkItemUpdateOneWithoutStoriesNestedInput
+    stories?: WorkItemUpdateManyWithoutEpicNestedInput
+    project?: ProjectUpdateOneRequiredWithoutWorkItemsNestedInput
+    state?: WorkItemStateUpdateOneWithoutWorkItemsNestedInput
+    assignee?: UserUpdateOneWithoutAssignedWorkItemsNestedInput
+    creator?: UserUpdateOneRequiredWithoutCreatedWorkItemsNestedInput
+    sprint?: SprintUpdateOneWithoutWorkItemsNestedInput
+    details?: WorkItemDetailUpdateOneWithoutWorkItemNestedInput
+    dependenciesAsSource?: DependencyUpdateManyWithoutSourceItemNestedInput
+    dependenciesAsTarget?: DependencyUpdateManyWithoutTargetItemNestedInput
+    comments?: CommentUpdateManyWithoutWorkItemNestedInput
+    attachments?: AttachmentUpdateManyWithoutWorkItemNestedInput
+    timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
+    snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
+    tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
+  }
+
+  export type WorkItemUncheckedUpdateWithoutComponentsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    type?: EnumWorkItemTypeFieldUpdateOperationsInput | $Enums.WorkItemType
+    priority?: EnumPriorityFieldUpdateOperationsInput | $Enums.Priority
+    storyPoints?: NullableFloatFieldUpdateOperationsInput | number | null
+    estimatedHours?: NullableFloatFieldUpdateOperationsInput | number | null
+    remainingHours?: NullableFloatFieldUpdateOperationsInput | number | null
+    order?: IntFieldUpdateOperationsInput | number
+    dueDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    completedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    deletedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    parentId?: NullableStringFieldUpdateOperationsInput | string | null
+    epicId?: NullableStringFieldUpdateOperationsInput | string | null
+    projectId?: StringFieldUpdateOperationsInput | string
+    stateId?: NullableStringFieldUpdateOperationsInput | string | null
+    assigneeId?: NullableStringFieldUpdateOperationsInput | string | null
+    creatorId?: StringFieldUpdateOperationsInput | string
+    sprintId?: NullableStringFieldUpdateOperationsInput | string | null
+    children?: WorkItemUncheckedUpdateManyWithoutParentNestedInput
+    stories?: WorkItemUncheckedUpdateManyWithoutEpicNestedInput
+    details?: WorkItemDetailUncheckedUpdateOneWithoutWorkItemNestedInput
+    dependenciesAsSource?: DependencyUncheckedUpdateManyWithoutSourceItemNestedInput
+    dependenciesAsTarget?: DependencyUncheckedUpdateManyWithoutTargetItemNestedInput
+    comments?: CommentUncheckedUpdateManyWithoutWorkItemNestedInput
+    attachments?: AttachmentUncheckedUpdateManyWithoutWorkItemNestedInput
+    timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
+    snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
+    tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
+  }
+
+  export type ComponentUpsertWithoutWorkItemsInput = {
+    update: XOR<ComponentUpdateWithoutWorkItemsInput, ComponentUncheckedUpdateWithoutWorkItemsInput>
+    create: XOR<ComponentCreateWithoutWorkItemsInput, ComponentUncheckedCreateWithoutWorkItemsInput>
+    where?: ComponentWhereInput
+  }
+
+  export type ComponentUpdateToOneWithWhereWithoutWorkItemsInput = {
+    where?: ComponentWhereInput
+    data: XOR<ComponentUpdateWithoutWorkItemsInput, ComponentUncheckedUpdateWithoutWorkItemsInput>
+  }
+
+  export type ComponentUpdateWithoutWorkItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: ProjectUpdateOneRequiredWithoutComponentsNestedInput
+  }
+
+  export type ComponentUncheckedUpdateWithoutWorkItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    projectId?: StringFieldUpdateOperationsInput | string
   }
 
   export type WorkItemCreateWithoutDependenciesAsSourceInput = {
@@ -57157,6 +60718,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57191,6 +60753,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57230,6 +60793,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57264,6 +60828,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57314,6 +60879,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57348,6 +60914,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57393,6 +60960,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57427,6 +60995,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57461,6 +61030,7 @@ export namespace Prisma {
     attachments?: AttachmentCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57495,6 +61065,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57649,6 +61220,7 @@ export namespace Prisma {
     attachments?: AttachmentUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57683,6 +61255,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -57833,6 +61406,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57867,6 +61441,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -57978,6 +61553,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58012,6 +61588,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58113,6 +61690,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -58147,6 +61725,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -58197,6 +61776,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58231,6 +61811,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58266,6 +61847,7 @@ export namespace Prisma {
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
   }
 
   export type WorkItemUncheckedCreateWithoutEmbeddingInput = {
@@ -58300,6 +61882,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     snapshots?: WorkItemSnapshotUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
   }
 
   export type WorkItemCreateOrConnectWithoutEmbeddingInput = {
@@ -58350,6 +61933,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
   }
 
   export type WorkItemUncheckedUpdateWithoutEmbeddingInput = {
@@ -58384,6 +61968,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
   }
 
   export type WorkItemCreateWithoutSnapshotsInput = {
@@ -58417,6 +62002,7 @@ export namespace Prisma {
     attachments?: AttachmentCreateNestedManyWithoutWorkItemInput
     timeLogs?: TimeLogCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingCreateNestedOneWithoutWorkItemInput
   }
 
@@ -58451,6 +62037,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedCreateNestedManyWithoutWorkItemInput
     timeLogs?: TimeLogUncheckedCreateNestedManyWithoutWorkItemInput
     tags?: TagOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
+    components?: ComponentOnWorkItemUncheckedCreateNestedManyWithoutWorkItemInput
     embedding?: WorkItemEmbeddingUncheckedCreateNestedOneWithoutWorkItemInput
   }
 
@@ -58544,6 +62131,7 @@ export namespace Prisma {
     attachments?: AttachmentUpdateManyWithoutWorkItemNestedInput
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58578,6 +62166,7 @@ export namespace Prisma {
     attachments?: AttachmentUncheckedUpdateManyWithoutWorkItemNestedInput
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -58846,6 +62435,7 @@ export namespace Prisma {
     milestones?: MilestoneCreateNestedManyWithoutProjectInput
     boards?: BoardCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateCreateNestedManyWithoutProjectInput
+    components?: ComponentCreateNestedManyWithoutProjectInput
     teams?: TeamCreateNestedManyWithoutProjectsInput
   }
 
@@ -58869,6 +62459,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedCreateNestedManyWithoutProjectInput
     boards?: BoardUncheckedCreateNestedManyWithoutProjectInput
     workItemStates?: WorkItemStateUncheckedCreateNestedManyWithoutProjectInput
+    components?: ComponentUncheckedCreateNestedManyWithoutProjectInput
     teams?: TeamUncheckedCreateNestedManyWithoutProjectsInput
   }
 
@@ -58908,6 +62499,7 @@ export namespace Prisma {
     milestones?: MilestoneUpdateManyWithoutProjectNestedInput
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -58931,6 +62523,7 @@ export namespace Prisma {
     milestones?: MilestoneUncheckedUpdateManyWithoutProjectNestedInput
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -59342,6 +62935,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -59365,6 +62959,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -59415,6 +63010,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -59449,6 +63045,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -59506,6 +63103,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -59540,6 +63138,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -59836,6 +63435,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -59859,6 +63459,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -59941,6 +63542,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateWithoutTeamsInput = {
@@ -59964,6 +63566,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
   }
 
   export type ProjectUncheckedUpdateManyWithoutTeamsInput = {
@@ -60081,6 +63684,7 @@ export namespace Prisma {
     boards?: BoardUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUpdateManyWithoutProjectNestedInput
+    components?: ComponentUpdateManyWithoutProjectNestedInput
     teams?: TeamUpdateManyWithoutProjectsNestedInput
   }
 
@@ -60104,6 +63708,7 @@ export namespace Prisma {
     boards?: BoardUncheckedUpdateManyWithoutProjectNestedInput
     workflowRules?: WorkflowRuleUncheckedUpdateManyWithoutProjectNestedInput
     workItemStates?: WorkItemStateUncheckedUpdateManyWithoutProjectNestedInput
+    components?: ComponentUncheckedUpdateManyWithoutProjectNestedInput
     teams?: TeamUncheckedUpdateManyWithoutProjectsNestedInput
   }
 
@@ -60209,6 +63814,16 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type ComponentCreateManyProjectInput = {
+    id?: string
+    name: string
+    description?: string | null
+    color?: string
+    position?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type WorkItemUpdateWithoutProjectInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -60240,6 +63855,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -60274,6 +63890,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -60503,6 +64120,38 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type ComponentUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workItems?: ComponentOnWorkItemUpdateManyWithoutComponentNestedInput
+  }
+
+  export type ComponentUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workItems?: ComponentOnWorkItemUncheckedUpdateManyWithoutComponentNestedInput
+  }
+
+  export type ComponentUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    color?: StringFieldUpdateOperationsInput | string
+    position?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type TeamUpdateWithoutProjectsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
@@ -60632,6 +64281,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -60666,6 +64316,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -60924,6 +64575,11 @@ export namespace Prisma {
     tagId: string
   }
 
+  export type ComponentOnWorkItemCreateManyWorkItemInput = {
+    componentId: string
+    assignedAt?: Date | string
+  }
+
   export type WorkItemUpdateWithoutParentInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
@@ -60955,6 +64611,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -60989,6 +64646,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -61046,6 +64704,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -61080,6 +64739,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -61316,6 +64976,21 @@ export namespace Prisma {
     tagId?: StringFieldUpdateOperationsInput | string
   }
 
+  export type ComponentOnWorkItemUpdateWithoutWorkItemInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    component?: ComponentUpdateOneRequiredWithoutWorkItemsNestedInput
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateWithoutWorkItemInput = {
+    componentId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemInput = {
+    componentId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type WorkItemCreateManyStateInput = {
     id?: string
     title: string
@@ -61370,6 +65045,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -61404,6 +65080,7 @@ export namespace Prisma {
     timeLogs?: TimeLogUncheckedUpdateManyWithoutWorkItemNestedInput
     snapshots?: WorkItemSnapshotUncheckedUpdateManyWithoutWorkItemNestedInput
     tags?: TagOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
+    components?: ComponentOnWorkItemUncheckedUpdateManyWithoutWorkItemNestedInput
     embedding?: WorkItemEmbeddingUncheckedUpdateOneWithoutWorkItemNestedInput
   }
 
@@ -61492,6 +65169,26 @@ export namespace Prisma {
 
   export type TagOnWorkItemUncheckedUpdateManyWithoutTagInput = {
     workItemId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type ComponentOnWorkItemCreateManyComponentInput = {
+    workItemId: string
+    assignedAt?: Date | string
+  }
+
+  export type ComponentOnWorkItemUpdateWithoutComponentInput = {
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    workItem?: WorkItemUpdateOneRequiredWithoutComponentsNestedInput
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateWithoutComponentInput = {
+    workItemId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ComponentOnWorkItemUncheckedUpdateManyWithoutComponentInput = {
+    workItemId?: StringFieldUpdateOperationsInput | string
+    assignedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

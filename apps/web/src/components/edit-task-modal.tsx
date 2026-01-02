@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import {
     Select,
@@ -53,6 +54,7 @@ export function EditTaskModal({
     const [estimatedHours, setEstimatedHours] = useState<number | null>(null);
     const [remainingHours, setRemainingHours] = useState<number | null>(null);
     const [dueDate, setDueDate] = useState<string>("");
+    const [componentIds, setComponentIds] = useState<string[]>([]);
 
     // Details state
     const [acceptanceCriteria, setAcceptanceCriteria] = useState("");
@@ -70,6 +72,9 @@ export function EditTaskModal({
     );
     const { data: epics } = useQuery<any>(
         trpc.workItem.getEpics.queryOptions({ projectId }) as any
+    );
+    const { data: components } = useQuery<any>(
+        trpc.component.getByProject.queryOptions({ projectId }) as any
     );
 
     // Initialize form when task changes
@@ -93,6 +98,10 @@ export function EditTaskModal({
             setReproSteps(task.details?.reproSteps || "");
             setBusinessValue(task.details?.businessValue || "");
             setUserPersona(task.details?.userPersona || "");
+
+            // Components - extract IDs from the junction table data
+            const taskComponentIds = task.components?.map((c: any) => c.componentId || c.component?.id) || [];
+            setComponentIds(taskComponentIds);
         }
     }, [task]);
 
@@ -130,6 +139,7 @@ export function EditTaskModal({
             estimatedHours: estimatedHours === 0 ? null : estimatedHours,
             remainingHours: remainingHours === 0 ? null : remainingHours,
             dueDate: dueDate ? new Date(dueDate) : null,
+            componentIds,
             details: {
                 acceptanceCriteria,
                 technicalNotes,
@@ -280,6 +290,41 @@ export function EditTaskModal({
                                         ))}
                                     </SelectContent>
                                 </Select>
+                            </div>
+                        </div>
+
+                        <div className="space-y-2">
+                            <Label>Components</Label>
+                            <div className="border rounded-md p-3 space-y-2 max-h-40 overflow-y-auto">
+                                {components && components.length > 0 ? (
+                                    components.map((component: any) => (
+                                        <div key={component.id} className="flex items-center space-x-2">
+                                            <Checkbox
+                                                id={`component-${component.id}`}
+                                                checked={componentIds.includes(component.id)}
+                                                onCheckedChange={(checked) => {
+                                                    if (checked) {
+                                                        setComponentIds([...componentIds, component.id]);
+                                                    } else {
+                                                        setComponentIds(componentIds.filter(id => id !== component.id));
+                                                    }
+                                                }}
+                                            />
+                                            <label
+                                                htmlFor={`component-${component.id}`}
+                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer flex items-center gap-2"
+                                            >
+                                                <div
+                                                    className="w-3 h-3 rounded-full"
+                                                    style={{ backgroundColor: component.color }}
+                                                />
+                                                {component.name}
+                                            </label>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <p className="text-sm text-muted-foreground">No components defined yet</p>
+                                )}
                             </div>
                         </div>
                     </TabsContent>

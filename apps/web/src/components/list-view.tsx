@@ -197,7 +197,11 @@ export function ListView({ projectId }: ListViewProps) {
             });
         }
         if (filters.assignee !== "all") {
-            filtered = filtered.filter((item: any) => item.assigneeId === filters.assignee);
+            if (filters.assignee === "unassigned") {
+                filtered = filtered.filter((item: any) => !item.assigneeId);
+            } else {
+                filtered = filtered.filter((item: any) => item.assigneeId === filters.assignee);
+            }
         }
         if (filters.sprint !== "all") {
             filtered = filtered.filter((item: any) => item.sprintId === filters.sprint);
@@ -431,7 +435,7 @@ export function ListView({ projectId }: ListViewProps) {
                         </SelectTrigger>
                         <SelectContent>
                             <SelectItem value="all">All Assignees</SelectItem>
-                            <SelectItem value="">Unassigned</SelectItem>
+                            <SelectItem value="unassigned">Unassigned</SelectItem>
                             {assignees.map((assignee: any) => (
                                 <SelectItem key={assignee.id} value={assignee.id}>
                                     {assignee.firstName} {assignee.lastName}

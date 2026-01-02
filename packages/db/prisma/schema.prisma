@@ -247,6 +247,7 @@ model Project {
   boards         Board[]
   workflowRules  WorkflowRule[]
   workItemStates WorkItemState[]
+  components     Component[]
   teams          Team[]
 
   @@unique([organizationId, key])
@@ -352,13 +353,14 @@ model WorkItem {
   details WorkItemDetail?
 
   // Related
-  dependenciesAsSource Dependency[]       @relation("DependencySource")
-  dependenciesAsTarget Dependency[]       @relation("DependencyTarget")
+  dependenciesAsSource Dependency[]          @relation("DependencySource")
+  dependenciesAsTarget Dependency[]          @relation("DependencyTarget")
   comments             Comment[]
   attachments          Attachment[]
   timeLogs             TimeLog[]
   snapshots            WorkItemSnapshot[]
   tags                 TagOnWorkItem[]
+  components           ComponentOnWorkItem[]
   embedding            WorkItemEmbedding?
 
   @@index([projectId])
@@ -474,6 +476,41 @@ model TagOnWorkItem {
   tag      Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
 
   @@id([workItemId, tagId])
+}
+
+// ============================================
+// Components
+// ============================================
+
+model Component {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  color       String   @default("#3B82F6")
+  position    Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  workItems ComponentOnWorkItem[]
+
+  @@unique([projectId, name])
+  @@index([projectId])
+}
+
+model ComponentOnWorkItem {
+  workItemId  String
+  componentId String
+  assignedAt  DateTime @default(now())
+
+  workItem  WorkItem  @relation(fields: [workItemId], references: [id], onDelete: Cascade)
+  component Component @relation(fields: [componentId], references: [id], onDelete: Cascade)
+
+  @@id([workItemId, componentId])
+  @@index([workItemId])
+  @@index([componentId])
 }
 
 // ============================================

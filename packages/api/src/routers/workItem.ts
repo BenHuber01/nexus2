@@ -11,6 +11,11 @@ export const workItemRouter = router({
                 include: {
                     assignee: true,
                     state: true,
+                    components: {
+                        include: {
+                            component: true,
+                        },
+                    },
                 },
                 orderBy: { order: "asc" },
             });
@@ -31,6 +36,11 @@ export const workItemRouter = router({
                     },
                     attachments: true,
                     details: true,
+                    components: {
+                        include: {
+                            component: true,
+                        },
+                    },
                 },
             });
         }),
@@ -45,15 +55,30 @@ export const workItemRouter = router({
                 projectId: z.string(),
                 stateId: z.string().optional(),
                 assigneeId: z.string().optional(),
+                componentIds: z.array(z.string()).optional(),
             }),
         )
-        .mutation(({ ctx, input }) => {
-            return ctx.prisma.workItem.create({
+        .mutation(async ({ ctx, input }) => {
+            const { componentIds, ...workItemData } = input;
+
+            const workItem = await ctx.prisma.workItem.create({
                 data: {
-                    ...input,
+                    ...workItemData,
                     creatorId: ctx.session.user.id,
                 },
             });
+
+            // Assign components if provided
+            if (componentIds && componentIds.length > 0) {
+                await ctx.prisma.componentOnWorkItem.createMany({
+                    data: componentIds.map((componentId) => ({
+                        workItemId: workItem.id,
+                        componentId,
+                    })),
+                });
+            }
+
+            return workItem;
         }),
 
     updateState: protectedProcedure
@@ -88,6 +113,7 @@ export const workItemRouter = router({
                 remainingHours: z.number().optional().nullable(),
                 dueDate: z.date().optional().nullable(),
                 order: z.number().optional(),
+                componentIds: z.array(z.string()).optional(),
                 details: z
                     .object({
                         acceptanceCriteria: z.string().optional().nullable(),
@@ -102,7 +128,7 @@ export const workItemRouter = router({
             }),
         )
         .mutation(async ({ ctx, input }) => {
-            const { id, details, ...data } = input;
+            const { id, details, componentIds, ...data } = input;
 
             return ctx.prisma.$transaction(async (tx: any) => {
                 const workItem = await tx.workItem.update({
@@ -119,6 +145,24 @@ export const workItemRouter = router({
                         },
                         update: details,
                     });
+                }
+
+                // Update components if provided
+                if (componentIds !== undefined) {
+                    // Remove existing component assignments
+                    await tx.componentOnWorkItem.deleteMany({
+                        where: { workItemId: id },
+                    });
+
+                    // Add new component assignments
+                    if (componentIds.length > 0) {
+                        await tx.componentOnWorkItem.createMany({
+                            data: componentIds.map((componentId: string) => ({
+                                workItemId: id,
+                                componentId,
+                            })),
+                        });
+                    }
                 }
 
                 return workItem;

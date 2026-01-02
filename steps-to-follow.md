@@ -134,6 +134,7 @@
 - **Tabs:**
   1. **General** - Project name, key, description (view-only for now)
   2. **Workflow States** - Custom workflow state management
+  3. **Components** - Project component management (NEW! ✅)
 - **Features:**
   - View project details
   - **Workflow State Editor** – Full CRUD for custom workflow states
@@ -143,8 +144,15 @@
     - Reorder states with up/down buttons
     - Set initial/final states
     - View usage count per state
+  - **Component Editor** – Full CRUD for project components (NEW! ✅)
+    - Create components (e.g., "Frontend", "Backend", "Design")
+    - Edit component details (name, description, color)
+    - Delete components (removes from all tasks)
+    - View task count per component
+    - Color-coded visual identification
 - **Backend Integration:**
   - Router: `packages/api/src/routers/workItemState.ts`
+  - Router: `packages/api/src/routers/component.ts` (NEW! ✅)
   - Procedures: `getByProject`, `create`, `update`, `delete`, `reorder`
   - **Optimistic Updates:** ✅ All mutations (create, update, delete, reorder)
   - **Cross-cache invalidation:** Updates both `workItemState` and `board` queries
@@ -161,14 +169,31 @@
     - Color picker → Choose state color
     - Category dropdown → Select TODO/IN_PROGRESS/DONE/ARCHIVED
     - Toggle "Initial State" / "Final State"
-- **User Journey:**
+  - Components tab: (NEW! ✅)
+    - Click "Add Component" → Opens create dialog
+    - Enter name (e.g., "Frontend"), description, select color
+    - Click "Create Component" → Component created instantly
+    - Click edit icon → Opens edit dialog
+    - Click delete icon → Confirms and deletes (removes from all tasks)
+    - Task count badge shows how many tasks use each component
+- **User Journey (Workflow States):**
   1. Navigate to project settings
   2. Switch to "Workflow States" tab
   3. Create custom states for your workflow
   4. Go back to board settings
   5. Map lanes to custom states
   6. Tasks with custom states now appear in correct lanes
-- **See Also:** ADR-002 in `decisions-doc.md`
+- **User Journey (Components):** (NEW! ✅)
+  1. Navigate to project settings
+  2. Switch to "Components" tab
+  3. Create components for your project (e.g., "Frontend", "Backend", "Design")
+  4. Go to task edit modal
+  5. In General tab, select components for the task
+  6. Save task → Components are assigned
+  7. Filter tasks by component in list view (coming soon)
+- **See Also:** 
+  - ADR-002 (Workflow States) in `decisions-doc.md`
+  - ADR-003 (Components) in `decisions-doc.md` (NEW! ✅)
 
 ---
 

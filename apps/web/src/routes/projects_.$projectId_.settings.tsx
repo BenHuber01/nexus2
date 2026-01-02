@@ -8,7 +8,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { WorkflowStateEditor } from "@/components/workflow-state-editor";
-import { Settings, Workflow, ArrowLeft } from "lucide-react";
+import { ComponentEditor } from "@/components/component-editor";
+import { Settings, Workflow, ArrowLeft, Package } from "lucide-react";
 
 export const Route = createFileRoute("/projects_/$projectId_/settings")({
     component: RouteComponent,
@@ -69,6 +70,10 @@ function RouteComponent() {
                         <Workflow className="h-4 w-4 mr-2" />
                         Workflow States
                     </TabsTrigger>
+                    <TabsTrigger value="components">
+                        <Package className="h-4 w-4 mr-2" />
+                        Components
+                    </TabsTrigger>
                 </TabsList>
 
                 {/* General Settings Tab */}
@@ -79,6 +84,11 @@ function RouteComponent() {
                 {/* Workflow States Tab */}
                 <TabsContent value="workflow">
                     <WorkflowStateEditor projectId={projectId} />
+                </TabsContent>
+
+                {/* Components Tab */}
+                <TabsContent value="components">
+                    <ComponentEditor projectId={projectId} />
                 </TabsContent>
             </Tabs>
         </div>

@@ -376,6 +376,23 @@ exports.Prisma.TagOnWorkItemScalarFieldEnum = {
   tagId: 'tagId'
 };
 
+exports.Prisma.ComponentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  color: 'color',
+  position: 'position',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  projectId: 'projectId'
+};
+
+exports.Prisma.ComponentOnWorkItemScalarFieldEnum = {
+  workItemId: 'workItemId',
+  componentId: 'componentId',
+  assignedAt: 'assignedAt'
+};
+
 exports.Prisma.DependencyScalarFieldEnum = {
   id: 'id',
   dependencyType: 'dependencyType',
@@ -565,6 +582,8 @@ exports.Prisma.ModelName = {
   BoardLane: 'BoardLane',
   Tag: 'Tag',
   TagOnWorkItem: 'TagOnWorkItem',
+  Component: 'Component',
+  ComponentOnWorkItem: 'ComponentOnWorkItem',
   Dependency: 'Dependency',
   TimeLog: 'TimeLog',
   Comment: 'Comment',

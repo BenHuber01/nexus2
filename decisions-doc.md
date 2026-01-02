@@ -570,4 +570,97 @@ WorkItemState {
 
 ---
 
+## ADR-003: Project Components for Task Categorization
+
+**Date:** 2025-12-30  
+**Status:** ✅ **IMPLEMENTED**  
+**Decision Makers:** Development Team
+
+### Context
+
+Tasks need to be categorized by technical components (e.g., "Frontend", "Backend", "Design") to facilitate filtering, resource allocation, and component-based metrics.
+
+### Problem
+
+**Current Limitation:**
+- No way to tag tasks with component information
+- Difficult to filter tasks by technical area
+- No visibility into which components have the most work
+
+**User Need:**
+- Multiple components per task (many-to-many)
+- Project-scoped component definitions
+- Administration UI to manage components
+- Visual indicators (colors)
+
+### Decision
+
+**Implemented Many-to-Many Component System**
+
+#### Database Schema
+
+```prisma
+model Component {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  color       String   @default("#3B82F6")
+  position    Int      @default(0)
+  projectId   String
+  workItems   ComponentOnWorkItem[]
+  @@unique([projectId, name])
+}
+
+model ComponentOnWorkItem {
+  workItemId  String
+  componentId String
+  assignedAt  DateTime @default(now())
+  @@id([workItemId, componentId])
+}
+```
+
+#### Implementation Phases
+
+**Phase 1: Database & Backend** ✅ COMPLETE
+- Component and ComponentOnWorkItem models
+- Component router with CRUD procedures
+- WorkItem router updated for component support
+
+**Phase 2: Administration UI** ✅ COMPLETE
+- component-editor.tsx created
+- Components tab in Project Settings
+- Color picker and usage count display
+
+**Phase 3: Task Forms** ✅ COMPLETE
+- Component multi-select in edit-task-modal
+- Checkbox UI with color indicators
+
+**Phase 4: Views** 🚧 PENDING
+- Display components in task-board cards
+- Component filter in list-view
+
+### Key Features
+
+- ✅ Project-scoped components
+- ✅ Many-to-many relationship
+- ✅ Color-coded visual identification
+- ✅ Optimistic updates
+- ✅ Usage tracking
+- ✅ Unique names per project
+
+### Files Modified
+
+**Backend:**
+- `packages/db/prisma/schema.prisma` - Added models
+- `packages/api/src/routers/component.ts` - New router
+- `packages/api/src/routers/workItem.ts` - Added componentIds support
+- `packages/api/src/routers/index.ts` - Exported component router
+
+**Frontend:**
+- `apps/web/src/components/component-editor.tsx` - New component
+- `apps/web/src/components/edit-task-modal.tsx` - Added component multi-select
+- `apps/web/src/routes/projects_.$projectId_.settings.tsx` - Added Components tab
+
+---
+
 **Last Updated:** 2025-12-30
