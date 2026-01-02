@@ -159,6 +159,9 @@ export const workItemRouter = router({
         .mutation(async ({ ctx, input }) => {
             const { id, details, componentIds, ...data } = input;
 
+            console.log("[workItem.update] Received input:", input);
+            console.log("[workItem.update] Details object:", details);
+
             return ctx.prisma.$transaction(async (tx: any) => {
                 const workItem = await tx.workItem.update({
                     where: { id },
@@ -166,7 +169,8 @@ export const workItemRouter = router({
                 });
 
                 if (details) {
-                    await tx.workItemDetail.upsert({
+                    console.log("[workItem.update] Upserting details:", details);
+                    const upsertedDetails = await tx.workItemDetail.upsert({
                         where: { workItemId: id },
                         create: {
                             ...details,
@@ -174,6 +178,7 @@ export const workItemRouter = router({
                         },
                         update: details,
                     });
+                    console.log("[workItem.update] Upserted details result:", upsertedDetails);
                 }
 
                 // Update components if provided

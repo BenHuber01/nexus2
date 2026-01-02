@@ -150,6 +150,13 @@ export function EditTaskModal({
         };
 
         console.log("[EditTaskModal] Saving task with data:", updateData);
+        console.log("[EditTaskModal] Details state values:", {
+            acceptanceCriteria,
+            technicalNotes,
+            reproSteps,
+            businessValue,
+            userPersona,
+        });
         console.log("[EditTaskModal] dueDate raw value:", dueDate);
         console.log("[EditTaskModal] dueDate converted:", updateData.dueDate);
 
