@@ -318,12 +318,15 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
             updatedStates[index],
         ];
 
-        // Update positions
-        const reorderedStates = updatedStates.map((state, idx) => ({
-            id: state.id,
-            position: idx,
-        }));
+        // Update positions - filter out temp IDs
+        const reorderedStates = updatedStates
+            .map((state, idx) => ({
+                id: state.id,
+                position: idx,
+            }))
+            .filter((state) => !state.id.startsWith('temp-'));
 
+        console.log("[WorkflowStateEditor] Reordering states (excluding temp):", reorderedStates);
         reorderMutation.mutate({ states: reorderedStates });
     };
 
