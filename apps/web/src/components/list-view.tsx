@@ -64,9 +64,11 @@ export function ListView({ projectId }: ListViewProps) {
     });
 
     // Data queries
-    const { data: workItems, isLoading } = useQuery<any>(
-        trpc.workItem.getAll.queryOptions({ projectId }) as any
-    );
+    const { data: workItems, isLoading } = useQuery<any>({
+        ...(trpc.workItem.getAll.queryOptions({ projectId }) as any),
+        refetchOnMount: "always",
+        refetchOnWindowFocus: true,
+    });
 
     const { data: states } = useQuery<any>(
         trpc.workItemState.getByProject.queryOptions({ projectId }) as any

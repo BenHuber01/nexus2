@@ -37,9 +37,11 @@ export function BacklogView({ projectId }: BacklogViewProps) {
         trpc.project.getById.queryOptions({ id: projectId }) as any,
     );
 
-    const { data: workItems, isLoading: itemsLoading } = useQuery<any>(
-        trpc.workItem.getAll.queryOptions({ projectId }) as any,
-    );
+    const { data: workItems, isLoading: itemsLoading } = useQuery<any>({
+        ...(trpc.workItem.getAll.queryOptions({ projectId }) as any),
+        refetchOnMount: "always",
+        refetchOnWindowFocus: true,
+    });
 
     const { data: sprints } = useQuery<any>(
         trpc.sprint.getAll.queryOptions({ projectId }) as any,
