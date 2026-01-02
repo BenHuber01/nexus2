@@ -252,7 +252,9 @@ export function TaskFormModal({
             toast.error(errorMessage);
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["workItem"] });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+            });
             const successMessage = mode === "create" 
                 ? "Task created successfully" 
                 : "Task updated successfully";
@@ -304,7 +306,9 @@ export function TaskFormModal({
             toast.error("Failed to delete task");
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["workItem"] });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+            });
             toast.success("Task deleted successfully");
             onOpenChange(false);
         },
