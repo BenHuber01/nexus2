@@ -181,14 +181,20 @@ export function TaskFormModal({
             return;
         }
 
+        // Helper function to convert "none" or null to undefined
+        const normalizeOptionalId = (value: string | null) => {
+            if (!value || value === "none") return undefined;
+            return value;
+        };
+
         const taskData = {
             title,
             description,
             priority,
             type,
-            assigneeId: assigneeId === "none" ? null : assigneeId,
-            sprintId: sprintId === "none" ? null : sprintId,
-            epicId: epicId === "none" ? null : epicId,
+            assigneeId: normalizeOptionalId(assigneeId),
+            sprintId: normalizeOptionalId(sprintId),
+            epicId: normalizeOptionalId(epicId),
             storyPoints: storyPoints === 0 ? null : storyPoints,
             estimatedHours: estimatedHours === 0 ? null : estimatedHours,
             remainingHours: remainingHours === 0 ? null : remainingHours,
