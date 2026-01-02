@@ -88,9 +88,18 @@ export const workItemRouter = router({
 
                 // Create details if provided
                 if (details && Object.values(details).some(v => v !== null && v !== undefined && v !== "")) {
+                    // Convert empty strings to null for proper storage
+                    const cleanedDetails = {
+                        acceptanceCriteria: details.acceptanceCriteria?.trim() || null,
+                        technicalNotes: details.technicalNotes?.trim() || null,
+                        reproSteps: details.reproSteps?.trim() || null,
+                        businessValue: details.businessValue?.trim() || null,
+                        userPersona: details.userPersona?.trim() || null,
+                    };
+                    
                     await tx.workItemDetail.create({
                         data: {
-                            ...details,
+                            ...cleanedDetails,
                             workItemId: workItem.id,
                         },
                     });
@@ -170,13 +179,27 @@ export const workItemRouter = router({
 
                 if (details) {
                     console.log("[workItem.update] Upserting details:", details);
+                    
+                    // Convert empty strings to null for proper storage
+                    const cleanedDetails = {
+                        acceptanceCriteria: details.acceptanceCriteria?.trim() || null,
+                        technicalNotes: details.technicalNotes?.trim() || null,
+                        reproSteps: details.reproSteps?.trim() || null,
+                        businessValue: details.businessValue?.trim() || null,
+                        userPersona: details.userPersona?.trim() || null,
+                        customFields: details.customFields || undefined,
+                        externalReferences: details.externalReferences?.trim() || null,
+                    };
+                    
+                    console.log("[workItem.update] Cleaned details:", cleanedDetails);
+                    
                     const upsertedDetails = await tx.workItemDetail.upsert({
                         where: { workItemId: id },
                         create: {
-                            ...details,
+                            ...cleanedDetails,
                             workItemId: id,
                         },
-                        update: details,
+                        update: cleanedDetails,
                     });
                     console.log("[workItem.update] Upserted details result:", upsertedDetails);
                 }
