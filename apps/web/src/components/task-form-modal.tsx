@@ -147,6 +147,84 @@ export function TaskFormModal({
                 });
             }
         },
+        onMutate: async (newTaskData) => {
+            const queryKey = ["workItem", "getAll", { projectId }];
+
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+
+            // Snapshot previous value
+            const previousWorkItems = queryClient.getQueryData(queryKey);
+
+            if (mode === "create") {
+                // Optimistically add new task
+                queryClient.setQueryData(queryKey, (old: any) => {
+                    if (!old) return old;
+                    
+                    const tempId = `temp-${Date.now()}`;
+                    const now = new Date().toISOString();
+                    
+                    // Get default state ID
+                    const defaultStateId = newTaskData.stateId || project?.workItemStates?.[0]?.id;
+                    
+                    const optimisticTask = {
+                        id: tempId,
+                        title: newTaskData.title,
+                        description: newTaskData.description || null,
+                        type: newTaskData.type,
+                        priority: newTaskData.priority,
+                        stateId: defaultStateId,
+                        assigneeId: newTaskData.assigneeId || null,
+                        sprintId: newTaskData.sprintId || null,
+                        epicId: newTaskData.epicId || null,
+                        storyPoints: newTaskData.storyPoints || null,
+                        estimatedHours: newTaskData.estimatedHours || null,
+                        remainingHours: newTaskData.remainingHours || null,
+                        dueDate: newTaskData.dueDate || null,
+                        order: old.length,
+                        createdAt: now,
+                        updatedAt: now,
+                        projectId: projectId,
+                        creatorId: null,
+                        assignee: null,
+                        state: null,
+                        components: [],
+                        details: null,
+                        parent: null,
+                        children: [],
+                        epic: null,
+                        stories: [],
+                    };
+                    
+                    console.log("[TaskFormModal] Optimistic create:", optimisticTask);
+                    return [...old, optimisticTask];
+                });
+            } else {
+                // Optimistically update existing task
+                queryClient.setQueryData(queryKey, (old: any) => {
+                    if (!old) return old;
+                    return old.map((item: any) =>
+                        item.id === task.id ? { ...item, ...newTaskData } : item
+                    );
+                });
+            }
+
+            return { previousWorkItems };
+        },
+        onError: (error, _data, context: any) => {
+            console.error(`[TaskFormModal] ${mode} error:`, error);
+            
+            // Rollback on error
+            const queryKey = ["workItem", "getAll", { projectId }];
+            if (context?.previousWorkItems) {
+                queryClient.setQueryData(queryKey, context.previousWorkItems);
+            }
+            
+            const errorMessage = mode === "create"
+                ? "Failed to create task"
+                : "Failed to update task";
+            toast.error(errorMessage);
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["workItem"] });
             const successMessage = mode === "create" 
@@ -159,13 +237,6 @@ export function TaskFormModal({
             if (mode === "create") {
                 resetForm();
             }
-        },
-        onError: (error) => {
-            console.error(`[TaskFormModal] ${mode} error:`, error);
-            const errorMessage = mode === "create"
-                ? "Failed to create task"
-                : "Failed to update task";
-            toast.error(errorMessage);
         },
     });
 
