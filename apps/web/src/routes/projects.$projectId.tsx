@@ -5,7 +5,7 @@ import { TaskBoard } from "@/components/task-board";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CreateTaskModal } from "@/components/create-task-modal";
+import { TaskFormModal } from "@/components/task-form-modal";
 import { SprintManagement } from "@/components/sprint-management";
 import { BacklogView } from "@/components/backlog-view";
 import { ListView } from "@/components/list-view";
@@ -58,7 +58,8 @@ function ProjectComponent() {
                 </div>
             </div>
 
-            <CreateTaskModal
+            <TaskFormModal
+                mode="create"
                 open={createTaskOpen}
                 onOpenChange={setCreateTaskOpen}
                 projectId={projectId}
