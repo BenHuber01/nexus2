@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
@@ -27,21 +27,55 @@ export function CreateProjectModal({
     organizationId,
 }: CreateProjectModalProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
 
-    const createMutation = useMutation(
-        trpc.project.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.project.getAll.queryFilter({ organizationId }));
-                toast.success("Project created successfully");
-                onOpenChange(false);
-                form.reset();
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to create project");
-            },
-        })
-    );
+    const createMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.project.create.mutate(data);
+        },
+        onMutate: async (newProject) => {
+            const queryKey = trpc.project.getAll.queryOptions({ organizationId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousProjects = queryClient.getQueryData(queryKey);
+            
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const optimisticProject = {
+                    id: tempId,
+                    ...newProject,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                };
+                
+                console.log("[CreateProject] Optimistic create:", optimisticProject);
+                return [...old, optimisticProject];
+            });
+            
+            return { previousProjects };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.project.getAll.queryOptions({ organizationId }).queryKey;
+            
+            if (context?.previousProjects) {
+                queryClient.setQueryData(queryKey, context.previousProjects);
+            }
+            
+            console.error("[CreateProject] error:", error);
+            toast.error(error.message || "Failed to create project");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.project.getAll.queryOptions({ organizationId }).queryKey 
+            });
+            toast.success("Project created successfully");
+            onOpenChange(false);
+            form.reset();
+        },
+    });
 
     const form = useForm({
         defaultValues: {

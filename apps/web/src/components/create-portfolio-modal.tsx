@@ -1,6 +1,6 @@
 import { useForm } from "@tanstack/react-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
@@ -28,21 +28,55 @@ export function CreatePortfolioModal({
     organizationId,
 }: CreatePortfolioModalProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
 
-    const createMutation = useMutation(
-        trpc.portfolio.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.portfolio.getAll.queryFilter({ organizationId }));
-                toast.success("Portfolio created successfully");
-                onOpenChange(false);
-                form.reset();
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to create portfolio");
-            },
-        })
-    );
+    const createMutation = useMutation({
+        mutationFn: async (data: any) => {
+            return await client.portfolio.create.mutate(data);
+        },
+        onMutate: async (newPortfolio) => {
+            const queryKey = trpc.portfolio.getAll.queryOptions({ organizationId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey });
+            const previousPortfolios = queryClient.getQueryData(queryKey);
+            
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const optimisticPortfolio = {
+                    id: tempId,
+                    ...newPortfolio,
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                };
+                
+                console.log("[CreatePortfolio] Optimistic create:", optimisticPortfolio);
+                return [...old, optimisticPortfolio];
+            });
+            
+            return { previousPortfolios };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.portfolio.getAll.queryOptions({ organizationId }).queryKey;
+            
+            if (context?.previousPortfolios) {
+                queryClient.setQueryData(queryKey, context.previousPortfolios);
+            }
+            
+            console.error("[CreatePortfolio] error:", error);
+            toast.error(error.message || "Failed to create portfolio");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.portfolio.getAll.queryOptions({ organizationId }).queryKey 
+            });
+            toast.success("Portfolio created successfully");
+            onOpenChange(false);
+            form.reset();
+        },
+    });
 
     const form = useForm({
         defaultValues: {
