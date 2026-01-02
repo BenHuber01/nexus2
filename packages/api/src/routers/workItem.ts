@@ -11,6 +11,7 @@ export const workItemRouter = router({
                 include: {
                     assignee: true,
                     state: true,
+                    details: true,
                     components: {
                         include: {
                             component: true,
