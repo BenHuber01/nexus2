@@ -318,16 +318,29 @@ export function WorkflowStateEditor({ projectId }: WorkflowStateEditorProps) {
             updatedStates[index],
         ];
 
-        // Update positions - filter out temp IDs
-        const reorderedStates = updatedStates
-            .map((state, idx) => ({
+        // Update positions for all states
+        const updatedStatesWithPositions = updatedStates.map((state, idx) => ({
+            ...state,
+            position: idx,
+        }));
+
+        // Immediately update cache with new order (including temp states)
+        const queryKey = trpc.workItemState.getByProject.queryOptions({ projectId }).queryKey;
+        queryClient.setQueryData(queryKey, updatedStatesWithPositions);
+        console.log("[WorkflowStateEditor] Immediate reorder (all states):", updatedStatesWithPositions);
+
+        // Send only non-temp states to backend
+        const reorderedStates = updatedStatesWithPositions
+            .map((state) => ({
                 id: state.id,
-                position: idx,
+                position: state.position,
             }))
             .filter((state) => !state.id.startsWith('temp-'));
 
-        console.log("[WorkflowStateEditor] Reordering states (excluding temp):", reorderedStates);
-        reorderMutation.mutate({ states: reorderedStates });
+        if (reorderedStates.length > 0) {
+            console.log("[WorkflowStateEditor] Backend reorder (excluding temp):", reorderedStates);
+            reorderMutation.mutate({ states: reorderedStates });
+        }
     };
 
     const getCategoryIcon = (category: WorkItemStateCategory) => {
