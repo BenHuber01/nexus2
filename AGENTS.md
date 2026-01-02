@@ -321,6 +321,134 @@ const updateStateMutation = useMutation({
 - ✅ **onSuccess**: Invalidate queries, show success toast
 - ✅ **Console Logs**: Add debug logs for troubleshooting
 - ✅ **Context**: Return previous data from onMutate for rollback
+- ✅ **Query Keys**: ALWAYS use `trpc.xxx.queryOptions().queryKey` for consistency
+
+#### ⚠️ CRITICAL: Use Correct Query Keys
+
+**MANDATORY RULE**: When working with optimistic updates, you MUST use the exact same query key that your queries use!
+
+**Why This Matters:**
+- tRPC uses an internal query key format that's different from manual arrays
+- If you use wrong keys, cache updates go to different locations
+- Views won't see the optimistic updates → appears broken
+- Data inconsistency between components
+
+**❌ DON'T: Use Manual Query Keys**
+```typescript
+// ❌ WRONG: Manual query key doesn't match tRPC's internal format
+const mutation = useMutation({
+    mutationFn: async (data) => {
+        return await client.workItem.create.mutate(data);
+    },
+    onMutate: async (newData) => {
+        // ❌ This key won't match the one used by queries!
+        const queryKey = ["workItem", "getAll", { projectId }];
+        
+        await queryClient.cancelQueries({ queryKey });
+        const previousData = queryClient.getQueryData(queryKey);
+        
+        // Cache update goes to wrong location
+        queryClient.setQueryData(queryKey, (old: any) => {
+            return [...old, newData];
+        });
+        
+        return { previousData };
+    },
+});
+
+// Problem: Views query from different key!
+const { data } = useQuery(
+    trpc.workItem.getAll.queryOptions({ projectId }) // Different key format!
+);
+```
+
+**✅ DO: Use tRPC Query Keys**
+```typescript
+// ✅ CORRECT: Use tRPC's queryOptions to get exact key
+const mutation = useMutation({
+    mutationFn: async (data) => {
+        return await client.workItem.create.mutate(data);
+    },
+    onMutate: async (newData) => {
+        // ✅ This matches the key used by ALL queries!
+        const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+        
+        await queryClient.cancelQueries({ queryKey });
+        const previousData = queryClient.getQueryData(queryKey);
+        
+        // Cache update goes to correct location
+        queryClient.setQueryData(queryKey, (old: any) => {
+            return [...old, newData];
+        });
+        
+        console.log("[Component] Query key:", queryKey); // Debug log
+        return { previousData };
+    },
+    onError: (err, _data, context: any) => {
+        // ✅ Same key for rollback
+        const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey;
+        if (context?.previousData) {
+            queryClient.setQueryData(queryKey, context.previousData);
+        }
+        toast.error("Failed to create");
+    },
+});
+
+// Views use the same key - everything syncs!
+const { data } = useQuery(
+    trpc.workItem.getAll.queryOptions({ projectId })
+);
+```
+
+**Key Pattern for All Mutations:**
+```typescript
+// For ANY tRPC query, get the key this way:
+const queryKey = trpc.routerName.procedureName.queryOptions(input).queryKey;
+
+// Examples:
+trpc.workItem.getAll.queryOptions({ projectId }).queryKey
+trpc.project.getById.queryOptions({ id: projectId }).queryKey
+trpc.sprint.getAll.queryOptions({ projectId }).queryKey
+trpc.board.getById.queryOptions({ id: boardId }).queryKey
+```
+
+**Real-World Bug Example:**
+```typescript
+// ❌ This was the actual bug in TaskFormModal:
+onMutate: async (newTaskData) => {
+    const queryKey = ["workItem", "getAll", { projectId }]; // ❌ Wrong!
+    queryClient.setQueryData(queryKey, (old: any) => [...old, newTask]);
+    // Result: New tasks invisible in Board/List/Backlog until refresh
+}
+
+// ✅ Fixed version:
+onMutate: async (newTaskData) => {
+    const queryKey = trpc.workItem.getAll.queryOptions({ projectId }).queryKey; // ✅
+    queryClient.setQueryData(queryKey, (old: any) => [...old, newTask]);
+    // Result: New tasks appear instantly in all views!
+}
+```
+
+**Symptoms of Wrong Query Key:**
+- ✅ Mutation succeeds (no errors)
+- ✅ Data saved to database
+- ❌ UI doesn't update until manual refresh
+- ❌ Optimistic update "doesn't work"
+- ❌ Other components don't see changes
+
+**Debugging Tips:**
+```typescript
+// Add these logs to verify keys match:
+console.log("[Mutation] Query key:", 
+    trpc.workItem.getAll.queryOptions({ projectId }).queryKey
+);
+
+console.log("[Query] Query key:", 
+    trpc.workItem.getAll.queryOptions({ projectId }).queryKey
+);
+
+// Keys should be IDENTICAL! If different = bug!
+```
 
 #### ❌ DON'T: Forget Optimistic Updates
 
