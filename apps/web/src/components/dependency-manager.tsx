@@ -56,14 +56,63 @@ export function DependencyManager({
         mutationFn: async (data: any) => {
             return await client.dependency.create.mutate(data);
         },
+        onMutate: async (newDep) => {
+            const queryKey = trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousDependencies = queryClient.getQueryData(queryKey);
+            
+            // Optimistically add dependency
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const now = new Date().toISOString();
+                
+                // Find target item for display
+                const targetItem = workItems?.find((item: any) => item.id === newDep.targetItemId);
+                
+                const optimisticDep = {
+                    id: tempId,
+                    sourceItemId: newDep.sourceItemId,
+                    targetItemId: newDep.targetItemId,
+                    dependencyType: newDep.dependencyType,
+                    description: newDep.description || null,
+                    createdAt: now,
+                    updatedAt: now,
+                    targetItem: targetItem || null,
+                    sourceItem: null,
+                };
+                
+                console.log("[DependencyManager] Optimistic create:", optimisticDep);
+                return [...old, optimisticDep];
+            });
+            
+            return { previousDependencies };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousDependencies) {
+                queryClient.setQueryData(queryKey, context.previousDependencies);
+            }
+            
+            console.error("[DependencyManager] create error:", error);
+            toast.error(error.message || "Failed to add dependency");
+        },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["dependency"] });
-            queryClient.invalidateQueries({ queryKey: ["workItem"] });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+            });
             toast.success("Dependency added successfully");
             resetForm();
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to add dependency");
         },
     });
 
@@ -72,13 +121,43 @@ export function DependencyManager({
         mutationFn: async (id: string) => {
             return await client.dependency.delete.mutate({ id });
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["dependency"] });
-            queryClient.invalidateQueries({ queryKey: ["workItem"] });
-            toast.success("Dependency removed");
+        onMutate: async (id) => {
+            const queryKey = trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousDependencies = queryClient.getQueryData(queryKey);
+            
+            // Optimistically remove dependency
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                console.log("[DependencyManager] Optimistic delete:", id);
+                return old.filter((dep: any) => dep.id !== id);
+            });
+            
+            return { previousDependencies };
         },
-        onError: (error: any) => {
+        onError: (error: any, _id, context: any) => {
+            const queryKey = trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousDependencies) {
+                queryClient.setQueryData(queryKey, context.previousDependencies);
+            }
+            
+            console.error("[DependencyManager] delete error:", error);
             toast.error(error.message || "Failed to remove dependency");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.dependency.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.workItem.getAll.queryOptions({ projectId }).queryKey 
+            });
+            toast.success("Dependency removed");
         },
     });
 
