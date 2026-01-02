@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -13,6 +13,7 @@ interface CommentSectionProps {
 
 export function CommentSection({ workItemId }: CommentSectionProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
     const [newComment, setNewComment] = useState("");
 
@@ -20,18 +21,70 @@ export function CommentSection({ workItemId }: CommentSectionProps) {
         trpc.comment.getByWorkItem.queryOptions({ workItemId })
     );
 
-    const createMutation = useMutation(
-        trpc.comment.create.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.comment.getByWorkItem.queryFilter({ workItemId }));
-                setNewComment("");
-                toast.success("Comment added");
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to add comment");
-            },
-        })
-    );
+    const createMutation = useMutation({
+        mutationFn: async (data: { body: string; workItemId: string }) => {
+            return await client.comment.create.mutate(data);
+        },
+        onMutate: async (newCommentData) => {
+            const queryKey = trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousComments = queryClient.getQueryData(queryKey);
+            
+            // Optimistically add comment
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old) return old;
+                
+                const tempId = `temp-${Date.now()}`;
+                const now = new Date().toISOString();
+                
+                const optimisticComment = {
+                    id: tempId,
+                    body: newCommentData.body,
+                    workItemId: newCommentData.workItemId,
+                    userId: null, // Will be filled by server
+                    user: {
+                        id: null,
+                        firstName: "You",
+                        lastName: "",
+                        email: "",
+                        avatarUrl: null,
+                    },
+                    createdAt: now,
+                    updatedAt: now,
+                    sentimentScore: null,
+                    sentimentLabel: null,
+                };
+                
+                console.log("[CommentSection] Optimistic create:", optimisticComment);
+                return [...old, optimisticComment];
+            });
+            
+            return { previousComments };
+        },
+        onError: (err, _data, context: any) => {
+            const queryKey = trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousComments) {
+                queryClient.setQueryData(queryKey, context.previousComments);
+            }
+            
+            console.error("[CommentSection] create error:", err);
+            toast.error("Failed to add comment");
+        },
+        onSuccess: () => {
+            // Invalidate to refetch fresh data
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.comment.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            setNewComment("");
+            toast.success("Comment added");
+        },
+    });
 
     const handleSubmit = async () => {
         if (!newComment.trim()) return;
