@@ -168,6 +168,15 @@ export function TaskFormModal({
                     // Get default state ID
                     const defaultStateId = newTaskData.stateId || project?.workItemStates?.[0]?.id;
                     
+                    // Create optimistic details object
+                    const optimisticDetails = newTaskData.details ? {
+                        acceptanceCriteria: newTaskData.details.acceptanceCriteria || null,
+                        technicalNotes: newTaskData.details.technicalNotes || null,
+                        reproSteps: newTaskData.details.reproSteps || null,
+                        businessValue: newTaskData.details.businessValue || null,
+                        userPersona: newTaskData.details.userPersona || null,
+                    } : null;
+                    
                     const optimisticTask = {
                         id: tempId,
                         title: newTaskData.title,
@@ -190,7 +199,7 @@ export function TaskFormModal({
                         assignee: null,
                         state: null,
                         components: [],
-                        details: null,
+                        details: optimisticDetails,  // Include details!
                         parent: null,
                         children: [],
                         epic: null,
@@ -205,9 +214,24 @@ export function TaskFormModal({
                 // Optimistically update existing task
                 queryClient.setQueryData(queryKey, (old: any) => {
                     if (!old) return old;
-                    return old.map((item: any) =>
-                        item.id === task.id ? { ...item, ...newTaskData } : item
-                    );
+                    return old.map((item: any) => {
+                        if (item.id === task.id) {
+                            // Merge task data with details
+                            const updatedTask = { ...item, ...newTaskData };
+                            
+                            // Update details if provided
+                            if (newTaskData.details) {
+                                updatedTask.details = {
+                                    ...item.details,
+                                    ...newTaskData.details,
+                                };
+                            }
+                            
+                            console.log("[TaskFormModal] Optimistic update:", updatedTask);
+                            return updatedTask;
+                        }
+                        return item;
+                    });
                 });
             }
 
