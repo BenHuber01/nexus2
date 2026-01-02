@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { useTRPC, useTRPCClient } from "@/utils/trpc";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FileIcon, Paperclip, Trash2 } from "lucide-react";
@@ -10,6 +10,7 @@ interface AttachmentListProps {
 
 export function AttachmentList({ workItemId }: AttachmentListProps) {
     const trpc = useTRPC();
+    const client = useTRPCClient();
     const queryClient = useQueryClient();
 
     const { data: attachments, isLoading } = useQuery(
@@ -19,17 +20,46 @@ export function AttachmentList({ workItemId }: AttachmentListProps) {
     // Safely convert to array, defaulting to empty array
     const attachmentList = Array.isArray(attachments) ? attachments : [];
 
-    const deleteMutation = useMutation(
-        trpc.attachment.delete.mutationOptions({
-            onSuccess: () => {
-                queryClient.invalidateQueries(trpc.attachment.getByWorkItem.queryFilter({ workItemId }));
-                toast.success("Attachment deleted");
-            },
-            onError: (error: any) => {
-                toast.error(error.message || "Failed to delete attachment");
-            },
-        })
-    );
+    const deleteMutation = useMutation({
+        mutationFn: async (data: { id: string }) => {
+            return await client.attachment.delete.mutate(data);
+        },
+        onMutate: async ({ id }) => {
+            const queryKey = trpc.attachment.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Cancel outgoing refetches
+            await queryClient.cancelQueries({ queryKey });
+            
+            // Snapshot previous value
+            const previousAttachments = queryClient.getQueryData(queryKey);
+            
+            // Optimistically remove attachment
+            queryClient.setQueryData(queryKey, (old: any) => {
+                if (!old || !Array.isArray(old)) return old;
+                console.log("[AttachmentList] Optimistic delete:", id);
+                return old.filter((att: any) => att.id !== id);
+            });
+            
+            return { previousAttachments };
+        },
+        onError: (error: any, _data, context: any) => {
+            const queryKey = trpc.attachment.getByWorkItem.queryOptions({ workItemId }).queryKey;
+            
+            // Rollback on error
+            if (context?.previousAttachments) {
+                queryClient.setQueryData(queryKey, context.previousAttachments);
+            }
+            
+            console.error("[AttachmentList] delete error:", error);
+            toast.error(error.message || "Failed to delete attachment");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ 
+                queryKey: trpc.attachment.getByWorkItem.queryOptions({ workItemId }).queryKey 
+            });
+            toast.success("Attachment deleted");
+        },
+    });
 
     // Mock upload function - in a real app, this would handle file selection and upload to S3/etc.
     const handleUpload = () => {
