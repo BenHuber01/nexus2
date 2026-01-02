@@ -9,7 +9,14 @@ export const projectRouter = router({
                 where: { organizationId: input.organizationId },
                 include: {
                     leadUser: true,
+                    _count: {
+                        select: {
+                            workItems: true,
+                            sprints: true,
+                        },
+                    },
                 },
+                orderBy: { name: "asc" },
             });
         }),
 

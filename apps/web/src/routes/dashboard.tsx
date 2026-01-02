@@ -1,10 +1,19 @@
 import { getUser } from "@/functions/get-user";
 import { useTRPC } from "@/utils/trpc";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect, Link } from "@tanstack/react-router";
+import { createFileRoute, redirect, Link, useNavigate } from "@tanstack/react-router";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 import { useState } from "react";
 import { CreateOrganizationModal } from "@/components/create-organization-modal";
@@ -84,9 +93,7 @@ function RouteComponent() {
 								</div>
 							</div>
 
-							<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-								<ProjectList organizationId={org.id} />
-							</div>
+							<ProjectList organizationId={org.id} />
 						</div>
 					))}
 
@@ -108,13 +115,14 @@ function RouteComponent() {
 
 function ProjectList({ organizationId }: { organizationId: string }) {
 	const trpc = useTRPC();
+	const navigate = useNavigate();
 	const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
 	const { data: projects, isLoading } = useQuery<any>(
 		trpc.project.getAll.queryOptions({ organizationId }) as any,
 	);
 
 	if (isLoading) {
-		return [1, 2].map((i) => <Skeleton key={i} className="h-[150px] w-full" />);
+		return <Skeleton className="h-[200px] w-full" />;
 	}
 
 	return (
@@ -124,39 +132,66 @@ function ProjectList({ organizationId }: { organizationId: string }) {
 				onOpenChange={setIsCreateProjectModalOpen}
 				organizationId={organizationId}
 			/>
-			{projects?.map((project: any) => (
-				<Link
-					key={project.id}
-					to="/projects/$projectId"
-					params={{ projectId: project.id }}
-				>
-					<Card className="hover:border-primary transition-colors cursor-pointer h-full">
-						<CardHeader>
-							<div className="flex justify-between items-start">
-								<div>
-									<CardTitle>{project.name}</CardTitle>
-									<CardDescription className="mt-1">
-										{project.key}
-									</CardDescription>
-								</div>
-							</div>
-						</CardHeader>
-						<CardContent>
-							<p className="text-sm text-muted-foreground line-clamp-2">
-								{project.description || "No description provided."}
-							</p>
-						</CardContent>
-					</Card>
-				</Link>
-			))}
-			<Card
-				className="border-dashed hover:bg-muted/50 transition-colors cursor-pointer flex items-center justify-center h-full min-h-[150px]"
-				onClick={() => setIsCreateProjectModalOpen(true)}
-			>
-				<Button variant="ghost" className="h-full w-full">
-					+ New Project
-				</Button>
-			</Card>
+			
+			{projects && projects.length > 0 ? (
+				<Card>
+					<CardHeader className="flex flex-row items-center justify-between">
+						<CardTitle>Projects</CardTitle>
+						<Button size="sm" onClick={() => setIsCreateProjectModalOpen(true)}>
+							+ New Project
+						</Button>
+					</CardHeader>
+					<CardContent>
+						<Table>
+							<TableHeader>
+								<TableRow>
+									<TableHead>Key</TableHead>
+									<TableHead>Name</TableHead>
+									<TableHead>Description</TableHead>
+									<TableHead className="text-right">Work Items</TableHead>
+									<TableHead className="text-right">Active Sprints</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{projects.map((project: any) => (
+									<TableRow
+										key={project.id}
+										className="cursor-pointer hover:bg-muted/50"
+										onClick={() => navigate({ to: "/projects/$projectId", params: { projectId: project.id } })}
+									>
+										<TableCell>
+											<Badge variant="outline" className="font-mono">
+												{project.key}
+											</Badge>
+										</TableCell>
+										<TableCell className="font-medium">{project.name}</TableCell>
+										<TableCell className="text-sm text-muted-foreground max-w-md truncate">
+											{project.description || "No description"}
+										</TableCell>
+										<TableCell className="text-right">
+											{project._count?.workItems || 0}
+										</TableCell>
+										<TableCell className="text-right">
+											{project._count?.sprints || 0}
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</CardContent>
+				</Card>
+			) : (
+				<Card className="bg-muted/50 border-dashed">
+					<CardContent className="flex flex-col items-center justify-center py-12">
+						<p className="text-muted-foreground mb-4">
+							No projects yet.
+						</p>
+						<Button onClick={() => setIsCreateProjectModalOpen(true)}>
+							Create your first project
+						</Button>
+					</CardContent>
+				</Card>
+			)}
 		</>
 	);
 }
