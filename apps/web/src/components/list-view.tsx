@@ -20,7 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { EditTaskModal } from "@/components/edit-task-modal";
+import { TaskFormModal } from "@/components/task-form-modal";
 import { Priority, WorkItemType, WorkItemStateCategory } from "@my-better-t-app/db";
 import { toast } from "sonner";
 import {
@@ -695,7 +695,8 @@ export function ListView({ projectId }: ListViewProps) {
 
             {/* Edit Modal */}
             {editingTask && (
-                <EditTaskModal
+                <TaskFormModal
+                    mode="edit"
                     open={isEditModalOpen}
                     onOpenChange={setIsEditModalOpen}
                     task={editingTask}
