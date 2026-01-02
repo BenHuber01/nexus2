@@ -72,7 +72,13 @@ export function BacklogView({ projectId }: BacklogViewProps) {
             }
             
             console.error("[BacklogView] moveToSprint error:", err);
-            toast.error("Failed to move item to sprint");
+            
+            // User-friendly message for temp-ID error
+            if (err.message?.includes('temporary ID')) {
+                toast.error("Please wait for task creation to complete");
+            } else {
+                toast.error("Failed to move item to sprint");
+            }
         },
         onSuccess: () => {
             // Invalidate to refetch fresh data
