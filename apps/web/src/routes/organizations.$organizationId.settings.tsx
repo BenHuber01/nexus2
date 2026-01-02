@@ -204,23 +204,141 @@ function MembersManagement({
     members: any[];
     isLoading: boolean;
 }) {
+    const trpc = useTRPC();
     const client = useTRPCClient();
     const queryClient = useQueryClient();
     const [showInviteForm, setShowInviteForm] = useState(false);
-    const [inviteEmail, setInviteEmail] = useState("");
+    const [selectedUserId, setSelectedUserId] = useState<string>("");
     const [inviteRole, setInviteRole] = useState("member");
+
+    // Fetch available users (not already members)
+    const { data: availableUsers, isLoading: usersLoading } = useQuery<any>(
+        trpc.organizationMembership.getAvailableUsers.queryOptions({ organizationId }) as any
+    );
+
+    // Add member mutation
+    const addMemberMutation = useMutation({
+        mutationFn: async (data: { userId: string; role: string }) => {
+            return await client.organizationMembership.inviteMember.mutate({
+                organizationId,
+                userId: data.userId,
+                role: data.role,
+            });
+        },
+        onMutate: async (newMemberData) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            const usersKey = trpc.organizationMembership.getAvailableUsers.queryOptions({ organizationId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey: membersKey });
+            await queryClient.cancelQueries({ queryKey: usersKey });
+            
+            const previousMembers = queryClient.getQueryData(membersKey);
+            const previousUsers = queryClient.getQueryData(usersKey);
+            
+            // Get user details from available users
+            const user = availableUsers?.find((u: any) => u.id === newMemberData.userId);
+            
+            if (user) {
+                // Optimistically add member
+                const tempMember = {
+                    id: `temp-${Date.now()}`,
+                    userId: newMemberData.userId,
+                    organizationId,
+                    role: newMemberData.role,
+                    joinedAt: new Date(),
+                    user: user,
+                };
+                
+                queryClient.setQueryData(membersKey, (old: any) => {
+                    if (!old) return [tempMember];
+                    return [...old, tempMember];
+                });
+                
+                // Remove user from available users
+                queryClient.setQueryData(usersKey, (old: any) => {
+                    if (!old) return old;
+                    return old.filter((u: any) => u.id !== newMemberData.userId);
+                });
+            }
+            
+            console.log("[MembersManagement] Optimistic add member:", newMemberData);
+            return { previousMembers, previousUsers };
+        },
+        onError: (error: any, _data, context: any) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            const usersKey = trpc.organizationMembership.getAvailableUsers.queryOptions({ organizationId }).queryKey;
+            
+            if (context?.previousMembers) {
+                queryClient.setQueryData(membersKey, context.previousMembers);
+            }
+            if (context?.previousUsers) {
+                queryClient.setQueryData(usersKey, context.previousUsers);
+            }
+            console.error("[MembersManagement] Add member error:", error);
+            toast.error(error.message || "Failed to add member");
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["organizationMembership"] });
+            toast.success("Member added to organization");
+            setShowInviteForm(false);
+            setSelectedUserId("");
+            setInviteRole("member");
+        },
+    });
 
     // Remove member mutation
     const removeMemberMutation = useMutation({
         mutationFn: async (id: string) => {
             return await client.organizationMembership.removeMember.mutate({ id });
         },
+        onMutate: async (memberId) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            const usersKey = trpc.organizationMembership.getAvailableUsers.queryOptions({ organizationId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey: membersKey });
+            await queryClient.cancelQueries({ queryKey: usersKey });
+            
+            const previousMembers = queryClient.getQueryData(membersKey);
+            const previousUsers = queryClient.getQueryData(usersKey);
+            
+            // Find member being removed
+            const removedMember = members?.find((m: any) => m.id === memberId);
+            
+            // Optimistically remove from members list
+            queryClient.setQueryData(membersKey, (old: any) => {
+                if (!old) return old;
+                return old.filter((m: any) => m.id !== memberId);
+            });
+            
+            // Add user back to available users
+            if (removedMember?.user) {
+                queryClient.setQueryData(usersKey, (old: any) => {
+                    if (!old) return [removedMember.user];
+                    return [...old, removedMember.user].sort((a: any, b: any) => 
+                        a.email.localeCompare(b.email)
+                    );
+                });
+            }
+            
+            console.log("[MembersManagement] Optimistic remove member:", memberId);
+            return { previousMembers, previousUsers };
+        },
+        onError: (error: any, _id, context: any) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            const usersKey = trpc.organizationMembership.getAvailableUsers.queryOptions({ organizationId }).queryKey;
+            
+            if (context?.previousMembers) {
+                queryClient.setQueryData(membersKey, context.previousMembers);
+            }
+            if (context?.previousUsers) {
+                queryClient.setQueryData(usersKey, context.previousUsers);
+            }
+            console.error("[MembersManagement] Remove member error:", error);
+            toast.error(error.message || "Failed to remove member");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["organizationMembership"] });
             toast.success("Member removed from organization");
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to remove member");
         },
     });
 
@@ -229,12 +347,35 @@ function MembersManagement({
         mutationFn: async (data: { id: string; role: string }) => {
             return await client.organizationMembership.updateRole.mutate(data);
         },
+        onMutate: async (updateData) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            
+            await queryClient.cancelQueries({ queryKey: membersKey });
+            const previousMembers = queryClient.getQueryData(membersKey);
+            
+            // Optimistically update role
+            queryClient.setQueryData(membersKey, (old: any) => {
+                if (!old) return old;
+                return old.map((m: any) => 
+                    m.id === updateData.id ? { ...m, role: updateData.role } : m
+                );
+            });
+            
+            console.log("[MembersManagement] Optimistic update role:", updateData);
+            return { previousMembers };
+        },
+        onError: (error: any, _data, context: any) => {
+            const membersKey = trpc.organizationMembership.getByOrganization.queryOptions({ organizationId }).queryKey;
+            
+            if (context?.previousMembers) {
+                queryClient.setQueryData(membersKey, context.previousMembers);
+            }
+            console.error("[MembersManagement] Update role error:", error);
+            toast.error(error.message || "Failed to update role");
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["organizationMembership"] });
             toast.success("Member role updated");
-        },
-        onError: (error: any) => {
-            toast.error(error.message || "Failed to update role");
         },
     });
 
@@ -296,14 +437,29 @@ function MembersManagement({
                     <CardContent className="border-t">
                         <div className="space-y-4 pt-4">
                             <div className="space-y-2">
-                                <Label htmlFor="invite-email">Email Address</Label>
-                                <Input
-                                    id="invite-email"
-                                    type="email"
-                                    placeholder="user@example.com"
-                                    value={inviteEmail}
-                                    onChange={(e) => setInviteEmail(e.target.value)}
-                                />
+                                <Label htmlFor="invite-user">Select User</Label>
+                                <Select value={selectedUserId} onValueChange={setSelectedUserId}>
+                                    <SelectTrigger id="invite-user">
+                                        <SelectValue placeholder="Choose a user" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {usersLoading && (
+                                            <SelectItem value="loading" disabled>
+                                                Loading users...
+                                            </SelectItem>
+                                        )}
+                                        {!usersLoading && availableUsers?.length === 0 && (
+                                            <SelectItem value="none" disabled>
+                                                No available users
+                                            </SelectItem>
+                                        )}
+                                        {availableUsers?.map((user: any) => (
+                                            <SelectItem key={user.id} value={user.id}>
+                                                {user.name || `${user.firstName} ${user.lastName}`} ({user.email})
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className="space-y-2">
                                 <Label htmlFor="invite-role">Role</Label>
@@ -320,20 +476,24 @@ function MembersManagement({
                             <div className="flex gap-2">
                                 <Button
                                     onClick={() => {
-                                        toast.info(
-                                            "Invite functionality requires email integration"
-                                        );
-                                        setShowInviteForm(false);
-                                        setInviteEmail("");
+                                        if (!selectedUserId) {
+                                            toast.error("Please select a user");
+                                            return;
+                                        }
+                                        addMemberMutation.mutate({
+                                            userId: selectedUserId,
+                                            role: inviteRole,
+                                        });
                                     }}
+                                    disabled={addMemberMutation.isPending || !selectedUserId}
                                 >
-                                    Send Invite
+                                    {addMemberMutation.isPending ? "Adding..." : "Add Member"}
                                 </Button>
                                 <Button
                                     variant="outline"
                                     onClick={() => {
                                         setShowInviteForm(false);
-                                        setInviteEmail("");
+                                        setSelectedUserId("");
                                     }}
                                 >
                                     Cancel
