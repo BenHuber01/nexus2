@@ -1,5 +1,6 @@
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import Loader from "./components/loader";
+import { AIChatBubble } from "./components/ai-chat-bubble";
 import "./index.css";
 import { routeTree } from "./routeTree.gen";
 import {
@@ -62,6 +63,7 @@ export const getRouter = () => {
 			<QueryClientProvider client={queryClient}>
 				<TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
 					{children}
+					<AIChatBubble />
 				</TRPCProvider>
 			</QueryClientProvider>
 		),

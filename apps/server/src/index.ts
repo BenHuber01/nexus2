@@ -149,10 +149,62 @@ const app = new Elysia()
 						}
 					},
 				} as any),
+				create_task: tool({
+					description: "Create a new task in the current project when user requests it",
+					inputSchema: z.object({
+						title: z.string().describe("Task title"),
+						description: z.string().optional().describe("Task description"),
+						priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).optional().describe("Task priority"),
+					}),
+					execute: async ({ title, description, priority }: any) => {
+						console.log("[AI] Creating task:", title);
+						console.log("[AI] Creating task with user:", userId);
+						console.log("[AI] Creating task with project:", projectId);
+						if (!projectId) {
+							return { error: "Project context required. Please navigate to a project first." };
+						}
+						if (!userId) {
+							return { error: "User authentication required" };
+						}
+						try {
+							const firstState = await prisma.workItemState.findFirst({
+								where: { projectId },
+								orderBy: { position: "asc" },
+							});
+	
+							const workItem = await prisma.workItem.create({
+								data: {
+									title,
+									description: description || "",
+									type: "TASK",
+									priority: priority || "MEDIUM",
+									projectId,
+									stateId: firstState?.id || "",
+									creatorId: userId,
+								},
+							});
+	
+							const project = await prisma.project.findUnique({
+								where: { id: projectId },
+								select: { key: true },
+							});
+	
+							const taskId = `${project?.key || "PROJ"}-${workItem.id.split("-")[0]}`;
+							return {
+								success: true,
+								taskId,
+								title: workItem.title,
+								message: `Task ${taskId} "${workItem.title}" created successfully`,
+							};
+						} catch (error: any) {
+							console.error("[AI] Error creating task:", error);
+							return { error: error.message };
+						}
+					},
+				} as any),
 			},
 			toolChoice: "auto",
 		});
-		//return result.toTextStreamResponse();
 		return result.toTextStreamResponse();
 	})
 	.get("/", () => "OK")
