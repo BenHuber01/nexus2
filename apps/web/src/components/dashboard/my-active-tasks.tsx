@@ -126,7 +126,12 @@ export function MyActiveTasks() {
                 <TaskFormModal
                     mode="edit"
                     open={isEditModalOpen}
-                    onOpenChange={setIsEditModalOpen}
+                    onOpenChange={(open) => {
+                        setIsEditModalOpen(open);
+                        if (!open) {
+                            setEditingTask(null);
+                        }
+                    }}
                     task={editingTask}
                     projectId={editingTask.project?.id || editingTask.projectId}
                 />

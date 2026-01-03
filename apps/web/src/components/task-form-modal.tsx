@@ -45,6 +45,11 @@ export function TaskFormModal({
     const client = useTRPCClient();
     const queryClient = useQueryClient();
 
+    // Early return if in edit mode but task is null
+    if (mode === "edit" && !task) {
+        return null;
+    }
+
     // Form state
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
@@ -369,7 +374,7 @@ export function TaskFormModal({
             storyPoints: storyPoints === 0 ? null : storyPoints,
             estimatedHours: estimatedHours === 0 ? null : estimatedHours,
             remainingHours: remainingHours === 0 ? null : remainingHours,
-            dueDate: dueDate && dueDate.trim() !== "" ? new Date(dueDate) : null,
+            dueDate: dueDate && dueDate.trim() !== "" ? new Date(dueDate) : undefined,
             componentIds,
             details: {
                 acceptanceCriteria,
@@ -723,7 +728,7 @@ export function TaskFormModal({
                     </TabsContent>
 
                     {/* Dependencies Tab (Edit mode only) */}
-                    {showDependenciesTab && (
+                    {showDependenciesTab && task && (
                         <TabsContent value="dependencies" className="py-4">
                             <DependencyManager
                                 workItemId={task.id}
@@ -733,7 +738,7 @@ export function TaskFormModal({
                     )}
 
                     {/* Comments Tab (Edit mode only) */}
-                    {showCommentsTab && (
+                    {showCommentsTab && task && (
                         <TabsContent value="comments" className="py-4">
                             <CommentSection workItemId={task.id} />
                         </TabsContent>

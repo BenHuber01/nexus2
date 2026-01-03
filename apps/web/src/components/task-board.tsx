@@ -8,6 +8,7 @@ import { BoardSelector } from "./board-selector";
 import { TaskFormModal } from "./task-form-modal";
 import { useState } from "react";
 import { toast } from "sonner";
+import { getUser } from "@/functions/get-user";
 import {
     DndContext,
     DragOverlay,
@@ -41,6 +42,11 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
     const [editingTask, setEditingTask] = useState<any>(null);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTask, setActiveTask] = useState<any>(null);
+
+    const { data: session } = useQuery({
+        queryKey: ["session"],
+        queryFn: getUser,
+    });
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -224,6 +230,7 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
                                     setEditingTask(task);
                                     setIsEditModalOpen(true);
                                 }}
+                                currentUserId={session?.user?.id}
                             />
                         ))
                     )}
@@ -231,7 +238,7 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
 
                 <DragOverlay>
                     {activeTask ? (
-                        <TaskCard task={activeTask} isOverlay />
+                        <TaskCard task={activeTask} isOverlay currentUserId={session?.user?.id} />
                     ) : null}
                 </DragOverlay>
             </DndContext>
@@ -249,7 +256,7 @@ export function TaskBoard({ projectId, boardId: initialBoardId }: TaskBoardProps
     );
 }
 
-function BoardLane({ lane, tasks, states, onEditTask }: { lane: any; tasks: any[]; states: any[]; onEditTask: (task: any) => void }) {
+function BoardLane({ lane, tasks, states, onEditTask, currentUserId }: { lane: any; tasks: any[]; states: any[]; onEditTask: (task: any) => void; currentUserId?: string }) {
     const { setNodeRef } = useDroppable({
         id: lane.id,
     });
@@ -315,7 +322,7 @@ function BoardLane({ lane, tasks, states, onEditTask }: { lane: any; tasks: any[
                 ) : (
                     <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
                         {tasks.map((task) => (
-                            <SortableTaskCard key={task.id} task={task} onEdit={() => onEditTask(task)} />
+                            <SortableTaskCard key={task.id} task={task} onEdit={() => onEditTask(task)} currentUserId={currentUserId} />
                         ))}
                     </SortableContext>
                 )}
@@ -324,7 +331,7 @@ function BoardLane({ lane, tasks, states, onEditTask }: { lane: any; tasks: any[
     );
 }
 
-function SortableTaskCard({ task, onEdit }: { task: any; onEdit: () => void }) {
+function SortableTaskCard({ task, onEdit, currentUserId }: { task: any; onEdit: () => void; currentUserId?: string }) {
     const {
         attributes,
         listeners,
@@ -342,14 +349,20 @@ function SortableTaskCard({ task, onEdit }: { task: any; onEdit: () => void }) {
 
     return (
         <div ref={setNodeRef} style={style} {...attributes} {...listeners} onClick={onEdit}>
-            <TaskCard task={task} />
+            <TaskCard task={task} currentUserId={currentUserId} />
         </div>
     );
 }
 
-function TaskCard({ task, isOverlay }: { task: any; isOverlay?: boolean }) {
+function TaskCard({ task, isOverlay, currentUserId }: { task: any; isOverlay?: boolean; currentUserId?: string }) {
+    const isAssignedToMe = currentUserId && task.assigneeId === currentUserId;
+    
     return (
-        <Card className={`shadow-sm hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing ${isOverlay ? 'rotate-3 scale-105' : ''}`}>
+        <Card className={`shadow-sm hover:shadow-md transition-all cursor-grab active:cursor-grabbing ${
+            isOverlay ? 'rotate-3 scale-105' : ''
+        } ${
+            isAssignedToMe ? 'ring-2 ring-primary/50 shadow-primary/20 shadow-lg' : ''
+        }`}>
             <CardContent className="p-3 space-y-2">
                 <div className="flex justify-between items-start gap-2">
                     <span className="text-xs font-medium text-muted-foreground">
