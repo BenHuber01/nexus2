@@ -134,3 +134,80 @@ Lane "Working" → ["In Progress", "Testing"]  // "In Progress" appears twice = 
 
 **Last Updated:** 2025-12-30  
 **Next Review:** When board configuration becomes frequently used
+
+---
+
+## 🤖 AI SDK v6 Tool Schema Fix
+
+**Status:** To Be Implemented Later  
+**Priority:** High (blocks AI tool execution)  
+**Affected Component:** `apps/server/src/index.ts`
+
+### Current Issue
+
+AI tools defined with `tool()` helper send invalid schema to OpenAI API:
+
+**Error:**
+```
+AI_APICallError: Invalid schema for function 'create_bug_ticket': 
+schema must be a JSON Schema of 'type: "object"', got 'type: "None"'.
+```
+
+### Root Cause
+
+**Location:** `apps/server/src/index.ts:91, 149`
+
+```typescript
+// Current problematic code:
+create_organization: tool({
+    description: "...",
+    schema: z.object({...}),  // AI SDK v6 expects different property name?
+    execute: async (...) => {...}
+} as any),  // ❌ as any cast corrupts tool structure
+```
+
+**Problems:**
+1. `as any` cast bypasses type checking and corrupts runtime object
+2. Property name might be wrong (`schema` vs `parameters` vs `inputSchema`)
+3. AI SDK v6 changed tool API - needs research
+4. Tool object doesn't convert properly to OpenAI function calling format
+
+### Why We Used `as any`
+
+TypeScript errors:
+```
+error TS2769: No overload matches this call.
+  Object literal may only specify known properties, 
+  and 'schema' does not exist in type 'Tool<never, never>'.
+```
+
+We couldn't find correct property name/structure, so used `as any` to bypass - but this breaks runtime.
+
+### Proposed Solution
+
+1. **Research AI SDK v6 tool API:**
+   - Check `node_modules/ai/dist/index.d.ts` for correct `tool()` signature
+   - Look at official examples in Vercel AI SDK v6 docs
+   - Find correct property names and structure
+
+2. **Remove `as any` casts:**
+   - Fix type errors properly
+   - Ensure tool object structure matches OpenAI expectations
+
+3. **Test with both tools:**
+   - `create_organization` (simple)
+   - `create_bug_ticket` (with optional fields)
+
+### Workaround (Current)
+
+Tools are defined but will fail at runtime when called. User sees error in AI response.
+
+### Related Files
+
+- `apps/server/src/index.ts` (lines 52-91, 92-149)
+- AI SDK v6 migration notes
+
+---
+
+**Last Updated:** 2026-01-03  
+**Next Review:** Before enabling AI features in production

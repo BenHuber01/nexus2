@@ -37,19 +37,60 @@ const app = new Elysia()
 		return res;
 	})
 	.post("/ai", async (context: any) => {
+		const session = await auth.api.getSession({ headers: context.request.headers });
+		const userId = session?.user?.id;
+		console.log("[AI] Session:", session);
+		console.log("[AI] User ID:", userId);
 		const body = (await context.request.json()) as { 
 			messages?: any[];
 			projectId?: string;
-			userId?: string;
 		};
 		const uiMessages = body.messages || [];
 		const projectId = body.projectId;
-		const userId = body.userId;
 
 		const result = await streamText({
 			model: openai("gpt-4-turbo"),
 			messages: await convertToModelMessages(uiMessages),
 			tools: {
+				create_organization: tool({
+					description: "Create a new organization when user requests it",
+					inputSchema: z.object({
+						name: z.string().describe("Organization name"),
+						description: z.string().optional().describe("Organization description"),
+					}),
+					execute: async ({ name, description }: any) => {
+						console.log("[AI] Creating organization with name:", name);
+						console.log("[AI] Creating organization with user:", userId);
+						if (!userId) {
+							return { error: "User ID required" };
+						}
+			
+						try {
+							const slug = name.toLowerCase().replace(/\s+/g, "-");
+							const org = await prisma.organization.create({
+								data: { name, slug, description },
+							});
+						
+							await prisma.organizationMembership.create({
+								data: {
+									organizationId: org.id,
+									userId,
+									role: "OWNER",
+								},
+							});
+						
+							return {
+								success: true,
+								organizationId: org.id,
+								name: org.name,
+								message: `Organization "${org.name}" created successfully`,
+							};
+						} catch (error: any) {
+							console.error("[AI] Error creating organization:", error);
+							return { error: error.message };
+						}
+					},
+				} as any),
 				create_bug_ticket: tool({
 					description: "Create a bug ticket in the project management system when user reports a bug",
 					inputSchema: z.object({

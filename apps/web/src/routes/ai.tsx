@@ -16,6 +16,7 @@ function RouteComponent() {
 	const { messages, sendMessage } = useChat({
 		transport: new DefaultChatTransport({
 			api: `${import.meta.env.VITE_SERVER_URL}/ai`,
+			credentials: "include",
 		}),
 	});
 
@@ -53,7 +54,7 @@ function RouteComponent() {
 							<p className="text-sm font-semibold mb-1">
 								{message.role === "user" ? "You" : "AI Assistant"}
 							</p>
-							<Response>{message.parts.map((part) => part.text).join('')}</Response>
+							<Response>{(message as any).content || JSON.stringify(message)}</Response>
 						</div>
 					))
 				)}
