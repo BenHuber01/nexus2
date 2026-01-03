@@ -1,50 +1,43 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useTRPC } from "@/utils/trpc";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { getUser } from "@/functions/get-user";
+import { QuickStatsBar } from "@/components/dashboard/quick-stats-bar";
+import { MyActiveTasks } from "@/components/dashboard/my-active-tasks";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
+	beforeLoad: async () => {
+		const session = await getUser();
+		return { session };
+	},
+	loader: async ({ context }) => {
+		if (!context.session) {
+			throw redirect({
+				to: "/login",
+			});
+		}
+	},
 });
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
-
 function HomeComponent() {
-	const trpc = useTRPC();
-	const healthCheck = useQuery(trpc.healthCheck.queryOptions());
+	const { session } = Route.useRouteContext();
 
 	return (
-		<div className="container mx-auto max-w-3xl px-4 py-2">
-			<pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-			<div className="grid gap-6">
-				<section className="rounded-lg border p-4">
-					<h2 className="mb-2 font-medium">API Status</h2>
-					<div className="flex items-center gap-2">
-						<div
-							className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-						/>
-						<span className="text-muted-foreground text-sm">
-							{healthCheck.isLoading
-								? "Checking..."
-								: healthCheck.data
-									? "Connected"
-									: "Disconnected"}
-						</span>
-					</div>
-				</section>
+		<div className="container mx-auto py-8">
+			<div className="flex justify-between items-center mb-8">
+				<div>
+					<h1 className="text-3xl font-bold tracking-tight">Home</h1>
+					<p className="text-muted-foreground">
+						Welcome back, {session?.user.name}
+					</p>
+				</div>
+			</div>
+
+			<div className="space-y-6">
+				{/* Quick Stats */}
+				<QuickStatsBar />
+
+				{/* My Active Tasks */}
+				<MyActiveTasks />
 			</div>
 		</div>
 	);
