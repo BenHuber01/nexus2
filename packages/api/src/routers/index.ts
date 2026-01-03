@@ -18,6 +18,7 @@ import { workItemStateRouter } from "./workItemState";
 import { componentRouter } from "./component";
 import { teamMembershipRouter } from "./teamMembership";
 import { organizationMembershipRouter } from "./organizationMembership";
+import { dashboardRouter } from "./dashboard";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -39,6 +40,7 @@ export const appRouter = router({
 	component: componentRouter,
 	teamMembership: teamMembershipRouter,
 	organizationMembership: organizationMembershipRouter,
+	dashboard: dashboardRouter,
 });
 
 export type AppRouter = typeof appRouter;

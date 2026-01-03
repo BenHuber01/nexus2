@@ -23,6 +23,43 @@ export const workItemRouter = router({
             });
         }),
 
+    getByAssignee: protectedProcedure
+        .input(
+            z.object({
+                userId: z.string(),
+                limit: z.number().default(15),
+            }),
+        )
+        .query(({ ctx, input }) => {
+            return ctx.prisma.workItem.findMany({
+                where: {
+                    assigneeId: input.userId,
+                    state: {
+                        category: {
+                            notIn: ["DONE"],
+                        },
+                    },
+                },
+                include: {
+                    assignee: true,
+                    state: true,
+                    sprint: true,
+                    project: {
+                        select: {
+                            id: true,
+                            key: true,
+                            name: true,
+                        },
+                    },
+                },
+                orderBy: [
+                    { priority: "desc" },
+                    { dueDate: "asc" },
+                ],
+                take: input.limit,
+            });
+        }),
+
     getById: protectedProcedure
         .input(z.object({ id: z.string() }))
         .query(({ ctx, input }) => {
