@@ -22,6 +22,7 @@ function RouteComponent() {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		console.log("messages", messages);
 		messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
 	}, [messages]);
 
@@ -44,21 +45,15 @@ function RouteComponent() {
 					messages.map((message) => (
 						<div
 							key={message.id}
-							className={`p-3 rounded-lg ${
-								message.role === "user"
+							className={`p-3 rounded-lg ${message.role === "user"
 									? "bg-primary/10 ml-8"
 									: "bg-secondary/20 mr-8"
-							}`}
+								}`}
 						>
 							<p className="text-sm font-semibold mb-1">
 								{message.role === "user" ? "You" : "AI Assistant"}
 							</p>
-							{message.parts?.map((part, index) => {
-								if (part.type === "text") {
-									return <Response key={index}>{part.text}</Response>;
-								}
-								return null;
-							})}
+							<Response>{message.parts.map((part) => part.text).join('')}</Response>
 						</div>
 					))
 				)}

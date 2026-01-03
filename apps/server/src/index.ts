@@ -3,7 +3,7 @@ import { Elysia } from "elysia";
 import { cors } from "@elysiajs/cors";
 // import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
-import { convertToModelMessages, streamText, tool } from "ai";
+import { convertToModelMessages, streamText, tool, generateText } from "ai";
 import { z } from "zod";
 import { createContext } from "@my-better-t-app/api/context";
 import { appRouter } from "@my-better-t-app/api/routers/index";
@@ -52,17 +52,19 @@ const app = new Elysia()
 			tools: {
 				create_bug_ticket: tool({
 					description: "Create a bug ticket in the project management system when user reports a bug",
-					schema: z.object({
+					inputSchema: z.object({
 						title: z.string().describe("Short, descriptive bug title"),
 						description: z.string().describe("Detailed bug description"),
 						priority: z.enum(["LOW", "MEDIUM", "HIGH", "CRITICAL"]).describe("Bug severity"),
 						reproSteps: z.string().optional().describe("Steps to reproduce the bug"),
 					}),
 					execute: async ({ title, description, priority, reproSteps }: any) => {
+						console.log("[AI] Creating bug ticket with title:", title);
+						console.log("[AI] Project ID:", projectId);
 						if (!projectId) {
 							return { error: "Project ID required" };
 						}
-
+						console.log("[AI] Creating bug ticket:", title, description, priority, reproSteps);
 						try {
 							// Get first state for project
 							const firstState = await prisma.workItemState.findFirst({
@@ -87,7 +89,7 @@ const app = new Elysia()
 									} : undefined,
 								},
 							});
-							
+							console.log("[AI] Created bug ticket:", workItem.id);
 							// Get project key for ticket ID
 							const project = await prisma.project.findUnique({
 								where: { id: projectId },
@@ -109,7 +111,7 @@ const app = new Elysia()
 			},
 			toolChoice: "auto",
 		});
-
+		//return result.toTextStreamResponse();
 		return result.toTextStreamResponse();
 	})
 	.get("/", () => "OK")
