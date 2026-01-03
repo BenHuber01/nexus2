@@ -1,5 +1,23 @@
 # Home Dashboard Plan
 
+## Implementation Status
+
+### ✅ Completed
+- **Quick Stats Bar** - 4 metric cards (Open Tasks, Due This Week, Active Sprints, Recent Comments)
+- **My Active Tasks** - Table view with task details, project context, click to open modal
+- **Active Sprints** - Collapsible cards with progress bars and task stats
+- **Recent Activity** - Timeline view with comments and state changes
+- **My Projects** - Grid view of projects grouped by organization with task counts
+- **Upcoming Due Dates** - Grouped by Overdue/Today/Tomorrow/This Week
+- **Backend**: `dashboard.getStats`, `workItem.getByAssignee`, `sprint.getActive`, `activity.getRecent`, `workItem.getUpcoming`, `organization.getWithProjects`
+- **UI Components**: Progress component from shadcn/ui
+
+### ❌ Not Yet Implemented
+- **Team Activity** - Team members' work overview (optional feature)
+- **Backend**: `team.getActivity` endpoint (optional)
+
+---
+
 ## Overview
 Transform the home page into a personalized dashboard showing user's most relevant work across all organizations and projects.
 
@@ -40,75 +58,80 @@ Transform the home page into a personalized dashboard showing user's most releva
 
 ## Components Breakdown
 
-### 1. Quick Stats Bar (Top)
+### 1. Quick Stats Bar (Top) ✅ IMPLEMENTED
 **4 Metric Cards (Horizontal)**
 
-- **My Open Tasks**
+- **My Open Tasks** ✅
   - Count of assigned tasks (non-completed states)
-  - Badge: Priority breakdown (High/Critical count)
-  - Click: Filter to "My Tasks" view
+  - Icon: CheckCircle2 (blue)
+  - Click: Not yet implemented
 
-- **Tasks Due This Week**
+- **Tasks Due This Week** ✅
   - Count of tasks with dueDate in next 7 days
-  - Badge: Overdue count (red)
-  - Click: Show filtered list
+  - Icon: Clock (orange)
+  - Click: Not yet implemented
 
-- **Active Sprints**
+- **Active Sprints** ✅
   - Count of sprints in "active" state across all projects
-  - Badge: Current sprint progress %
-  - Click: Navigate to sprint view
+  - Icon: Rocket (green)
+  - Click: Not yet implemented
 
-- **Recent Comments**
-  - Count of unread comments on user's tasks (last 24h)
-  - Badge: New count
-  - Click: Show activity timeline
+- **Recent Comments** ✅
+  - Count of comments on user's tasks (last 24h, excluding own comments)
+  - Icon: MessageSquare (purple)
+  - Click: Not yet implemented
 
 **Data Source**: 
 ```typescript
-trpc.dashboard.getStats.query() // New endpoint
+trpc.dashboard.getStats.query() // ✅ Implemented
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/quick-stats-bar.tsx`
 
 ---
 
-### 2. My Active Tasks (Left Panel)
+### 2. My Active Tasks (Left Panel) ✅ IMPLEMENTED
 **Table View - Current User's Work**
 
-**Columns**:
+**Columns**: ✅
 - Project Key + Task ID (e.g., `PROJ-123`)
-- Title (truncated)
-- Priority (Badge)
+- Title (truncated) + Project name subtitle
+- Priority (Badge with color coding)
 - State (Badge)
-- Due Date (relative: "2 days" with color coding)
+- Due Date (relative format with overdue highlighting)
 
-**Filters** (Top):
+**Filters** (Top): ❌ Not implemented
 - All / High Priority / Due Soon
 - Grouping: By Project / By Sprint
 
-**Actions**:
-- Click row → Open task modal
-- Max 10-15 items, "View All" link at bottom
+**Actions**: ✅
+- Click row → Open task modal (TaskFormModal)
+- Max 15 items
+- Empty state handling
 
-**Data Source**:
+**Data Source**: ✅
 ```typescript
 trpc.workItem.getByAssignee.query({ 
   userId: currentUser.id,
-  states: ['TODO', 'IN_PROGRESS'],
   limit: 15
 })
+// Filters by non-DONE states, ordered by priority (desc) and dueDate (asc)
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/my-active-tasks.tsx`
 
 ---
 
-### 3. Recent Activity (Right Panel)
+### 3. Recent Activity (Right Panel) ✅ IMPLEMENTED
 **Timeline View - User & Team Updates**
 
-**Items** (Chronological, newest first):
+**Items** (Chronological, newest first): ✅
 - Task state changes
 - New comments on watched tasks
 - Task assignments
-- Sprint starts/completions
+- Sprint starts/completions (via ActivityLog)
 
-**Format**:
+**Format**: ✅
 ```
 [Icon] [User Avatar] [Action] [Target] • [Time]
 ```
@@ -120,83 +143,83 @@ trpc.workItem.getByAssignee.query({
 → Mike L. moved "Update docs" to In Progress • 5h ago
 ```
 
-**Max**: 10 items, "View All Activity" link
+**Max**: ✅ 10 items, skeleton loading states
 
-**Data Source**:
+**Data Source**: ✅
 ```typescript
 trpc.activity.getRecent.query({ 
-  limit: 10,
-  types: ['state_change', 'comment', 'assignment']
+  limit: 10
 })
+// Combines ActivityLog entries + recent comments
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/recent-activity.tsx`
 
 ---
 
-### 4. Active Sprints Overview
+### 4. Active Sprints Overview ✅ IMPLEMENTED
 **Collapsible Cards per Sprint**
 
-**Card Header**:
-- Sprint Name + Project Name
+**Card Header**: ✅
+- Sprint Name + Project Name (badge)
 - Progress Bar (% completed tasks)
-- Days Remaining (badge)
-- Expand/Collapse icon
+- Days Remaining / Overdue status
+- Expand/Collapse icon (ChevronDown/ChevronUp)
 
-**Card Content (when expanded)**:
-- **Stats Row**:
+**Card Content (when expanded)**: ✅
+- **Stats Row** (4-column grid):
   - Total Tasks: X
-  - Completed: Y (green)
-  - In Progress: Z (blue)
   - Todo: W (gray)
+  - In Progress: Z (blue)
+  - Done: Y (green)
 
-- **Task Breakdown** (Mini table):
+- **Sprint Goal**: ✅ Displayed if available
+
+- **Task Breakdown** (Mini table): ❌ Not implemented
   - Top 5 tasks in sprint
   - State + Assignee
   - Click → Task modal
 
-**Sorting**: By sprint end date (soonest first)
+**Sorting**: ✅ By sprint end date (soonest first)
 
-**Data Source**:
+**Data Source**: ✅
 ```typescript
 trpc.sprint.getActive.query({ 
-  includeTaskCounts: true,
   limit: 3
 })
+// Returns sprints with stats: { total, todo, inProgress, done }
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/active-sprints.tsx`
 
 ---
 
-### 5. My Projects (Grid)
+### 5. My Projects (Grid) ✅ IMPLEMENTED
 **Card Grid - User's Organizations & Projects**
 
-**Card Layout**:
-```
-┌────────────────────────┐
-│ [Org Icon] Org Name    │
-│ ────────────────────   │
-│ Project A    [5 tasks] │
-│ Project B    [2 tasks] │
-│ Project C    [0 tasks] │
-│                        │
-│ [View All Projects →]  │
-└────────────────────────┘
-```
+**Card Layout**: ✅
+- Organization cards with nested project lists
+- Project key + task count badges
+- Click to navigate to project view
+- Max 5 projects shown per org, "+ more" indicator
 
-**Features**:
+**Features**: ✅
 - Group by organization
-- Show task count per project (assigned to user)
+- Show task count per project (assigned to user, non-DONE)
 - Click project → Navigate to project view
-- Max 3 organizations, expand for more
+- Hover states and chevron indicators
 
-**Data Source**:
+**Data Source**: ✅
 ```typescript
-trpc.organization.getWithProjects.query({
-  includeTaskCounts: true
-})
+trpc.organization.getWithProjects.query()
+// Returns orgs with projects + taskCount per project
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/my-projects.tsx`
 
 ---
 
-### 6. Team Activity (Optional)
+### 6. Team Activity (Optional) ❌ NOT IMPLEMENTED
 **List View - Team Members' Work**
 
 Shows recent work from team members in same projects:
@@ -207,36 +230,44 @@ Shows recent work from team members in same projects:
 **Format**:
 - Avatar + Name + Current Task + Status
 
-**Data Source**:
+**Data Source**: ❌ Requires implementation
 ```typescript
 trpc.team.getActivity.query({ limit: 5 })
 ```
 
+**Status**: Requires backend endpoint + frontend component
+
 ---
 
-### 7. Upcoming Due Dates
+### 7. Upcoming Due Dates ✅ IMPLEMENTED
 **List View - Tasks Due Soon**
 
-**Grouped by Date**:
-- Overdue (red)
+**Grouped by Date**: ✅
+- Overdue (red with AlertCircle icon)
 - Today (orange)
 - Tomorrow (yellow)
 - This Week (default)
 
-**Item Format**:
-- Task Title
-- Project
+**Item Format**: ✅
+- Task ID (Project key + short ID)
+- Task Title (truncated)
+- State badge
+- Project name
 - Assignee (if not current user)
+- Relative time ("due in 2 days")
 
-**Click**: Open task modal
+**Click**: ✅ Open task modal (TaskFormModal)
 
-**Data Source**:
+**Data Source**: ✅
 ```typescript
 trpc.workItem.getUpcoming.query({ 
   userId: currentUser.id,
   days: 7
 })
+// Returns tasks due within 7 days, sorted by dueDate asc
 ```
+
+**Implementation**: `/apps/web/src/components/dashboard/upcoming-due-dates.tsx`
 
 ---
 
@@ -282,34 +313,38 @@ export const activityRouter = router({
 ## Implementation Steps
 
 ### Phase 1: Backend (Data Layer)
-1. Create `dashboard.ts` router with `getStats` endpoint
-2. Create `activity.ts` router with `getRecent` endpoint
-3. Add `workItem.getByAssignee` procedure
-4. Add `workItem.getUpcoming` procedure
-5. Extend `sprint.getActive` with task counts
-6. Test all endpoints with Postman/Prisma Studio
+1. ✅ Create `dashboard.ts` router with `getStats` endpoint
+2. ✅ Create `activity.ts` router with `getRecent` endpoint
+3. ✅ Add `workItem.getByAssignee` procedure
+4. ✅ Add `workItem.getUpcoming` procedure
+5. ✅ Extend `sprint.getActive` with task counts
+6. ✅ Add `organization.getWithProjects` with task counts
+7. ⏳ Test all endpoints with Postman/Prisma Studio
 
 ### Phase 2: Frontend Components
-1. Create `/apps/web/src/components/dashboard/` folder
-2. Build `QuickStatsBar.tsx` (4 stat cards)
-3. Build `MyActiveTasks.tsx` (table view)
-4. Build `RecentActivity.tsx` (timeline)
-5. Build `ActiveSprints.tsx` (collapsible cards)
-6. Build `MyProjects.tsx` (grid)
-7. Build `UpcomingDue.tsx` (list)
+1. ✅ Create `/apps/web/src/components/dashboard/` folder
+2. ✅ Build `QuickStatsBar.tsx` (4 stat cards)
+3. ✅ Build `MyActiveTasks.tsx` (table view)
+4. ✅ Build `RecentActivity.tsx` (timeline)
+5. ✅ Build `ActiveSprints.tsx` (collapsible cards)
+6. ✅ Build `MyProjects.tsx` (grid)
+7. ✅ Build `UpcomingDueDates.tsx` (grouped list)
+8. ❌ Build `TeamActivity.tsx` (optional)
 
 ### Phase 3: Integration
-1. Update `/apps/web/src/routes/index.tsx` (home route)
-2. Wire up all components with tRPC queries
-3. Add refetchOnMount/refetchOnWindowFocus for fresh data
-4. Add loading skeletons for each section
+1. ✅ Update `/apps/web/src/routes/index.tsx` (home route)
+2. ✅ Wire up all components with tRPC queries
+3. ✅ Add loading skeletons for each section
+4. ✅ Add two-column layout for Tasks/Activity
+5. ⏳ Add refetchOnMount/refetchOnWindowFocus for fresh data
 
 ### Phase 4: Polish
-1. Add empty states ("No tasks assigned", etc.)
-2. Add navigation links ("View All", etc.)
-3. Add hover states and animations
-4. Test multi-user scenarios
-5. Optimize query performance (indexes, includes)
+1. ✅ Add empty states for all components
+2. ✅ Add hover states and animations
+3. ✅ Responsive grid layouts
+4. ⏳ Test multi-user scenarios
+5. ⏳ Optimize query performance (indexes, includes)
+6. ⏳ Add navigation links ("View All", etc.)
 
 ---
 

@@ -367,4 +367,65 @@ export const workItemRouter = router({
             console.log("[workItem.delete] Successfully deleted:", deletedItem.title);
             return deletedItem;
         }),
+
+    getUpcoming: protectedProcedure
+        .input(
+            z.object({
+                userId: z.string(),
+                days: z.number().default(7),
+            }),
+        )
+        .query(({ ctx, input }) => {
+            const now = new Date();
+            const futureDate = new Date();
+            futureDate.setDate(now.getDate() + input.days);
+
+            return ctx.prisma.workItem.findMany({
+                where: {
+                    OR: [
+                        { assigneeId: input.userId },
+                        {
+                            project: {
+                                organization: {
+                                    users: {
+                                        some: {
+                                            userId: input.userId,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    ],
+                    dueDate: {
+                        lte: futureDate,
+                    },
+                    state: {
+                        category: {
+                            notIn: ["DONE"],
+                        },
+                    },
+                },
+                include: {
+                    assignee: {
+                        select: {
+                            id: true,
+                            name: true,
+                            avatarUrl: true,
+                        },
+                    },
+                    state: true,
+                    project: {
+                        select: {
+                            id: true,
+                            key: true,
+                            name: true,
+                        },
+                    },
+                },
+                orderBy: [
+                    { dueDate: "asc" },
+                    { priority: "desc" },
+                ],
+            });
+        }),
 });

@@ -19,6 +19,7 @@ import { componentRouter } from "./component";
 import { teamMembershipRouter } from "./teamMembership";
 import { organizationMembershipRouter } from "./organizationMembership";
 import { dashboardRouter } from "./dashboard";
+import { activityRouter } from "./activity";
 
 export const appRouter = router({
 	healthCheck: publicProcedure.query(() => true),
@@ -41,6 +42,7 @@ export const appRouter = router({
 	teamMembership: teamMembershipRouter,
 	organizationMembership: organizationMembershipRouter,
 	dashboard: dashboardRouter,
+	activity: activityRouter,
 });
 
 export type AppRouter = typeof appRouter;

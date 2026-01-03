@@ -2,6 +2,10 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import { getUser } from "@/functions/get-user";
 import { QuickStatsBar } from "@/components/dashboard/quick-stats-bar";
 import { MyActiveTasks } from "@/components/dashboard/my-active-tasks";
+import { ActiveSprints } from "@/components/dashboard/active-sprints";
+import { RecentActivity } from "@/components/dashboard/recent-activity";
+import { UpcomingDueDates } from "@/components/dashboard/upcoming-due-dates";
+import { MyProjects } from "@/components/dashboard/my-projects";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
@@ -36,8 +40,23 @@ function HomeComponent() {
 				{/* Quick Stats */}
 				<QuickStatsBar />
 
-				{/* My Active Tasks */}
-				<MyActiveTasks />
+				{/* Two Column Layout */}
+				<div className="grid gap-6 md:grid-cols-2">
+					{/* My Active Tasks */}
+					<MyActiveTasks />
+
+					{/* Recent Activity */}
+					<RecentActivity />
+				</div>
+
+				{/* Active Sprints */}
+				<ActiveSprints />
+
+				{/* Upcoming Due Dates */}
+				<UpcomingDueDates />
+
+				{/* My Projects */}
+				<MyProjects />
 			</div>
 		</div>
 	);

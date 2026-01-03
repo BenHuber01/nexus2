@@ -66,4 +66,64 @@ export const organizationRouter = router({
             });
             return org;
         }),
+
+    getWithProjects: protectedProcedure.query(async ({ ctx }) => {
+        const userId = ctx.session.user.id;
+
+        // Get user's organizations with projects
+        const organizations = await ctx.prisma.organization.findMany({
+            where: {
+                users: {
+                    some: {
+                        userId: userId,
+                    },
+                },
+            },
+            include: {
+                projects: {
+                    select: {
+                        id: true,
+                        name: true,
+                        key: true,
+                        description: true,
+                    },
+                },
+            },
+        });
+
+        // For each project, get task count assigned to user
+        const orgsWithTaskCounts = await Promise.all(
+            organizations.map(async (org: any) => {
+                const projectsWithCounts = await Promise.all(
+                    org.projects.map(async (project: any) => {
+                        const taskCount = await ctx.prisma.workItem.count({
+                            where: {
+                                projectId: project.id,
+                                assigneeId: userId,
+                                state: {
+                                    category: {
+                                        notIn: ["DONE"],
+                                    },
+                                },
+                            },
+                        });
+
+                        return {
+                            ...project,
+                            taskCount,
+                        };
+                    })
+                );
+
+                return {
+                    id: org.id,
+                    name: org.name,
+                    slug: org.slug,
+                    projects: projectsWithCounts,
+                };
+            })
+        );
+
+        return orgsWithTaskCounts;
+    }),
 });
