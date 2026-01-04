@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport } from "ai";
 import { Button } from "@/components/ui/button";
@@ -12,27 +12,13 @@ export function AIChatBubble() {
     const [input, setInput] = useState("");
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Extract projectId from URL pathname
-    const getProjectId = () => {
+    // Extract projectId from URL pathname (memoized)
+    const projectId = useMemo(() => {
         if (typeof window === "undefined") return undefined;
         const pathname = window.location.pathname;
-        console.log("[AIChatBubble] pathname:", pathname);
         const match = pathname.match(/\/projects\/([^\/]+)/);
-        const projectId = match?.[1];
-        console.log("[AIChatBubble] extracted projectId:", projectId);
-        return projectId;
-    };
-
-    const [projectId, setProjectId] = useState<string | undefined>(getProjectId());
-
-    // Update projectId when URL changes
-    useEffect(() => {
-        const handleLocationChange = () => {
-            setProjectId(getProjectId());
-        };
-        window.addEventListener("popstate", handleLocationChange);
-        return () => window.removeEventListener("popstate", handleLocationChange);
-    }, []);
+        return match?.[1];
+    }, [isOpen]); // Only recalculate when dialog opens
 
     const { messages, sendMessage } = useChat({
         transport: new DefaultChatTransport({
@@ -41,8 +27,11 @@ export function AIChatBubble() {
             body: { projectId },
         }),
     });
+    
+    console.log("[AIChatBubble] All messages:", messages);
 
     useEffect(() => {
+        console.log("[AIChatBubble] messages updated:", messages);
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
@@ -89,7 +78,6 @@ export function AIChatBubble() {
                         ) : (
                             messages.map((message) => {
                                 const msg = message as any;
-                                console.log("[AIChatBubble] Message:", msg);
                                 return (
                                     <div
                                         key={message.id}
@@ -101,7 +89,15 @@ export function AIChatBubble() {
                                         <p className="text-sm font-semibold mb-1">
                                             {message.role === "user" ? "You" : "AI"}
                                         </p>
-                                        <Response>{msg.content || ""}</Response>
+                                        {/* Render message parts */}
+                                        <div>
+                                            {msg.parts?.map((part: any, idx: number) => {
+                                                if (part.type === "text") {
+                                                    return <Response key={idx}>{part.text}</Response>;
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
 
                                         {/* Tool Call Results */}
                                         {msg.toolInvocations?.map((tool: any, idx: number) => (

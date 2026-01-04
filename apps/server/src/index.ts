@@ -205,7 +205,7 @@ const app = new Elysia()
 			},
 			toolChoice: "auto",
 		});
-		return result.toTextStreamResponse();
+		return result.toUIMessageStreamResponse();
 	})
 	.get("/", () => "OK")
 	.listen(3000, () => {
