@@ -97,39 +97,43 @@ export function AIChatBubble() {
                                                 }
                                                 return null;
                                             })}
+                                            {/* Show message if no text parts but has tool calls */}
+                                            {msg.parts?.every((p: any) => p.type !== "text") && msg.parts?.some((p: any) => p.type?.startsWith("tool-")) && (
+                                                <p className="text-muted-foreground text-sm">Using tools...</p>
+                                            )}
                                         </div>
 
-                                        {/* Tool Call Results */}
-                                        {msg.toolInvocations?.map((tool: any, idx: number) => (
+                                        {/* Tool Call Results - render from parts array */}
+                                        {msg.parts?.filter((p: any) => p.type?.startsWith("tool-")).map((tool: any, idx: number) => (
                                             <div key={idx} className="mt-2 p-3 bg-muted/50 rounded-lg text-sm">
                                                 <p className="font-semibold text-xs mb-1 flex items-center gap-2">
                                                     <span className="text-muted-foreground">🔧</span>
-                                                    {tool.toolName === "create_task" && "Creating task..."}
-                                                    {tool.toolName === "create_bug_ticket" && "Creating bug ticket..."}
-                                                    {tool.toolName === "create_organization" && "Creating organization..."}
+                                                    {tool.type === "tool-create_task" && "Creating task..."}
+                                                    {tool.type === "tool-create_bug_ticket" && "Creating bug ticket..."}
+                                                    {tool.type === "tool-create_organization" && "Creating organization..."}
                                                 </p>
-                                                {tool.state === "result" && (
+                                                {tool.state === "output-available" && tool.output && (
                                                     <div className="mt-2">
-                                                        {tool.result.error ? (
+                                                        {tool.output.error ? (
                                                             <div className="text-red-500 flex items-start gap-2">
                                                                 <span>❌</span>
-                                                                <span>{tool.result.error}</span>
+                                                                <span>{tool.output.error}</span>
                                                             </div>
-                                                        ) : tool.result.success ? (
+                                                        ) : tool.output.success ? (
                                                             <div className="text-green-600 flex items-start gap-2">
                                                                 <span>✅</span>
                                                                 <div>
-                                                                    <p>{tool.result.message}</p>
-                                                                    {tool.result.taskId && (
+                                                                    <p>{tool.output.message}</p>
+                                                                    {(tool.output.taskId || tool.output.ticketId || tool.output.organizationId) && (
                                                                         <p className="text-xs text-muted-foreground mt-1">
-                                                                            ID: {tool.result.taskId || tool.result.ticketId || tool.result.organizationId}
+                                                                            ID: {tool.output.taskId || tool.output.ticketId || tool.output.organizationId}
                                                                         </p>
                                                                     )}
                                                                 </div>
                                                             </div>
                                                         ) : (
                                                             <pre className="text-xs overflow-auto text-muted-foreground">
-                                                                {JSON.stringify(tool.result, null, 2)}
+                                                                {JSON.stringify(tool.output, null, 2)}
                                                             </pre>
                                                         )}
                                                     </div>
