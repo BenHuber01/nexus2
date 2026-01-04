@@ -210,6 +210,120 @@ const app = new Elysia()
 						}
 					},
 				} as any),
+				get_project_status: tool({
+					description: `Get comprehensive project status, metrics, and progress overview.
+	
+	Use this when user asks about:
+	- Project status/stand ("Wie ist der Stand?", "Wo stehen wir?")
+	- What's done/remaining ("Was ist noch offen?", "Was ist fertig?")
+	- Team workload ("Wer arbeitet woran?")
+	- Progress overview ("Übersicht über das Projekt")
+	
+	Provides real-time metrics including work items by state, type, priority, and team workload.`,
+					inputSchema: z.object({
+						includeDetails: z.enum(["brief", "detailed", "full"]).default("detailed").optional()
+							.describe("brief = overview only, detailed = include breakdowns, full = all metrics")
+					}),
+					execute: async ({ includeDetails = "detailed" }: any) => {
+						console.log("[AI] Getting project status for:", projectId);
+						if (!projectId) {
+							return { error: "Project context required. Please navigate to a project first." };
+						}
+	
+						try {
+							// Fetch all work items with relations
+							const workItems = await prisma.workItem.findMany({
+								where: { projectId },
+								include: {
+									state: true,
+									assignee: { select: { id: true, name: true } },
+								},
+							});
+	
+							const total = workItems.length;
+							if (total === 0) {
+								return { message: "No work items found in this project yet." };
+							}
+	
+							// Calculate completion
+							const completed = workItems.filter(w => 
+								w.state && (w.state.name.toLowerCase() === "done" || 
+								w.state.name.toLowerCase() === "closed")
+							).length;
+							
+							// Group by state
+							const stateGroups = workItems.reduce((acc, item) => {
+								if (!item.state) return acc;
+								const key = item.state.name;
+								acc[key] = (acc[key] || 0) + 1;
+								return acc;
+							}, {} as Record<string, number>);
+	
+							const stats: any = {
+								totalWorkItems: total,
+								completionRate: Math.round((completed / total) * 100),
+								workItemsByState: Object.entries(stateGroups).map(([name, count]) => ({
+									stateName: name,
+									count,
+									percentage: Math.round((count as number / total) * 100)
+								})),
+							};
+	
+							if (includeDetails === "brief") {
+								return stats;
+							}
+	
+							// Group by type
+							const typeGroups = workItems.reduce((acc, item) => {
+								acc[item.type] = (acc[item.type] || 0) + 1;
+								return acc;
+							}, {} as Record<string, number>);
+	
+							stats.workItemsByType = Object.entries(typeGroups).map(([type, count]) => ({
+								type,
+								count,
+								percentage: Math.round((count as number / total) * 100)
+							}));
+	
+							// Group by priority
+							const priorityGroups = workItems.reduce((acc, item) => {
+								acc[item.priority] = (acc[item.priority] || 0) + 1;
+								return acc;
+							}, {} as Record<string, number>);
+	
+							stats.workItemsByPriority = Object.entries(priorityGroups).map(([priority, count]) => ({
+								priority,
+								count
+							}));
+	
+							// Team workload
+							const assigneeWorkload = workItems
+								.filter(w => w.assigneeId)
+								.reduce((acc, item) => {
+									const key = item.assigneeId!;
+									if (!acc[key]) {
+										acc[key] = {
+											userId: key,
+											userName: item.assignee?.name || "Unknown",
+											activeWorkItems: 0,
+										};
+									}
+									acc[key].activeWorkItems += 1;
+									return acc;
+								}, {} as Record<string, any>);
+	
+							stats.teamWorkload = Object.values(assigneeWorkload);
+	
+							return {
+								success: true,
+								...stats
+							};
+						} catch (error: any) {
+							console.error("[AI] Error fetching project status:", error);
+							return { error: error.message };
+						}
+					},
+				} as any),
 			},
 			toolChoice: "auto",
 		});

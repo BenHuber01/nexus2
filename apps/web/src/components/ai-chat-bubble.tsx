@@ -111,6 +111,7 @@ export function AIChatBubble() {
                                                     {tool.type === "tool-create_task" && "Creating task..."}
                                                     {tool.type === "tool-create_bug_ticket" && "Creating bug ticket..."}
                                                     {tool.type === "tool-create_organization" && "Creating organization..."}
+                                                    {tool.type === "tool-get_project_status" && "Fetching project status..."}
                                                 </p>
                                                 {tool.state === "output-available" && tool.output && (
                                                     <div className="mt-2">
@@ -118,6 +119,93 @@ export function AIChatBubble() {
                                                             <div className="text-red-500 flex items-start gap-2">
                                                                 <span>❌</span>
                                                                 <span>{tool.output.error}</span>
+                                                            </div>
+                                                        ) : tool.type === "tool-get_project_status" ? (
+                                                            <div className="space-y-3">
+                                                                {/* Overview Stats */}
+                                                                <div className="grid grid-cols-2 gap-2">
+                                                                    <div className="bg-background/60 p-2 rounded">
+                                                                        <div className="text-xs text-muted-foreground">Total Items</div>
+                                                                        <div className="text-lg font-bold">{tool.output.totalWorkItems}</div>
+                                                                    </div>
+                                                                    <div className="bg-background/60 p-2 rounded">
+                                                                        <div className="text-xs text-muted-foreground">Completion</div>
+                                                                        <div className="text-lg font-bold">{tool.output.completionRate}%</div>
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Progress Bar */}
+                                                                <div>
+                                                                    <div className="flex justify-between text-xs mb-1">
+                                                                        <span className="text-muted-foreground">Overall Progress</span>
+                                                                    </div>
+                                                                    <div className="w-full bg-secondary h-2 rounded overflow-hidden">
+                                                                        <div 
+                                                                            className="bg-primary h-2 rounded transition-all"
+                                                                            style={{ width: `${tool.output.completionRate}%` }}
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* By State */}
+                                                                {tool.output.workItemsByState && tool.output.workItemsByState.length > 0 && (
+                                                                    <div>
+                                                                        <div className="text-xs font-semibold mb-1">By State</div>
+                                                                        <div className="space-y-1">
+                                                                            {tool.output.workItemsByState.map((state: any, i: number) => (
+                                                                                <div key={i} className="flex justify-between text-xs">
+                                                                                    <span>{state.stateName}</span>
+                                                                                    <span className="font-mono">{state.count} ({state.percentage}%)</span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* By Type */}
+                                                                {tool.output.workItemsByType && tool.output.workItemsByType.length > 0 && (
+                                                                    <div>
+                                                                        <div className="text-xs font-semibold mb-1">By Type</div>
+                                                                        <div className="space-y-1">
+                                                                            {tool.output.workItemsByType.map((type: any, i: number) => (
+                                                                                <div key={i} className="flex justify-between text-xs">
+                                                                                    <span>{type.type}</span>
+                                                                                    <span className="font-mono">{type.count} ({type.percentage}%)</span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* By Priority */}
+                                                                {tool.output.workItemsByPriority && tool.output.workItemsByPriority.length > 0 && (
+                                                                    <div>
+                                                                        <div className="text-xs font-semibold mb-1">By Priority</div>
+                                                                        <div className="space-y-1">
+                                                                            {tool.output.workItemsByPriority.map((priority: any, i: number) => (
+                                                                                <div key={i} className="flex justify-between text-xs">
+                                                                                    <span>{priority.priority}</span>
+                                                                                    <span className="font-mono">{priority.count}</span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+                                                                {/* Team Workload */}
+                                                                {tool.output.teamWorkload && tool.output.teamWorkload.length > 0 && (
+                                                                    <div>
+                                                                        <div className="text-xs font-semibold mb-1">Team Workload</div>
+                                                                        <div className="space-y-1">
+                                                                            {tool.output.teamWorkload.map((member: any, i: number) => (
+                                                                                <div key={i} className="flex justify-between text-xs">
+                                                                                    <span>{member.userName}</span>
+                                                                                    <span className="font-mono">{member.activeWorkItems} items</span>
+                                                                                </div>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         ) : tool.output.success ? (
                                                             <div className="text-green-600 flex items-start gap-2">
