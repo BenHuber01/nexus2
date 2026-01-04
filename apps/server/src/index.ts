@@ -41,7 +41,7 @@ const app = new Elysia()
 		const userId = session?.user?.id;
 		console.log("[AI] Session:", session);
 		console.log("[AI] User ID:", userId);
-		const body = (await context.request.json()) as { 
+		const body = (await context.request.json()) as {
 			messages?: any[];
 			projectId?: string;
 		};
@@ -64,13 +64,13 @@ const app = new Elysia()
 						if (!userId) {
 							return { error: "User ID required" };
 						}
-			
+
 						try {
 							const slug = name.toLowerCase().replace(/\s+/g, "-");
 							const org = await prisma.organization.create({
 								data: { name, slug, description },
 							});
-						
+
 							await prisma.organizationMembership.create({
 								data: {
 									organizationId: org.id,
@@ -78,7 +78,7 @@ const app = new Elysia()
 									role: "OWNER",
 								},
 							});
-						
+
 							return {
 								success: true,
 								organizationId: org.id,
@@ -92,7 +92,15 @@ const app = new Elysia()
 					},
 				} as any),
 				create_bug_ticket: tool({
-					description: "Create a bug ticket in the project management system when user reports a bug",
+					description: `Create a bug ticket in the project management system when user reports a bug.
+
+						IMPORTANT REQUIREMENTS:
+						- ALWAYS ask for title if not provided
+						- ALWAYS ask for detailed description if not provided
+						- ALWAYS ask for priority (LOW/MEDIUM/HIGH/CRITICAL) if not provided
+						- Ask for reproduction steps if the bug is complex
+						- Do not assume information - explicitly ask the user
+						- Format your questions clearly and wait for answers before creating the ticket`,
 					inputSchema: z.object({
 						title: z.string().describe("Short, descriptive bug title"),
 						description: z.string().describe("Detailed bug description"),
@@ -136,7 +144,7 @@ const app = new Elysia()
 								where: { id: projectId },
 								select: { key: true },
 							});
-							
+
 							const ticketId = `${project?.key || "PROJ"}-${workItem.id.split("-")[0]}`;
 							return {
 								success: true,
@@ -171,7 +179,7 @@ const app = new Elysia()
 								where: { projectId },
 								orderBy: { position: "asc" },
 							});
-	
+
 							const workItem = await prisma.workItem.create({
 								data: {
 									title,
@@ -183,12 +191,12 @@ const app = new Elysia()
 									creatorId: userId,
 								},
 							});
-	
+
 							const project = await prisma.project.findUnique({
 								where: { id: projectId },
 								select: { key: true },
 							});
-	
+
 							const taskId = `${project?.key || "PROJ"}-${workItem.id.split("-")[0]}`;
 							return {
 								success: true,
